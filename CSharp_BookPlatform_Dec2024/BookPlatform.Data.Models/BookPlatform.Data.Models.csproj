@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BookPlatform.Common\BookPlatform.Common.csproj" />
+  </ItemGroup>
+
 </Project>

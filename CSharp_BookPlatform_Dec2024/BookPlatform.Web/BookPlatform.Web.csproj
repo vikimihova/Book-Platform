@@ -19,6 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BookPlatform.Common\BookPlatform.Common.csproj" />
+    <ProjectReference Include="..\BookPlatform.Data.Models\BookPlatform.Data.Models.csproj" />
     <ProjectReference Include="..\BookPlatform.Web.ViewModels\BookPlatform.Web.ViewModels.csproj" />
   </ItemGroup>
 
