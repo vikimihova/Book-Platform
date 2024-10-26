@@ -1,5 +1,4 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookPlatform.Data.Models
@@ -18,5 +17,7 @@ namespace BookPlatform.Data.Models
         [Required]
         [ForeignKey(nameof(BookId))]
         public Book Book { get; set; } = null!;
+
+        public ICollection<QuoteApplicationUser> QuoteApplicationUsers { get; set; } = new List<QuoteApplicationUser>();
     }
 }

@@ -12,5 +12,7 @@ namespace BookPlatform.Data.Models
 
         [Required]
         public string LastName { get; set; } = null!;
+
+        public ICollection<Book> Books { get; set; } = new List<Book>();
     }
 }

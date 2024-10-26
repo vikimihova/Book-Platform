@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookPlatform.Data.Models
 {
@@ -31,5 +26,13 @@ namespace BookPlatform.Data.Models
         [Required]
         [ForeignKey(nameof(GenreId))]
         public Genre Genre { get; set; } = null!;
+
+        public ICollection<BookApplicationUser> BookApplicationUsers { get; set; } = new List<BookApplicationUser>();
+
+        public ICollection<BookCharacter> BookCharacters { get; set; } = new List<BookCharacter>();
+
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+        public ICollection<Quote> Quotes { get; set; } = new List<Quote>();
     }
 }

@@ -17,5 +17,12 @@ namespace BookPlatform.Data.Models
         [Required]
         [ForeignKey(nameof(BookId))]
         public Book Book { get; set; } = null!;
+
+        [Required]
+        public Guid ApplicationUserId { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(ApplicationUserId))]
+        public ApplicationUser ApplicationUser { get; set; } = null!;
     }
 }

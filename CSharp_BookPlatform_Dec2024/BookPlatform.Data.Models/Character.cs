@@ -11,5 +11,8 @@ namespace BookPlatform.Data.Models
         [Required]
         public string Name { get; set; } = null!;
 
+        public ICollection<BookCharacter> CharacterBooks { get; set; } = new List<BookCharacter>();
+
+        public ICollection<BookApplicationUser> CharacterBookApplicationUsers { get; set; } = new List<BookApplicationUser>();
     }
 }
