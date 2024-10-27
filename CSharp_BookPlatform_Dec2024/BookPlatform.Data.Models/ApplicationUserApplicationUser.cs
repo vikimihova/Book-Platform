@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookPlatform.Data.Models
 {
-    public class ApplicationUserUser
+    public class ApplicationUserApplicationUser
     {
         [Required]
         public Guid UserId { get; set; }
