@@ -8,7 +8,7 @@ namespace BookPlatform.Data.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        public string FullName { get; set; } = null!;
+        public string FirstName { get; set; } = null!;
 
         [Required]
         public string LastName { get; set; } = null!;

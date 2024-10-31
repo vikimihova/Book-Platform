@@ -27,6 +27,8 @@ namespace BookPlatform.Data.Models
         [ForeignKey(nameof(GenreId))]
         public Genre Genre { get; set; } = null!;
 
+        public string? ImageUrl { get; set; }
+
         public ICollection<BookApplicationUser> BookApplicationUsers { get; set; } = new List<BookApplicationUser>();
 
         public ICollection<BookCharacter> BookCharacters { get; set; } = new List<BookCharacter>();

@@ -26,7 +26,7 @@ namespace BookPlatform.Data.Models
         [ForeignKey(nameof(ApplicationUserId))]
         public ApplicationUser ApplicationUser { get; set; } = null!;
 
-        public int Rating { get; set; }
+        public int? Rating { get; set; }
 
         public Review? Review { get; set; }
 
