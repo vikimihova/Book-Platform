@@ -1,6 +1,8 @@
-using BookPlatform.Web.Data;
+using BookPlatform.Data;
+using BookPlatform.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BookPlatform.Web
 {
@@ -9,13 +11,16 @@ namespace BookPlatform.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var connectionString = builder.Configuration.GetConnectionString("SqlServer");
 
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
             // ADD SERVICES TO THE CONTAINER
+
             // Add dbContext
+            builder.Services.AddDbContext<PlatformDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
             }); // !NuGet Microsoft Extensions Dependency Injection package!
+
             // Add db developer page exception filter (only in development environment)
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
