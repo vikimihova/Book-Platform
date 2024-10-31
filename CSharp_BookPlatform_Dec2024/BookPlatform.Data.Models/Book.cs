@@ -31,8 +31,6 @@ namespace BookPlatform.Data.Models
 
         public ICollection<BookCharacter> BookCharacters { get; set; } = new List<BookCharacter>();
 
-        public ICollection<Review> Reviews { get; set; } = new List<Review>();
-
         public ICollection<Quote> Quotes { get; set; } = new List<Quote>();
     }
 }

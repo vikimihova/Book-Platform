@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace BookPlatform.Data.Models
 {
+    [PrimaryKey(nameof(BookId), nameof(ApplicationUserId))]
     public class BookApplicationUser
     {
         [Required]
@@ -26,9 +28,6 @@ namespace BookPlatform.Data.Models
 
         public int Rating { get; set; }
 
-        public Guid? ReviewId { get; set; }
-
-        [ForeignKey(nameof(ReviewId))]
         public Review? Review { get; set; }
 
         public DateTime? DateStarted { get; set; }

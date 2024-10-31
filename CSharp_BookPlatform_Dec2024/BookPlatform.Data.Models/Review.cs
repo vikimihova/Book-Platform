@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookPlatform.Data.Models
@@ -10,19 +11,14 @@ namespace BookPlatform.Data.Models
 
         [Required]
         public string Content { get; set; } = null!;
-
+        
         [Required]
         public Guid BookId { get; set; }
-
-        [Required]
-        [ForeignKey(nameof(BookId))]
-        public Book Book { get; set; } = null!;
 
         [Required]
         public Guid ApplicationUserId { get; set; }
 
         [Required]
-        [ForeignKey(nameof(ApplicationUserId))]
-        public ApplicationUser ApplicationUser { get; set; } = null!;
+        public BookApplicationUser BookApplicationUser { get; set; } = null!;
     }
 }
