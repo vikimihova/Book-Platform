@@ -9,7 +9,7 @@ namespace BookPlatform.Data.Models
             this.Id = Guid.NewGuid();
         }
 
-        public ICollection<ApplicationUserApplicationUser> UserFriends { get; set; } = new List<ApplicationUserApplicationUser>();
+        public ICollection<ApplicationUser> Friends { get; set; } = new List<ApplicationUser>();
 
         public ICollection<BookApplicationUser> UserBooks { get; set; } = new List<BookApplicationUser>();
 
