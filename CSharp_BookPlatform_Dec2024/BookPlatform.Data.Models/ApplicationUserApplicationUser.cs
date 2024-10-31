@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookPlatform.Data.Models
 {
+    [PrimaryKey(nameof(UserId), nameof(FriendId))]
     public class ApplicationUserApplicationUser
     {
         [Required]
