@@ -19,7 +19,7 @@ namespace BookPlatform.Web
             builder.Services.AddDbContext<PlatformDbContext>(options =>
             {
                 options.UseSqlServer(connectionString);
-            }); // !NuGet Microsoft Extensions Dependency Injection package!
+            }); // !NuGet Microsoft Extensions Dependency Injection package!            
 
             // Add db developer page exception filter (only in development environment)
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -46,6 +46,7 @@ namespace BookPlatform.Web
             .AddSignInManager<SignInManager<ApplicationUser>>()
             .AddUserManager<UserManager<ApplicationUser>>();
 
+
             // Configure application cookie
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -53,22 +54,21 @@ namespace BookPlatform.Web
             });
 
             // Add repositories for each entity (repository pattern) except for ApplicationUser (UserManager and SignInManager instead)
+
             // Add services for controllers
+
             // Add other services
             builder.Services.AddControllersWithViews();
+            builder.Services.AddRazorPages();
 
             // BUILD APPLICATION
             var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseMigrationsEndPoint();
-            }
-            else
             // ADD AUTOMAPPER
 
             // CONFIGURE THE HTTP REQUEST PIPELINE
 
+            if (!app.Environment.IsDevelopment())           
             {
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -79,6 +79,7 @@ namespace BookPlatform.Web
             app.UseStaticFiles();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
