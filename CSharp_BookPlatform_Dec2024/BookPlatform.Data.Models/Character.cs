@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using static BookPlatform.Common.EntityValidationConstants.CharacterValidationConstants;
 
 
@@ -11,6 +12,7 @@ namespace BookPlatform.Data.Models
 
         [Required]
         [MaxLength(CharacterNameMaxLength)]
+        [Comment("Full name of the character")]
         public string Name { get; set; } = null!;
 
         [Required]

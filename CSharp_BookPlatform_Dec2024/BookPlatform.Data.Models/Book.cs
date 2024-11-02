@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static BookPlatform.Common.EntityValidationConstants.BookValidationConstants;
 
@@ -11,8 +12,10 @@ namespace BookPlatform.Data.Models
 
         [Required]
         [MaxLength(TitleMaxLength)]
+        [Comment("Full title of the book")]
         public string Title { get; set; } = null!;
 
+        [Comment("Official known first publication year of the book")]
         public int? PublicationYear { get; set; }
 
         [Required]
@@ -29,10 +32,16 @@ namespace BookPlatform.Data.Models
         [ForeignKey(nameof(GenreId))]
         public Genre Genre { get; set; } = null!;
 
+        [Required]
+        [Comment("Book description")]
+        public string Description { get; set; } = null!;
+
         [MaxLength(MaxImageUrlLength)]
+        [Comment("Book cover image")]
         public string? ImageUrl { get; set; }
 
         [Required]
+        [Comment("Average rating based on users' ratings")]
         public double AverageRating { get; set; } = 0.00;
 
         [Required]

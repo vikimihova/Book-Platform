@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static BookPlatform.Common.EntityValidationConstants.QuoteValidationConstants;
 
@@ -11,23 +12,20 @@ namespace BookPlatform.Data.Models
 
         [Required]
         [MaxLength(QuoteContentMaxLength)]
+        [Comment("The body of the quote")]
         public string Content { get; set; } = null!;
 
         [Required]
-        public DateTime CreatedOn { get; set; } = DateTime.Now;
+        [Comment("Date of creation in the database")]
+        public DateTime CreatedOn { get; set; } 
 
         [Required]
-        public Guid CreatorId { get; set; }
-
-        [Required]
-        [ForeignKey(nameof(CreatorId))]
-        public ApplicationUser Creator { get; set; } = null!;
-
-        [Required]
+        [Comment("The book the quote is from")]
         public Guid BookId { get; set; }
 
         [Required]
         [ForeignKey(nameof(BookId))]
+        [Comment("The book the quote is from")]
         public Book Book { get; set; } = null!;
 
         [Required]
