@@ -10,14 +10,17 @@ namespace BookPlatform.Data.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
+        [MaxLength(AuthorFirstNameMaxLength + AuthorLastNameMaxLength)]
+        [Comment("First or only name of the author")]
+        public string FullName { get; set; } = null!;
+        
         [MaxLength(AuthorFirstNameMaxLength)]
         [Comment("First or only name of the author")]
-        public string FirstName { get; set; } = null!;
-
-        [Required]
+        public string? FirstName { get; set; }
+        
         [MaxLength(AuthorLastNameMaxLength)]
         [Comment("Last or only name of the author")]
-        public string LastName { get; set; } = null!;
+        public string? LastName { get; set; }
 
         [Required]
         public bool IsDeleted { get; set; } = false;
