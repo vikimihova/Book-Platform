@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookPlatform.Data.Migrations
 {
     [DbContext(typeof(PlatformDbContext))]
-    [Migration("20241101110447_Initial")]
+    [Migration("20241102161310_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -114,11 +114,18 @@ namespace BookPlatform.Data.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("First or only name of the author");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Last or only name of the author");
 
                     b.HasKey("Id");
 
@@ -134,18 +141,35 @@ namespace BookPlatform.Data.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<double>("AverageRating")
+                        .HasColumnType("float")
+                        .HasComment("Average rating based on users' ratings");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("Book description");
+
                     b.Property<Guid>("GenreId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2083)
+                        .HasColumnType("nvarchar(2083)")
+                        .HasComment("Book cover image");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("PublicationYear")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasComment("Official known first publication year of the book");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("Full title of the book");
 
                     b.HasKey("Id");
 
@@ -165,25 +189,37 @@ namespace BookPlatform.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CharacterId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("User's favourite character from the book - optional");
 
                     b.Property<DateTime?>("DateFinished")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasComment("Date on which the user finished reading");
 
                     b.Property<DateTime?>("DateStarted")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasComment("Date on which the user started reading");
 
-                    b.Property<int?>("Rating")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
-                    b.Property<int>("ReadingStatus")
-                        .HasColumnType("int");
+                    b.Property<int?>("RatingId")
+                        .HasColumnType("int")
+                        .HasComment("Optional user rating");
+
+                    b.Property<int>("ReadingStatusId")
+                        .HasColumnType("int")
+                        .HasComment("Current reading status");
 
                     b.HasKey("BookId", "ApplicationUserId");
 
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("CharacterId");
+
+                    b.HasIndex("RatingId");
+
+                    b.HasIndex("ReadingStatusId");
 
                     b.ToTable("BooksApplicationUsers");
                 });
@@ -209,9 +245,14 @@ namespace BookPlatform.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Full name of the character");
 
                     b.HasKey("Id");
 
@@ -224,9 +265,14 @@ namespace BookPlatform.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasComment("Name of the genre");
 
                     b.HasKey("Id");
 
@@ -240,11 +286,21 @@ namespace BookPlatform.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("BookId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("The book the quote is from");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2500)
+                        .HasColumnType("nvarchar(2500)")
+                        .HasComment("The body of the quote");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date of creation in the database");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -268,6 +324,88 @@ namespace BookPlatform.Data.Migrations
                     b.ToTable("QuotesApplicationUsers");
                 });
 
+            modelBuilder.Entity("BookPlatform.Data.Models.Rating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasComment("Primary key and numeric value of the rating");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("RatingDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("Descriptive value of the rating");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ratings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            RatingDescription = "Barely finished it, if at all"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            RatingDescription = "Not much to enjoy/ learn"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            RatingDescription = "Good parts are good, bad parts are bad"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            RatingDescription = "Would definitely recommend/ reread"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            RatingDescription = "Absolutely amazing"
+                        });
+                });
+
+            modelBuilder.Entity("BookPlatform.Data.Models.ReadingStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasComment("Primary key and numeric value of the status");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("StatusDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("Descriptive value of the status");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReadingStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            StatusDescription = "Read"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            StatusDescription = "Currently Reading"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            StatusDescription = "Want to Read"
+                        });
+                });
+
             modelBuilder.Entity("BookPlatform.Data.Models.Review", b =>
                 {
                     b.Property<Guid>("Id")
@@ -275,14 +413,33 @@ namespace BookPlatform.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ApplicationUserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("The user who created the review");
 
                     b.Property<Guid>("BookId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("The book the review is about");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("The body of the review");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date of creation in the database");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Likes")
+                        .HasColumnType("int")
+                        .HasComment("Number of likes");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date of last modification in the database");
 
                     b.HasKey("Id");
 
@@ -475,11 +632,25 @@ namespace BookPlatform.Data.Migrations
                         .WithMany("CharacterBookApplicationUsers")
                         .HasForeignKey("CharacterId");
 
+                    b.HasOne("BookPlatform.Data.Models.Rating", "Rating")
+                        .WithMany()
+                        .HasForeignKey("RatingId");
+
+                    b.HasOne("BookPlatform.Data.Models.ReadingStatus", "ReadingStatus")
+                        .WithMany()
+                        .HasForeignKey("ReadingStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Book");
 
                     b.Navigation("Character");
+
+                    b.Navigation("Rating");
+
+                    b.Navigation("ReadingStatus");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.BookCharacter", b =>

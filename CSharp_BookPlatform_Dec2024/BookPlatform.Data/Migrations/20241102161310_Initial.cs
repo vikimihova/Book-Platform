@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace BookPlatform.Data.Migrations
 {
     /// <inheritdoc />
@@ -55,8 +57,9 @@ namespace BookPlatform.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, comment: "First or only name of the author"),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, comment: "Last or only name of the author"),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,7 +71,8 @@ namespace BookPlatform.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, comment: "Full name of the character"),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -80,11 +84,38 @@ namespace BookPlatform.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false, comment: "Name of the genre"),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Genres", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ratings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, comment: "Primary key and numeric value of the rating")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RatingDescription = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Descriptive value of the rating")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ratings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReadingStatuses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, comment: "Primary key and numeric value of the status")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StatusDescription = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Descriptive value of the status")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReadingStatuses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,11 +252,14 @@ namespace BookPlatform.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PublicationYear = table.Column<int>(type: "int", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false, comment: "Full title of the book"),
+                    PublicationYear = table.Column<int>(type: "int", nullable: true, comment: "Official known first publication year of the book"),
                     AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GenreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Book description"),
+                    ImageUrl = table.Column<string>(type: "nvarchar(2083)", maxLength: 2083, nullable: true, comment: "Book cover image"),
+                    AverageRating = table.Column<double>(type: "float", nullable: false, comment: "Average rating based on users' ratings"),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -250,11 +284,12 @@ namespace BookPlatform.Data.Migrations
                 {
                     BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Rating = table.Column<int>(type: "int", nullable: true),
-                    DateStarted = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateFinished = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ReadingStatus = table.Column<int>(type: "int", nullable: false),
-                    CharacterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    RatingId = table.Column<int>(type: "int", nullable: true, comment: "Optional user rating"),
+                    DateStarted = table.Column<DateTime>(type: "datetime2", nullable: true, comment: "Date on which the user started reading"),
+                    DateFinished = table.Column<DateTime>(type: "datetime2", nullable: true, comment: "Date on which the user finished reading"),
+                    ReadingStatusId = table.Column<int>(type: "int", nullable: false, comment: "Current reading status"),
+                    CharacterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true, comment: "User's favourite character from the book - optional"),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -276,6 +311,17 @@ namespace BookPlatform.Data.Migrations
                         column: x => x.CharacterId,
                         principalTable: "Characters",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BooksApplicationUsers_Ratings_RatingId",
+                        column: x => x.RatingId,
+                        principalTable: "Ratings",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BooksApplicationUsers_ReadingStatuses_ReadingStatusId",
+                        column: x => x.ReadingStatusId,
+                        principalTable: "ReadingStatuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -307,8 +353,10 @@ namespace BookPlatform.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Content = table.Column<string>(type: "nvarchar(2500)", maxLength: 2500, nullable: false, comment: "The body of the quote"),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date of creation in the database"),
+                    BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The book the quote is from"),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -326,9 +374,13 @@ namespace BookPlatform.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Content = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false, comment: "The body of the review"),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date of creation in the database"),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true, comment: "Date of last modification in the database"),
+                    Likes = table.Column<int>(type: "int", nullable: false, comment: "Number of likes"),
+                    BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The book the review is about"),
+                    ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The user who created the review"),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -363,6 +415,28 @@ namespace BookPlatform.Data.Migrations
                         principalTable: "Quotes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Ratings",
+                columns: new[] { "Id", "RatingDescription" },
+                values: new object[,]
+                {
+                    { 1, "Barely finished it, if at all" },
+                    { 2, "Not much to enjoy/ learn" },
+                    { 3, "Good parts are good, bad parts are bad" },
+                    { 4, "Would definitely recommend/ reread" },
+                    { 5, "Absolutely amazing" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ReadingStatuses",
+                columns: new[] { "Id", "StatusDescription" },
+                values: new object[,]
+                {
+                    { 1, "Read" },
+                    { 2, "Currently Reading" },
+                    { 3, "Want to Read" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -428,6 +502,16 @@ namespace BookPlatform.Data.Migrations
                 name: "IX_BooksApplicationUsers_CharacterId",
                 table: "BooksApplicationUsers",
                 column: "CharacterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BooksApplicationUsers_RatingId",
+                table: "BooksApplicationUsers",
+                column: "RatingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BooksApplicationUsers_ReadingStatusId",
+                table: "BooksApplicationUsers",
+                column: "ReadingStatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BooksCharacters_CharacterId",
@@ -498,6 +582,12 @@ namespace BookPlatform.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Characters");
+
+            migrationBuilder.DropTable(
+                name: "Ratings");
+
+            migrationBuilder.DropTable(
+                name: "ReadingStatuses");
 
             migrationBuilder.DropTable(
                 name: "Authors");
