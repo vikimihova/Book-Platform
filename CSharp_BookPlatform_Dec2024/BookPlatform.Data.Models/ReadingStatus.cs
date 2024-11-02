@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookPlatform.Data.Models
 {
-    public enum ReadingStatus
+    public class ReadingStatus
     {
-        Read = 1,
-        CurrentlyReading = 2,
-        WantToRead = 3,
+        [Key]
+        [Comment("Primary key and numeric value of the status")]
+        public int Id { get; set; }
+
+        [Required]
+        [Comment("Descriptive value of the status")]
+        public string StatusDescription { get; set; } = null!;
     }
 }

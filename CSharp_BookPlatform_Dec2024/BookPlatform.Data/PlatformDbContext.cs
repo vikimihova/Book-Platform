@@ -24,6 +24,10 @@ namespace BookPlatform.Data
 
         public virtual DbSet<Quote> Quotes { get; set; }
 
+        public virtual DbSet<Rating> Ratings { get; set; }
+
+        public virtual DbSet<ReadingStatus> ReadingStatuses { get; set; }  
+
         public virtual DbSet<QuoteApplicationUser> QuotesApplicationUsers { get; set; }
 
         public virtual DbSet<Character> Characters { get; set; }
