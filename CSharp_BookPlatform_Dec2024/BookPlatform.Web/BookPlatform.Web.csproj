@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\datasets\**" />
+    <Content Remove="wwwroot\datasets\**" />
+    <EmbeddedResource Remove="wwwroot\datasets\**" />
+    <None Remove="wwwroot\datasets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.10" />
@@ -25,6 +32,10 @@
     <ProjectReference Include="..\BookPlatform.Data.Models\BookPlatform.Data.Models.csproj" />
     <ProjectReference Include="..\BookPlatform.Data\BookPlatform.Data.csproj" />
     <ProjectReference Include="..\BookPlatform.Web.ViewModels\BookPlatform.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

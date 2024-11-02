@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataProcessor\**" />
+    <EmbeddedResource Remove="DataProcessor\**" />
+    <None Remove="DataProcessor\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
@@ -17,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BookPlatform.Data.Models\BookPlatform.Data.Models.csproj" />
+    <ProjectReference Include="..\BookPlatform.Services.Data\BookPlatform.Services.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
