@@ -1,0 +1,24 @@
+﻿@using BookPlatform.Web.ViewModels.Book
+@model IEnumerable<BookIndexViewModel>
+@{
+    ViewBag["Title"] = "Browse Books";
+}
+
+
+<h2>Browse All Books</h2>
+
+<div class="row">
+    @foreach (var book in Model)
+    {
+        <div class="col-md-2">
+            <div class="card mb-2 shadow-sm">
+                <img src="@book.ImageUrl" class="card-img-top" alt="Cover Image" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">@book.Title</h5>
+                    <p class="card-text">@book.Author</p>
+                    <a asp-action="Details" asp-route-id="@book.Id" class="btn btn-primary">See more</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
