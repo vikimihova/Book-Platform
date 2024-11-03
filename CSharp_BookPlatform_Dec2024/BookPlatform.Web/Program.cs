@@ -61,16 +61,24 @@ namespace BookPlatform.Web
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
+            // builder.Services.AddHttpClient<OpenLibraryService>();
+
             // BUILD APPLICATION
             var app = builder.Build();
 
-            // ADD AUTOMAPPER
-
             // CONFIGURE THE HTTP REQUEST PIPELINE
 
-            if (!app.Environment.IsDevelopment())           
+            // ADD AUTOMAPPER
+
+            if (app.Environment.IsDevelopment())            
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
+            }
+            else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithReExecute("/Home/StatusCode");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
