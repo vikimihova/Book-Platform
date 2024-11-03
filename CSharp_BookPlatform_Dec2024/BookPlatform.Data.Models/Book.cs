@@ -45,6 +45,9 @@ namespace BookPlatform.Data.Models
         public double AverageRating { get; set; } = 0.00;
 
         [Required]
+        public bool IsSubmittedByUser { get; set; } = false;
+
+        [Required]
         public bool IsDeleted { get; set; } = false;
 
         public ICollection<BookApplicationUser> BookApplicationUsers { get; set; } = new List<BookApplicationUser>();

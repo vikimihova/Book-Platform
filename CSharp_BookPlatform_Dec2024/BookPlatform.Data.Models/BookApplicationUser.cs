@@ -37,6 +37,10 @@ namespace BookPlatform.Data.Models
         [Comment("Optional review for this book by the user")]
         public Review? Review { get; set; }
 
+        [Required]
+        [Comment("Date on which the user added the book to a reading list")]
+        public DateTime DateAdded { get; set; }
+
         [Comment("Date on which the user started reading")]
         public DateTime? DateStarted { get; set; }
 

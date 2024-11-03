@@ -23,6 +23,9 @@ namespace BookPlatform.Data.Models
         public string? LastName { get; set; }
 
         [Required]
+        public bool IsSubmittedByUser { get; set; } = false;
+
+        [Required]
         public bool IsDeleted { get; set; } = false;
 
         public ICollection<Book> Books { get; set; } = new List<Book>();

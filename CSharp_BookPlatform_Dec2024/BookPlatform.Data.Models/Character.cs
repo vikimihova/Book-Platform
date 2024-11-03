@@ -16,6 +16,9 @@ namespace BookPlatform.Data.Models
         public string Name { get; set; } = null!;
 
         [Required]
+        public bool IsSubmittedByUser { get; set; } = false;
+
+        [Required]
         public bool IsDeleted { get; set; } = false;
 
         public ICollection<BookCharacter> CharacterBooks { get; set; } = new List<BookCharacter>();
