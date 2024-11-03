@@ -13,6 +13,7 @@ namespace BookPlatform.Common
             public const int TitleMinLength = 2;
             public const int TitleMaxLength = 200;
             public const int MaxImageUrlLength = 2083;
+            public const int DescriptionMinLength = 20;
         }
 
         public static class AuthorValidationConstants
