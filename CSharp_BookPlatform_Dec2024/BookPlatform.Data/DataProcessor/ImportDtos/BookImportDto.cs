@@ -16,10 +16,6 @@ namespace BookPlatform.Services.Data.DataProcessor.ImportDtos
         [MaxLength(MaxImageUrlLength)]
         public string ImageLink { get; set; } = null!;
 
-        public string? Language { get; set; }
-                
-        public int? Pages { get; set; }
-
         [Required]
         [MinLength(TitleMinLength)]
         [MaxLength(TitleMaxLength)]

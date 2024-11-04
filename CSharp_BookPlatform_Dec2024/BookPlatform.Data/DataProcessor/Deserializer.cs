@@ -2,12 +2,15 @@
 using BookPlatform.Services.Data.DataProcessor.ImportDtos;
 using static BookPlatform.Common.ApplicationConstants;
 using BookPlatform.Data.Models;
+using BookPlatform.Data;
+using System.Runtime.CompilerServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookPlatform.Services.Data.DataProcessor
 {
     public static class Deserializer
-    {     
-        public static string GenerateFilePath()
+    {    
+        private static string GenerateFilePath()
         {
             var currentDirectory = Directory.GetCurrentDirectory();
             var directoryName = Path.GetFileName(currentDirectory);
@@ -45,10 +48,48 @@ namespace BookPlatform.Services.Data.DataProcessor
             return generatedAuthors;
         }
 
-        public static IEnumerable<Book> GenerateBooks()
-        {
-            throw new NotImplementedException();
-        }
+        //public async Task<IEnumerable<Book>> GenerateBooks()
+        //{
+        //    BookImportDto[] bookImportDtos = GenerateBookImportDtos();
+
+        //    List<Book> generatedBooks = new List<Book>();
+
+        //    foreach (var bookDto in bookImportDtos)
+        //    {
+        //        if (!generatedBooks.Any(b => b.Title == bookDto.Title && b.Author.FullName == bookDto.Author))
+        //        {
+        //            Author? author = await context.Authors
+        //                .FirstOrDefaultAsync(a => a.FullName == bookDto.Author);
+
+        //            if (author == null)
+        //            {
+        //                continue;
+        //            }
+
+        //            Genre? genre = await this.context.Genres
+        //                .FirstOrDefaultAsync(g => g.Name == bookDto.Genre);
+
+        //            if (genre == null)
+        //            {
+        //                continue;
+        //            }
+
+        //            Book book = new Book()
+        //            {
+        //                Title = bookDto.Title,
+        //                PublicationYear = bookDto.Year,
+        //                Author = author,
+        //                Genre = genre,
+        //                Description = bookDto.Description,
+        //                ImageUrl = bookDto.ImageLink,
+        //            };
+
+        //            generatedBooks.Add(book);
+        //        }
+        //    }
+
+        //    return generatedBooks;
+        //}
 
         public static IEnumerable<Character> GenerateCharacters()
         {
@@ -57,7 +98,24 @@ namespace BookPlatform.Services.Data.DataProcessor
 
         public static IEnumerable<Genre> GenerateGenres()
         {
-            throw new NotImplementedException();
+            BookImportDto[] bookImportDtos = GenerateBookImportDtos();
+
+            List<Genre> generatedGenres = new List<Genre>();
+
+            foreach (var bookDto in bookImportDtos)
+            {
+                if (!generatedGenres.Any(g => g.Name == bookDto.Genre))
+                {
+                    Genre genre = new Genre()
+                    {
+                        Name = bookDto.Genre,
+                    };
+
+                    generatedGenres.Add(genre);
+                }
+            }
+
+            return generatedGenres;
         }
     }
 }

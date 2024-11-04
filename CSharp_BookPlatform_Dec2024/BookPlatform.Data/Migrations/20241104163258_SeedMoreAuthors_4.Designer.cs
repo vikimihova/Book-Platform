@@ -4,6 +4,7 @@ using BookPlatform.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookPlatform.Data.Migrations
 {
     [DbContext(typeof(PlatformDbContext))]
-    partial class PlatformDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241104163258_SeedMoreAuthors_4")]
+    partial class SeedMoreAuthors_4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("FriendsId");
 
-                    b.ToTable("ApplicationUserApplicationUser", (string)null);
+                    b.ToTable("ApplicationUserApplicationUser");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.ApplicationUser", b =>
@@ -133,7 +136,27 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("7a4ad7af-e62d-4970-876e-508a21b1a39b"),
+                            FirstName = "Rudyard",
+                            FullName = "Rudyard Kipling",
+                            IsDeleted = false,
+                            IsSubmittedByUser = false,
+                            LastName = "Kipling"
+                        },
+                        new
+                        {
+                            Id = new Guid("d8a5ac42-01b0-49ab-a1b1-447b99d1768b"),
+                            FirstName = "Richard",
+                            FullName = "Richard Adams",
+                            IsDeleted = false,
+                            IsSubmittedByUser = false,
+                            LastName = "Adams"
+                        });
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Book", b =>
@@ -184,7 +207,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.BookApplicationUser", b =>
@@ -232,7 +255,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("ReadingStatusId");
 
-                    b.ToTable("BooksApplicationUsers", (string)null);
+                    b.ToTable("BooksApplicationUsers");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.BookCharacter", b =>
@@ -247,7 +270,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("CharacterId");
 
-                    b.ToTable("BooksCharacters", (string)null);
+                    b.ToTable("BooksCharacters");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Character", b =>
@@ -270,7 +293,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Characters", (string)null);
+                    b.ToTable("Characters");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Genre", b =>
@@ -290,7 +313,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres", (string)null);
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Quote", b =>
@@ -320,7 +343,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("Quotes", (string)null);
+                    b.ToTable("Quotes");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.QuoteApplicationUser", b =>
@@ -335,7 +358,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("QuotesApplicationUsers", (string)null);
+                    b.ToTable("QuotesApplicationUsers");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Rating", b =>
@@ -354,7 +377,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ratings", (string)null);
+                    b.ToTable("Ratings");
 
                     b.HasData(
                         new
@@ -400,7 +423,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReadingStatuses", (string)null);
+                    b.ToTable("ReadingStatuses");
 
                     b.HasData(
                         new
@@ -460,7 +483,7 @@ namespace BookPlatform.Data.Migrations
                     b.HasIndex("BookId", "ApplicationUserId")
                         .IsUnique();
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>

@@ -4,6 +4,7 @@ using BookPlatform.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookPlatform.Data.Migrations
 {
     [DbContext(typeof(PlatformDbContext))]
-    partial class PlatformDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241104160009_SeedGenres")]
+    partial class SeedGenres
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("FriendsId");
 
-                    b.ToTable("ApplicationUserApplicationUser", (string)null);
+                    b.ToTable("ApplicationUserApplicationUser");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.ApplicationUser", b =>
@@ -133,7 +136,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Book", b =>
@@ -184,7 +187,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.BookApplicationUser", b =>
@@ -232,7 +235,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("ReadingStatusId");
 
-                    b.ToTable("BooksApplicationUsers", (string)null);
+                    b.ToTable("BooksApplicationUsers");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.BookCharacter", b =>
@@ -247,7 +250,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("CharacterId");
 
-                    b.ToTable("BooksCharacters", (string)null);
+                    b.ToTable("BooksCharacters");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Character", b =>
@@ -270,7 +273,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Characters", (string)null);
+                    b.ToTable("Characters");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Genre", b =>
@@ -290,7 +293,87 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres", (string)null);
+                    b.ToTable("Genres");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("61f871f9-1e36-4f20-be48-4749c171da7e"),
+                            IsDeleted = false,
+                            Name = "Historical Fiction"
+                        },
+                        new
+                        {
+                            Id = new Guid("9d5f3715-6ad0-4b07-80b7-7b515db5a223"),
+                            IsDeleted = false,
+                            Name = "Childrens"
+                        },
+                        new
+                        {
+                            Id = new Guid("12b8e696-6761-43f7-8bd8-2af7a82c8afb"),
+                            IsDeleted = false,
+                            Name = "Poetry"
+                        },
+                        new
+                        {
+                            Id = new Guid("d634aa2a-17c8-46d8-8fb4-9611da7e59fc"),
+                            IsDeleted = false,
+                            Name = "Religion"
+                        },
+                        new
+                        {
+                            Id = new Guid("3499ce22-d7b4-4ad1-9a4c-aadb28e1dc72"),
+                            IsDeleted = false,
+                            Name = "Mythology"
+                        },
+                        new
+                        {
+                            Id = new Guid("70ce3360-b547-407e-baf4-798fb9dba878"),
+                            IsDeleted = false,
+                            Name = "Fiction"
+                        },
+                        new
+                        {
+                            Id = new Guid("a26137f3-aec0-475e-8587-83477cd66e43"),
+                            IsDeleted = false,
+                            Name = "Short Stories"
+                        },
+                        new
+                        {
+                            Id = new Guid("2fa5129c-d729-45af-868c-996ad36b37da"),
+                            IsDeleted = false,
+                            Name = "Magical Realism"
+                        },
+                        new
+                        {
+                            Id = new Guid("b0823402-4dda-4b81-b587-915749f2605b"),
+                            IsDeleted = false,
+                            Name = "Philosophy"
+                        },
+                        new
+                        {
+                            Id = new Guid("a6be0772-da8b-4712-9169-5863964c1996"),
+                            IsDeleted = false,
+                            Name = "Short Novel"
+                        },
+                        new
+                        {
+                            Id = new Guid("2e2d89db-082f-403a-98a8-fee8a9e5908c"),
+                            IsDeleted = false,
+                            Name = "Plays"
+                        },
+                        new
+                        {
+                            Id = new Guid("3413e755-cfc3-4fb7-9bc5-9e3314159cd9"),
+                            IsDeleted = false,
+                            Name = "Dystopia"
+                        },
+                        new
+                        {
+                            Id = new Guid("aaeaf366-911b-4b96-9977-05076127d8dd"),
+                            IsDeleted = false,
+                            Name = "Fantasy"
+                        });
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Quote", b =>
@@ -320,7 +403,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("Quotes", (string)null);
+                    b.ToTable("Quotes");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.QuoteApplicationUser", b =>
@@ -335,7 +418,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("QuotesApplicationUsers", (string)null);
+                    b.ToTable("QuotesApplicationUsers");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Rating", b =>
@@ -354,7 +437,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ratings", (string)null);
+                    b.ToTable("Ratings");
 
                     b.HasData(
                         new
@@ -400,7 +483,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReadingStatuses", (string)null);
+                    b.ToTable("ReadingStatuses");
 
                     b.HasData(
                         new
@@ -460,7 +543,7 @@ namespace BookPlatform.Data.Migrations
                     b.HasIndex("BookId", "ApplicationUserId")
                         .IsUnique();
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
