@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static BookPlatform.Common.EntityValidationConstants.AuthorValidationConstants;
 using static BookPlatform.Common.EntityValidationConstants.BookValidationConstants;
+using static BookPlatform.Common.EntityValidationConstants.GenreValidationConstants;
 
 namespace BookPlatform.Services.Data.DataProcessor.ImportDtos
 {
@@ -10,19 +11,13 @@ namespace BookPlatform.Services.Data.DataProcessor.ImportDtos
         [MinLength(AuthorFirstNameMinLength + AuthorLastNameMinLength)]
         [MaxLength(AuthorFirstNameMaxLength + AuthorLastNameMaxLength)]
         public string Author { get; set; } = null!;
-                
-        public string? Country { get; set; }
 
         [Required]
-        [MaxLength(MaxImageUrlLength/2)]
+        [MaxLength(MaxImageUrlLength)]
         public string ImageLink { get; set; } = null!;
 
         public string? Language { get; set; }
-
-        [Required]
-        [MaxLength(MaxImageUrlLength / 2)]
-        public string Link { get; set; } = null!;
-        
+                
         public int? Pages { get; set; }
 
         [Required]
@@ -32,5 +27,16 @@ namespace BookPlatform.Services.Data.DataProcessor.ImportDtos
 
         [Required]
         public int Year { get; set; }
+
+        [Required]
+        [MinLength(GenreNameMinLength)]
+        [MaxLength(GenreNameMaxLength)]
+        public string Genre { get; set; } = null!;
+
+        [Required]
+        [MinLength(DescriptionMinLength)]
+        public string Description { get; set; } = null!;
+
+        public ICollection<string> Characters { get; set; } = new List<string>();
     }
 }
