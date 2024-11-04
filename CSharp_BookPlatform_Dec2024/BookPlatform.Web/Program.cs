@@ -108,6 +108,7 @@ namespace BookPlatform.Web
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<PlatformDbContext>();
                 context.SeedBooks();
+                context.SeedBookCharacters();
             }
 
             // RUN APPLICATION

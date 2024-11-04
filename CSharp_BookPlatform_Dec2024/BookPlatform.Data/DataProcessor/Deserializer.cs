@@ -46,54 +46,36 @@ namespace BookPlatform.Services.Data.DataProcessor
             }
 
             return generatedAuthors;
-        }
-
-        //public async Task<IEnumerable<Book>> GenerateBooks()
-        //{
-        //    BookImportDto[] bookImportDtos = GenerateBookImportDtos();
-
-        //    List<Book> generatedBooks = new List<Book>();
-
-        //    foreach (var bookDto in bookImportDtos)
-        //    {
-        //        if (!generatedBooks.Any(b => b.Title == bookDto.Title && b.Author.FullName == bookDto.Author))
-        //        {
-        //            Author? author = await context.Authors
-        //                .FirstOrDefaultAsync(a => a.FullName == bookDto.Author);
-
-        //            if (author == null)
-        //            {
-        //                continue;
-        //            }
-
-        //            Genre? genre = await this.context.Genres
-        //                .FirstOrDefaultAsync(g => g.Name == bookDto.Genre);
-
-        //            if (genre == null)
-        //            {
-        //                continue;
-        //            }
-
-        //            Book book = new Book()
-        //            {
-        //                Title = bookDto.Title,
-        //                PublicationYear = bookDto.Year,
-        //                Author = author,
-        //                Genre = genre,
-        //                Description = bookDto.Description,
-        //                ImageUrl = bookDto.ImageLink,
-        //            };
-
-        //            generatedBooks.Add(book);
-        //        }
-        //    }
-
-        //    return generatedBooks;
-        //}
+        }        
 
         public static IEnumerable<Character> GenerateCharacters()
         {
-            throw new NotImplementedException();
+            BookImportDto[] bookImportDtos = GenerateBookImportDtos();
+
+            List<Character> generatedCharacters = new List<Character>();
+
+            foreach (var bookDto in bookImportDtos)
+            {
+                if (bookDto.Characters.Count == 0)
+                {
+                    continue;
+                }
+
+                foreach (var characterName in bookDto.Characters)
+                {
+                    if (!generatedCharacters.Any(c => c.Name == characterName))
+                    {
+                        Character character = new Character()
+                        {
+                            Name = characterName,
+                        };
+
+                        generatedCharacters.Add(character);
+                    }
+                }                
+            }
+
+            return generatedCharacters;
         }
 
         public static IEnumerable<Genre> GenerateGenres()

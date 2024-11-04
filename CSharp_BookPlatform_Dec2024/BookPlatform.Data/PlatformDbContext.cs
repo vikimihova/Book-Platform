@@ -102,5 +102,66 @@ namespace BookPlatform.Data
                 Console.WriteLine($"An error occurred: {ex.Message}"); 
             }            
         }
+
+        public void SeedBookCharacters()
+        {
+            try
+            {
+                BookImportDto[] bookImportDtos = Deserializer.GenerateBookImportDtos();
+
+                List<BookCharacter> generatedBookCharacters = new List<BookCharacter>();
+
+                foreach (var bookDto in bookImportDtos)
+                {
+                    if (bookDto.Characters.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    Book? book = this.Books
+                        .FirstOrDefault(b => b.Title == bookDto.Title && b.Description == bookDto.Description);
+
+                    if (book == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (var characterName in bookDto.Characters)
+                    {
+                        Character? character = this.Characters
+                            .FirstOrDefault(c => c.Name == characterName);
+
+                        if (character == null)
+                        {
+                            continue;
+                        }
+
+                        BookCharacter bookCharacter = new BookCharacter()
+                        {
+                            BookId = book.Id,
+                            CharacterId = character.Id,
+                        };
+
+                        generatedBookCharacters.Add(bookCharacter);
+                    }
+
+                }
+
+                List<BookCharacter> existingBookCharacters = this.BooksCharacters.ToList();
+                List<BookCharacter> bookCharactersToAdd = generatedBookCharacters
+                    .Where(gbc => !existingBookCharacters.Any(ebc => ebc.BookId == gbc.BookId && ebc.CharacterId == gbc.CharacterId))
+                    .ToList();
+
+                if (bookCharactersToAdd.Any())
+                {
+                    this.BooksCharacters.AddRange(bookCharactersToAdd);
+                    this.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }
