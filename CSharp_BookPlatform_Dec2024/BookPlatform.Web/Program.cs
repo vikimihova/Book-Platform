@@ -18,8 +18,12 @@ namespace BookPlatform.Web
             // Add dbContext
             builder.Services.AddDbContext<PlatformDbContext>(options =>
             {
-                options.UseSqlServer(connectionString);
-            }); // !NuGet Microsoft Extensions Dependency Injection package!            
+                options.UseSqlServer(connectionString)
+                    .EnableSensitiveDataLogging()
+                    .LogTo(Console.WriteLine, LogLevel.Information);
+            }); // !NuGet Microsoft Extensions Dependency Injection package!
+            
+
 
             // Add db developer page exception filter (only in development environment)
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
