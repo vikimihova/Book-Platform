@@ -78,7 +78,7 @@ namespace BookPlatform.Data
                             AuthorId = author.Id,
                             GenreId = genre.Id,
                             Description = bookDto.Description,
-                            ImageUrl = bookDto.ImageLink,
+                            ImageUrl = "/" + bookDto.ImageLink,
                         };
 
 

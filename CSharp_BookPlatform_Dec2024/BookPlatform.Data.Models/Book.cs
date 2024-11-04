@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static BookPlatform.Common.EntityValidationConstants.BookValidationConstants;
+using static BookPlatform.Common.ApplicationConstants;
 
 namespace BookPlatform.Data.Models
 {
@@ -36,9 +37,10 @@ namespace BookPlatform.Data.Models
         [Comment("Book description")]
         public string Description { get; set; } = null!;
 
+        [Required]
         [MaxLength(MaxImageUrlLength)]
         [Comment("Book cover image")]
-        public string? ImageUrl { get; set; }
+        public string ImageUrl { get; set; } = NoImageUrl;
 
         [Required]
         [Comment("Average rating based on users' ratings")]

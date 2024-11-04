@@ -11,10 +11,9 @@ namespace BookPlatform.Services.Data.DataProcessor.ImportDtos
         [MinLength(AuthorFirstNameMinLength + AuthorLastNameMinLength)]
         [MaxLength(AuthorFirstNameMaxLength + AuthorLastNameMaxLength)]
         public string Author { get; set; } = null!;
-
-        [Required]
+        
         [MaxLength(MaxImageUrlLength)]
-        public string ImageLink { get; set; } = null!;
+        public string? ImageLink { get; set; }
 
         [Required]
         [MinLength(TitleMinLength)]
