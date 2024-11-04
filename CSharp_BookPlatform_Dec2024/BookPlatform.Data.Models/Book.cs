@@ -23,14 +23,14 @@ namespace BookPlatform.Data.Models
 
         [Required]
         [ForeignKey(nameof(AuthorId))]
-        public Author Author { get; set; } = null!;
+        public Author Author { get; set; }
 
         [Required]
         public Guid GenreId { get; set; }
 
         [Required]
         [ForeignKey(nameof(GenreId))]
-        public Genre Genre { get; set; } = null!;
+        public Genre Genre { get; set; }
 
         [Required]
         [Comment("Book description")]

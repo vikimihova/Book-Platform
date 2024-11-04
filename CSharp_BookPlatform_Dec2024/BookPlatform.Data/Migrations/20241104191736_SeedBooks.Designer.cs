@@ -4,6 +4,7 @@ using BookPlatform.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookPlatform.Data.Migrations
 {
     [DbContext(typeof(PlatformDbContext))]
-    partial class PlatformDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241104191736_SeedBooks")]
+    partial class SeedBooks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,6 +188,21 @@ namespace BookPlatform.Data.Migrations
                     b.HasIndex("GenreId");
 
                     b.ToTable("Books");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("50ddee0f-f47b-47af-8f8e-70a9757419aa"),
+                            AuthorId = new Guid("69a54e30-11cd-495c-a222-2b0fd492b8a4"),
+                            AverageRating = 0.0,
+                            Description = "description",
+                            GenreId = new Guid("aaeaf366-911b-4b96-9977-05076127d8dd"),
+                            ImageUrl = "images/hp-the-philosophers-stone",
+                            IsDeleted = false,
+                            IsSubmittedByUser = false,
+                            PublicationYear = 1997,
+                            Title = "Harry Potter and the Philosopher's Stone"
+                        });
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.BookApplicationUser", b =>

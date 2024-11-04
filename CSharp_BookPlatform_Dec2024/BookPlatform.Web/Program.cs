@@ -1,8 +1,10 @@
 using BookPlatform.Data;
 using BookPlatform.Data.Models;
+using BookPlatform.Services.Data.DataProcessor;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace BookPlatform.Web
 {
@@ -101,6 +103,12 @@ namespace BookPlatform.Web
             app.MapRazorPages();
 
             // APPLY MIGRATIONS
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<PlatformDbContext>();
+                context.SeedBooks();
+            }
 
             // RUN APPLICATION
             app.Run();
