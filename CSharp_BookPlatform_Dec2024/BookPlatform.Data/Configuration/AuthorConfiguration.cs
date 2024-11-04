@@ -1,7 +1,9 @@
 ﻿using BookPlatform.Data.Models;
+using BookPlatform.Data.Repository;
 using BookPlatform.Services.Data.DataProcessor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Runtime.CompilerServices;
 
 namespace BookPlatform.Data.Configuration
 {
@@ -9,7 +11,7 @@ namespace BookPlatform.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Author> builder)
         {
-            builder.HasData(Seeder.GenerateAuthors());
-        }               
+            builder.HasData(Deserializer.GenerateAuthors());    
+        }        
     }
 }
