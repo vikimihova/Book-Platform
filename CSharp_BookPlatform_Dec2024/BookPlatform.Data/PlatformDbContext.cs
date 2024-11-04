@@ -78,7 +78,7 @@ namespace BookPlatform.Data
                             AuthorId = author.Id,
                             GenreId = genre.Id,
                             Description = bookDto.Description,
-                            ImageUrl = "/" + bookDto.ImageLink,
+                            ImageUrl = bookDto.ImageLink,
                         };
 
 
@@ -163,5 +163,24 @@ namespace BookPlatform.Data
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
+
+        //public void UpdateBooks()
+        //{
+        //    BookImportDto[] bookImportDtos = Deserializer.GenerateBookImportDtos();
+
+        //    foreach (var bookDto in bookImportDtos)
+        //    {
+        //        Book? book = this.Books
+        //                .FirstOrDefault(b => b.Title == bookDto.Title && b.Description == bookDto.Description);
+
+        //        if (book == null)
+        //        {
+        //            continue;
+        //        }
+
+        //        book.ImageUrl = "/" + bookDto.ImageLink;
+        //        this.SaveChanges();
+        //    }
+        //}
     }
 }

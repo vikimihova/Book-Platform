@@ -109,6 +109,7 @@ namespace BookPlatform.Web
                 var context = services.GetRequiredService<PlatformDbContext>();
                 context.SeedBooks();
                 context.SeedBookCharacters();
+                //context.UpdateBooks();
             }
 
             // RUN APPLICATION
