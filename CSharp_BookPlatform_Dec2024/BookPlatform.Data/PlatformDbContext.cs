@@ -43,6 +43,88 @@ namespace BookPlatform.Data
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
+        public void SeedAuthors()
+        {
+            try
+            {
+                AuthorImportDto[] authorImportDtos = Deserializer.GenerateAuthorImportDtos();
+
+                List<Author> generatedAuthors = new List<Author>();
+
+                foreach (var authorDto in authorImportDtos)
+                {
+                    if (!generatedAuthors.Any(a => a.FullName == authorDto.Author))
+                    {
+                        Author author = new Author()
+                        {
+                            FullName = authorDto.Author,
+                        };
+
+                        generatedAuthors.Add(author);
+                    }
+                }
+
+                List<Author> existingAuthors = this.Authors
+                    .AsNoTracking()
+                    .ToList();
+
+                List<Author> newAuthorsToAdd = generatedAuthors
+                    .Where(ga => !existingAuthors.Any(ea => ea.FullName == ga.FullName))
+                    .ToList();
+
+                if (newAuthorsToAdd.Any())
+                {
+                    this.Authors.AddRange(newAuthorsToAdd);
+                    this.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        public void SeedGenres()
+        {
+            try
+            {
+                GenreImportDto[] genreImportDtos = Deserializer.GenerateGenreImportDtos();
+
+                List<Genre> generatedGenres = new List<Genre>();
+
+                foreach (var genreDto in genreImportDtos)
+                {
+                    if (!generatedGenres.Any(g => g.Name == genreDto.Genre))
+                    {
+                        Genre genre = new Genre()
+                        {
+                            Name = genreDto.Genre,
+                        };
+
+                        generatedGenres.Add(genre);
+                    }
+                }
+
+                List<Genre> existingGenres = this.Genres
+                    .AsNoTracking()
+                    .ToList();
+
+                List<Genre> newGenresToAdd = generatedGenres
+                    .Where(gg => !existingGenres.Any(eg => eg.Name == gg.Name))
+                    .ToList();
+
+                if (newGenresToAdd.Any())
+                {
+                    this.Genres.AddRange(newGenresToAdd);
+                    this.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
         public void SeedBooks()
         {
             try
@@ -56,6 +138,7 @@ namespace BookPlatform.Data
                     if (!generatedBooks.Any(b => b.Title == bookDto.Title && b.Description == bookDto.Description))
                     {
                         Author? author = this.Authors
+                            .AsNoTracking()
                             .FirstOrDefault(a => a.FullName == bookDto.Author);
 
                         if (author == null)
@@ -64,6 +147,7 @@ namespace BookPlatform.Data
                         }
 
                         Genre? genre = this.Genres
+                            .AsNoTracking()
                             .FirstOrDefault(g => g.Name == bookDto.Genre);
 
                         if (genre == null)
@@ -86,7 +170,10 @@ namespace BookPlatform.Data
                     }
                 }
 
-                List<Book> existingBooks = this.Books.ToList();
+                List<Book> existingBooks = this.Books
+                    .AsNoTracking()
+                    .ToList();
+
                 List<Book> booksToAdd = generatedBooks
                     .Where(gb => !existingBooks.Any(eb => eb.Title == gb.Title && eb.AuthorId == gb.AuthorId))
                     .ToList();
@@ -103,11 +190,63 @@ namespace BookPlatform.Data
             }            
         }
 
+        public void SeedCharacters()
+        {
+            try
+            {
+                CharactersImportDto[] charactersImportDtos = Deserializer.GenerateCharactersImportDtos();
+
+                List<Character> generatedCharacters = new List<Character>();
+
+                foreach (var charactersDto in charactersImportDtos)
+                {
+                    if (charactersDto.Characters.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    foreach (var characterName in charactersDto.Characters)
+                    {
+                        if (!generatedCharacters.Any(c => c.Name == characterName))
+                        {
+                            Character character = new Character()
+                            {
+                                Name = characterName,
+                            };
+
+                            generatedCharacters.Add(character);
+                        }
+                    }
+                }
+
+                List<Character> existingCharacters = this.Characters
+                    .AsNoTracking()
+                    .ToList();
+
+                List<Character> newCharactersToAdd = generatedCharacters
+                    .Where(gc => !existingCharacters.Any(ec => ec.Name == gc.Name))
+                    .ToList();
+
+                if (newCharactersToAdd.Any())
+                {
+                    this.Characters.AddRange(newCharactersToAdd);
+                    this.SaveChanges();
+                }
+
+                // Continue with seeding the corresponding BookCharacters
+                this.SeedBookCharacters();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
         public void SeedBookCharacters()
         {
             try
             {
-                BookImportDto[] bookImportDtos = Deserializer.GenerateBookImportDtos();
+                CharactersImportDto[] bookImportDtos = Deserializer.GenerateCharactersImportDtos();
 
                 List<BookCharacter> generatedBookCharacters = new List<BookCharacter>();
 
@@ -119,6 +258,7 @@ namespace BookPlatform.Data
                     }
 
                     Book? book = this.Books
+                        .AsNoTracking()
                         .FirstOrDefault(b => b.Title == bookDto.Title && b.Description == bookDto.Description);
 
                     if (book == null)
@@ -129,6 +269,7 @@ namespace BookPlatform.Data
                     foreach (var characterName in bookDto.Characters)
                     {
                         Character? character = this.Characters
+                            .AsNoTracking()
                             .FirstOrDefault(c => c.Name == characterName);
 
                         if (character == null)
@@ -147,14 +288,17 @@ namespace BookPlatform.Data
 
                 }
 
-                List<BookCharacter> existingBookCharacters = this.BooksCharacters.ToList();
-                List<BookCharacter> bookCharactersToAdd = generatedBookCharacters
+                List<BookCharacter> existingBookCharacters = this.BooksCharacters
+                    .AsNoTracking()
+                    .ToList();
+
+                List<BookCharacter> newBookCharactersToAdd = generatedBookCharacters
                     .Where(gbc => !existingBookCharacters.Any(ebc => ebc.BookId == gbc.BookId && ebc.CharacterId == gbc.CharacterId))
                     .ToList();
 
-                if (bookCharactersToAdd.Any())
+                if (newBookCharactersToAdd.Any())
                 {
-                    this.BooksCharacters.AddRange(bookCharactersToAdd);
+                    this.BooksCharacters.AddRange(newBookCharactersToAdd);
                     this.SaveChanges();
                 }
             }
@@ -164,23 +308,23 @@ namespace BookPlatform.Data
             }
         }
 
-        //public void UpdateBooks()
-        //{
-        //    BookImportDto[] bookImportDtos = Deserializer.GenerateBookImportDtos();
+        public void UpdateBooksImageUrl()
+        {
+            //BookImportDto[] bookImportDtos = Deserializer.GenerateBookImportDtos();
 
-        //    foreach (var bookDto in bookImportDtos)
-        //    {
-        //        Book? book = this.Books
-        //                .FirstOrDefault(b => b.Title == bookDto.Title && b.Description == bookDto.Description);
+            //foreach (var bookDto in bookImportDtos)
+            //{
+            //    Book? book = this.Books
+            //            .FirstOrDefault(b => b.Title == bookDto.Title && b.Description == bookDto.Description);
 
-        //        if (book == null)
-        //        {
-        //            continue;
-        //        }
+            //    if (book == null)
+            //    {
+            //        continue;
+            //    }
 
-        //        book.ImageUrl = "/" + bookDto.ImageLink;
-        //        this.SaveChanges();
-        //    }
-        //}
+            //    book.ImageUrl = "/" + bookDto.ImageLink;
+            //    this.SaveChanges();
+            //}
+        }
     }
 }

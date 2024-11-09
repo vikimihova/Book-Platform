@@ -21,7 +21,7 @@ namespace BookPlatform.Web
             builder.Services.AddDbContext<PlatformDbContext>(options =>
             {
                 options.UseSqlServer(connectionString)
-                    .EnableSensitiveDataLogging()
+                    .EnableSensitiveDataLogging() // delete!
                     .LogTo(Console.WriteLine, LogLevel.Information);
             }); // !NuGet Microsoft Extensions Dependency Injection package!
             
@@ -102,15 +102,19 @@ namespace BookPlatform.Web
 
             app.MapRazorPages();
 
-            // APPLY MIGRATIONS
+            // SEED DATABASE
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<PlatformDbContext>();
+                context.SeedAuthors();
+                context.SeedGenres();
                 context.SeedBooks();
-                context.SeedBookCharacters();
-                //context.UpdateBooks();
+                context.SeedCharacters();
+                //context.UpdateBooksImageUrl();
             }
+
+            // APPLY MIGRATIONS
 
             // RUN APPLICATION
             app.Run();

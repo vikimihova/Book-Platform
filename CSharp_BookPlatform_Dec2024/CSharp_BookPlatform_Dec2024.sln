@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookPlatform.Data", "BookPl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{671B24D2-D0C3-4767-AACB-160975AF34DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookPlatform.Services.Data", "BookPlatform.Services.Data\BookPlatform.Services.Data.csproj", "{7EC9597D-AC90-4A2E-B14C-D125EA0FA5FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookPlatform.Services.Data", "BookPlatform.Services.Data\BookPlatform.Services.Data.csproj", "{7EC9597D-AC90-4A2E-B14C-D125EA0FA5FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
