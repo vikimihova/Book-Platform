@@ -11,8 +11,8 @@ namespace BookPlatform.Web.Infrastructure
         {
             using IServiceScope serviceScope = app.ApplicationServices.CreateScope();
 
-            PlatformDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<PlatformDbContext>()!;
-            dbContext.Database.MigrateAsync();
+            PlatformDbContext context = serviceScope.ServiceProvider.GetRequiredService<PlatformDbContext>()!;
+            context.Database.MigrateAsync();
 
             return app;
         }
