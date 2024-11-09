@@ -2,6 +2,7 @@
 using static BookPlatform.Common.EntityValidationConstants.AuthorValidationConstants;
 using static BookPlatform.Common.EntityValidationConstants.BookValidationConstants;
 using static BookPlatform.Common.EntityValidationConstants.GenreValidationConstants;
+using static BookPlatform.Common.ApplicationConstants;
 
 namespace BookPlatform.Services.Data.DataProcessor.ImportDtos
 {
@@ -12,8 +13,9 @@ namespace BookPlatform.Services.Data.DataProcessor.ImportDtos
         [MaxLength(AuthorFirstNameMaxLength + AuthorLastNameMaxLength)]
         public string Author { get; set; } = null!;
         
+        [Required]
         [MaxLength(MaxImageUrlLength)]
-        public string? ImageLink { get; set; }
+        public string ImageLink { get; set; } = NoImageUrl;
 
         [Required]
         [MinLength(TitleMinLength)]

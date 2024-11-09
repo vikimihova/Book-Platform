@@ -36,7 +36,8 @@ namespace BookPlatform.Data.Models
         [Required]
         [Comment("Book description")]
         public string Description { get; set; } = null!;
-        
+
+        [Required]
         [MaxLength(MaxImageUrlLength)]
         [Comment("Book cover image")]
         public string ImageUrl { get; set; } = NoImageUrl;
