@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace BookPlatform.Web.ViewModels.Book
+﻿namespace BookPlatform.Web.ViewModels.Book
 {
     public class BookIndexViewModel
     {

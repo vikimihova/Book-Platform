@@ -1,11 +1,8 @@
 using BookPlatform.Data;
 using BookPlatform.Data.Models;
-using BookPlatform.Services.Data.DataProcessor;
 using BookPlatform.Web.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace BookPlatform.Web
 {

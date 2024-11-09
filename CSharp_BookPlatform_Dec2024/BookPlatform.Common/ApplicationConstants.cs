@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace BookPlatform.Common
+﻿namespace BookPlatform.Common
 {
     public static class ApplicationConstants
     {
