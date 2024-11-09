@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using BookPlatform.Data;
 
-namespace BookPlatform.Web.Infrastructure
+namespace BookPlatform.Web.Infrastructure.Extensions
 {
     public static class ExtensionMethods
     {
