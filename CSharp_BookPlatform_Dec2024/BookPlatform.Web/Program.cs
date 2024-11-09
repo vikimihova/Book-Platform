@@ -104,16 +104,17 @@ namespace BookPlatform.Web
             app.MapRazorPages();
 
             // SEED DATABASE
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var context = services.GetRequiredService<PlatformDbContext>();
-                context.SeedAuthors();
-                context.SeedGenres();
-                context.SeedBooks();
-                context.SeedCharacters();
-                //context.UpdateBooksImageUrl();
-            }
+            app.SeedDatabase();
+
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var context = scope
+            //      .ServiceProvider
+            //      .GetRequiredService<PlatformDbContext>();               
+            //}
+
+            // UPDATE DATABASE
+            // ...
 
             // APPLY MIGRATIONS
             app.ApplyMigrations();
