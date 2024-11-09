@@ -174,13 +174,13 @@ namespace BookPlatform.Data
                     .AsNoTracking()
                     .ToList();
 
-                List<Book> booksToAdd = generatedBooks
+                List<Book> newBooksToAdd = generatedBooks
                     .Where(gb => !existingBooks.Any(eb => eb.Title == gb.Title && eb.AuthorId == gb.AuthorId))
                     .ToList();
 
-                if (booksToAdd.Any())
+                if (newBooksToAdd.Any())
                 {
-                    this.Books.AddRange(booksToAdd);
+                    this.Books.AddRange(newBooksToAdd);
                     this.SaveChanges();
                 }
             }
