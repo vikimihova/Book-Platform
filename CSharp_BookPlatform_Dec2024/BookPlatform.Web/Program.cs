@@ -1,6 +1,7 @@
 using BookPlatform.Data;
 using BookPlatform.Data.Models;
 using BookPlatform.Services.Data.DataProcessor;
+using BookPlatform.Web.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -115,6 +116,7 @@ namespace BookPlatform.Web
             }
 
             // APPLY MIGRATIONS
+            app.ApplyMigrations();
 
             // RUN APPLICATION
             app.Run();
