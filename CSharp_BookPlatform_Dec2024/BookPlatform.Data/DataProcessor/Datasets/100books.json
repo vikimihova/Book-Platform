@@ -1620,5 +1620,24 @@
     "year": 1895,
     "genre": "Fiction",
     "description": "The Jungle Books can be regarded as classic stories told by an adult to children. But they also constitute a complex literary work of art in which the whole of Kipling's philosophy of life is expressed in miniature. They are best known for the 'Mowgli' stories; the tale of a baby abandoned and brought up by wolves, educated in the ways and secrets of the jungle by Kaa the python, Baloo the bear, and Bagheera the black panther. The stories, a mixture of fantasy, myth, and magic, are underpinned by Kipling's abiding preoccupation with the theme of self-discovery, and the nature of the 'Law'."
+  },
+  {
+    "author": "Richard Adams",
+    "country": "England",
+    "imageLink": "/images/watership-down",
+    "language": "English",
+    "title": "Watership Down",
+    "year": 1972,
+    "genre": "Animals",
+    "description": "Set in England's Downs, a once idyllic rural landscape, this stirring tale of adventure, courage and survival follows a band of very special creatures on their flight from the intrusion of man and the certain destruction of their home. Led by a stouthearted pair of friends, they journey forth from their native Sandleford Warren through the harrowing trials posed by predators and adversaries, to a mysterious promised land and a more perfect society.",
+    "characters": [
+      "Hazel",
+      "Fiver",
+      "Bigwig",
+      "Blackberry",
+      "Bluebell",
+      "Dandelion",
+      "Holly"
+    ]
   }
 ]
