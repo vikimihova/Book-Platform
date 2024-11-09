@@ -31,7 +31,5 @@ namespace BookPlatform.Services.Data.DataProcessor.ImportDtos
         [Required]
         [MinLength(DescriptionMinLength)]
         public string Description { get; set; } = null!;
-
-        public ICollection<string> Characters { get; set; } = new List<string>();
     }
 }

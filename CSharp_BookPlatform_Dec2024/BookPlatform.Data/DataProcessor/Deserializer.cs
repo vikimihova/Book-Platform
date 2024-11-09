@@ -20,11 +20,31 @@ namespace BookPlatform.Services.Data.DataProcessor
             return filePath;
         }
 
+        public static AuthorImportDto[] GenerateAuthorImportDtos()
+        {
+            string filePath = GenerateFilePath();
+            return JsonConvert.DeserializeObject<AuthorImportDto[]>(File.ReadAllText(filePath))!;
+        }
+
+        public static GenreImportDto[] GenerateGenreImportDtos()
+        {
+            string filePath = GenerateFilePath();
+            return JsonConvert.DeserializeObject<GenreImportDto[]>(File.ReadAllText(filePath))!;
+        }
+
         public static BookImportDto[] GenerateBookImportDtos()
         {
             string filePath = GenerateFilePath();
-            return JsonConvert.DeserializeObject<BookImportDto[]>(File.ReadAllText(filePath));
+            return JsonConvert.DeserializeObject<BookImportDto[]>(File.ReadAllText(filePath))!;
         }
+
+        public static CharactersImportDto[] GenerateCharactersImportDtos()
+        {
+            string filePath = GenerateFilePath();
+            return JsonConvert.DeserializeObject<CharactersImportDto[]>(File.ReadAllText(filePath))!;
+        }
+
+
 
         public static IEnumerable<Author> GenerateAuthors()
         {
