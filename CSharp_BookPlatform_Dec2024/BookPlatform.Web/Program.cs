@@ -1,6 +1,7 @@
 using BookPlatform.Data;
 using BookPlatform.Data.Models;
-using BookPlatform.Web.Infrastructure;
+using BookPlatform.Services.Data.Interfaces;
+using BookPlatform.Web.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +21,7 @@ namespace BookPlatform.Web
             {
                 options.UseSqlServer(connectionString)
                     .EnableSensitiveDataLogging() // delete!
-                    .LogTo(Console.WriteLine, LogLevel.Information);
+                    .LogTo(Console.WriteLine, LogLevel.Information); // delete!
             }); // !NuGet Microsoft Extensions Dependency Injection package!
             
 
@@ -28,8 +29,7 @@ namespace BookPlatform.Web
             // Add db developer page exception filter (only in development environment)
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            // Add identity            
-
+            // Add identity     
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
             {
                 options.Password.RequireDigit = builder.Configuration.GetValue<bool>("Identity:Password:RequireDigits");
@@ -58,8 +58,10 @@ namespace BookPlatform.Web
             });
 
             // Add repositories for each entity (repository pattern) except for ApplicationUser (UserManager and SignInManager instead)
+            builder.Services.RegisterRepositories(typeof(ApplicationUser).Assembly);
 
             // Add services for controllers
+            builder.Services.RegisterUserDefinedServices(typeof(IBaseService).Assembly);
 
             // Add other services
             builder.Services.AddControllersWithViews();
