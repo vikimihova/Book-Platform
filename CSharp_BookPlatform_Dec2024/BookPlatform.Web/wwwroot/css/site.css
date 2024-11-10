@@ -20,3 +20,13 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+a.book-title {
+    color: inherit;
+    text-decoration: none;
+}
+
+a.book-title:hover {
+    color: inherit;
+    text-decoration: underline;
+}

@@ -14,7 +14,7 @@
             <div class="card mb-2 shadow-sm" style="width: 200px; height: 425px">
                 <img src="@book.ImageUrl" class="card-img-top" alt="Cover Image" style="height: 300px; object-fit: cover;">
                 <div class="card-body">
-                    <a asp-action="Details" asp-route-id="@book.Id" class="card-title"><h6>@book.Title</h6></a>
+                    <a class="book-title" asp-action="Details" asp-route-id="@book.Id" class="card-title"><h6>@book.Title</h6></a>
                     <p class="card-text">@book.Author</p>
                 </div>
             </div>
