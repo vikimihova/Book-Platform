@@ -1139,7 +1139,6 @@
   {
     "author": "Valmiki",
     "country": "India",
-    "imageLink": "/images/ramayana.jpg",
     "language": "Sanskrit",
     "link": "https://en.wikipedia.org/wiki/Ramayana\n",
     "pages": 152,
@@ -1223,7 +1222,7 @@
   {
     "author": "J.R.R. Tolkien",
     "country": "England",
-    "imageLink": "/images/the-fellowship-of-the-ring",
+    "imageLink": "/images/the-fellowship-of-the-ring.jpg",
     "language": "English",
     "title": "The Fellowship of the Ring",
     "year": 1954,
@@ -1251,7 +1250,7 @@
   {
     "author": "J.R.R. Tolkien",
     "country": "England",
-    "imageLink": "/images/the-two-towers",
+    "imageLink": "/images/the-two-towers.jpg",
     "language": "English",
     "title": "The Two Towers",
     "year": 1954,
@@ -1281,7 +1280,7 @@
   {
     "author": "J.R.R. Tolkien",
     "country": "England",
-    "imageLink": "/images/the-return-of-the-king",
+    "imageLink": "/images/the-return-of-the-king.jpg",
     "language": "English",
     "title": "The Return of the King",
     "year": 1955,
@@ -1311,7 +1310,7 @@
   {
     "author": "J.K. Rowling",
     "country": "England",
-    "imageLink": "/images/hp-the-philosophers-stone",
+    "imageLink": "/images/hp-the-philosophers-stone.jpg",
     "language": "English",
     "title": "Harry Potter and the Philosopher's Stone",
     "year": 1997,
@@ -1346,7 +1345,7 @@
   {
     "author": "J.K. Rowling",
     "country": "England",
-    "imageLink": "/images/hp-the-chamber-of-secrets",
+    "imageLink": "/images/hp-the-chamber-of-secrets.jpg",
     "language": "English",
     "title": "Harry Potter and the Chamber of Secrets",
     "year": 1998,
@@ -1383,7 +1382,7 @@
   {
     "author": "J.K. Rowling",
     "country": "England",
-    "imageLink": "/images/hp-the-prisoner-of-azkaban",
+    "imageLink": "/images/hp-the-prisoner-of-azkaban.jpg",
     "language": "English",
     "title": "Harry Potter and the Prisoner of Azkaban",
     "year": 1999,
@@ -1423,7 +1422,7 @@
   {
     "author": "J.K. Rowling",
     "country": "England",
-    "imageLink": "/images/hp-the-goblet-of-fire",
+    "imageLink": "/images/hp-the-goblet-of-fire.jpg",
     "language": "English",
     "title": "Harry Potter and the Goblet of Fire",
     "year": 2000,
@@ -1474,7 +1473,7 @@
   {
     "author": "J.K. Rowling",
     "country": "England",
-    "imageLink": "/images/hp-the-order-of-the-phoenix",
+    "imageLink": "/images/hp-the-order-of-the-phoenix.jpg",
     "language": "English",
     "title": "Harry Potter and the Order of the Phoenix",
     "year": 2003,
@@ -1523,7 +1522,7 @@
   {
     "author": "J.K. Rowling",
     "country": "England",
-    "imageLink": "/images/hp-the-half-blood-prince",
+    "imageLink": "/images/hp-the-half-blood-prince.jpg",
     "language": "English",
     "title": "Harry Potter and the Half-Blood Prince",
     "year": 2005,
@@ -1569,7 +1568,7 @@
   {
     "author": "J.K. Rowling",
     "country": "England",
-    "imageLink": "/images/hp-the-deathly-hallows",
+    "imageLink": "/images/hp-the-deathly-hallows.jpg",
     "language": "English",
     "title": "Harry Potter and the Deathly Hallows",
     "year": 2007,
@@ -1615,6 +1614,7 @@
   {
     "author": "Rudyard Kipling",
     "country": "England",
+    "imageLink": "/images/the-jungle-books.jpg",
     "language": "English",
     "title": "The Jungle Books",
     "year": 1895,
@@ -1624,7 +1624,7 @@
   {
     "author": "Richard Adams",
     "country": "England",
-    "imageLink": "/images/watership-down",
+    "imageLink": "/images/watership-down.jpg",
     "language": "English",
     "title": "Watership Down",
     "year": 1972,

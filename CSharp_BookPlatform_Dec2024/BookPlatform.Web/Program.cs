@@ -103,7 +103,7 @@ namespace BookPlatform.Web
             app.MapRazorPages();
 
             // SEED DATABASE
-            app.SeedDatabase();
+            //app.SeedDatabase();
 
             //using (var scope = app.Services.CreateScope())
             //{
@@ -113,7 +113,7 @@ namespace BookPlatform.Web
             //}
 
             // UPDATE DATABASE
-            // ...
+            //app.UpdateDatabase();
 
             // APPLY MIGRATIONS
             app.ApplyMigrations();
