@@ -1,7 +1,7 @@
 ﻿@using BookPlatform.Web.ViewModels.Book
 @model IEnumerable<BookIndexViewModel>
 @{
-    ViewBag["Title"] = "Browse Books";
+    ViewData["Title"] = "Browse Books";
 }
 
 
@@ -11,12 +11,11 @@
     @foreach (var book in Model)
     {
         <div class="col-md-2">
-            <div class="card mb-2 shadow-sm">
-                <img src="@book.ImageUrl" class="card-img-top" alt="Cover Image" style="height: 200px; object-fit: cover;">
+            <div class="card mb-2 shadow-sm" style="width: 200px; height: 425px">
+                <img src="@book.ImageUrl" class="card-img-top" alt="Cover Image" style="height: 300px; object-fit: cover;">
                 <div class="card-body">
-                    <h5 class="card-title">@book.Title</h5>
+                    <a asp-action="Details" asp-route-id="@book.Id" class="card-title"><h6>@book.Title</h6></a>
                     <p class="card-text">@book.Author</p>
-                    <a asp-action="Details" asp-route-id="@book.Id" class="btn btn-primary">See more</a>
                 </div>
             </div>
         </div>
