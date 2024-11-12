@@ -1,0 +1,15 @@
+﻿@using BookPlatform.Web.ViewModels.Book
+@model BookDetailsViewModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="col-md-2">
+    <div class="card mb-2 shadow-sm" style="width: 200px; height: 425px">
+        <img src="@Model.ImageUrl" class="card-img-top" alt="Cover Image" style="height: 300px; object-fit: cover;">
+        <div class="card-body">
+            <a class="book-title" asp-action="Details" asp-route-id="@Model.Id" class="card-title"><h6>@Model.Title</h6></a>
+            <p class="card-text">@Model.Author</p>
+        </div>
+    </div>
+</div>
