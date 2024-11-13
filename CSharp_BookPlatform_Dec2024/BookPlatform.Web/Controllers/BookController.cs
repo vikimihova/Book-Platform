@@ -21,5 +21,17 @@ namespace BookPlatform.Web.Controllers
 
             return View(model);
         }
+
+        public async Task<IActionResult> Details(string id)
+        {
+            BookDetailsViewModel model = await this.bookService.GetBookDetailsAsync(id);
+
+            if (model == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(model);
+        }
     }
 }

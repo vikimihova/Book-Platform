@@ -9,10 +9,14 @@ namespace BookPlatform.Services.Data
     public class BookService : BaseService, IBookService
     {
         private readonly IRepository<Book, Guid> bookRepository;
+        private readonly IRepository<Author, Guid> authorRepository;
+        private readonly IRepository<Genre, Guid> genreRepository;
 
-        public BookService(IRepository<Book, Guid> _bookRepository)
+        public BookService(IRepository<Book, Guid> _bookRepository, IRepository<Author, Guid> _authorRepository, IRepository<Genre, Guid> _genreRepository)
         {
             this.bookRepository = _bookRepository;
+            this.authorRepository = _authorRepository;
+            this.genreRepository = _genreRepository;
         }
 
         public async Task<IEnumerable<BookIndexViewModel>> IndexGetAllAsync()
@@ -33,6 +37,41 @@ namespace BookPlatform.Services.Data
                 .ToArrayAsync();
 
             return allBooks;
+        }
+
+        public async Task<BookDetailsViewModel?> GetBookDetailsAsync(string id)
+        {
+            // check if string is a valid Guid
+            Guid parsedGuid = Guid.Empty;
+
+            if (!IsGuidValid(id, ref parsedGuid))
+            {
+                return null;
+            }
+
+            // check if book exists
+            Book book = await this.bookRepository.GetByIdAsync(parsedGuid);
+
+            if (book == null)
+            {
+                return null;
+            }
+
+            // get author and genre
+            Author author = await this.authorRepository.GetByIdAsync(book.AuthorId);
+            Genre genre = await this.genreRepository.GetByIdAsync(book.GenreId);
+
+            // generate view model
+            BookDetailsViewModel model = new BookDetailsViewModel()
+            {
+                Id = book.Id.ToString(),
+                Title = book.Title,
+                Author = author.FullName,
+                Genre = genre.Name,
+                ImageUrl = book.ImageUrl
+            };
+
+            return model;
         }
     }
 }
