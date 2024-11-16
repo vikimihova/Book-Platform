@@ -23,6 +23,7 @@ namespace BookPlatform.Services.Data
         {
             IEnumerable<BookIndexViewModel> allBooks = await this.bookRepository
                 .GetAllAttached()
+                .Where(b => b.IsDeleted == false)
                 .OrderBy(b => b.Author.LastName)
                 .ThenBy(b => b.PublicationYear)
                 .Select(b => new BookIndexViewModel()
@@ -52,8 +53,9 @@ namespace BookPlatform.Services.Data
             // get book
             Book? book = await this.bookRepository
                 .GetAllAttached()
+                .Where(b => b.IsDeleted == false)
                 .Include(b => b.Author)
-                .Include(b => b.Genre)
+                .Include(b => b.Genre)                
                 .FirstOrDefaultAsync(b => b.Id == parsedGuid);
 
             // check if book exists
