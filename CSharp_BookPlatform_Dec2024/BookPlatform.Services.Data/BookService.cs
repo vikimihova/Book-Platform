@@ -49,25 +49,26 @@ namespace BookPlatform.Services.Data
                 return null;
             }
 
-            // check if book exists
-            Book book = await this.bookRepository.GetByIdAsync(parsedGuid);
+            // get book
+            Book? book = await this.bookRepository
+                .GetAllAttached()
+                .Include(b => b.Author)
+                .Include(b => b.Genre)
+                .FirstOrDefaultAsync(b => b.Id == parsedGuid);
 
+            // check if book exists
             if (book == null)
             {
                 return null;
             }
-
-            // get author and genre
-            Author author = await this.authorRepository.GetByIdAsync(book.AuthorId);
-            Genre genre = await this.genreRepository.GetByIdAsync(book.GenreId);
 
             // generate view model
             BookDetailsViewModel model = new BookDetailsViewModel()
             {
                 Id = book.Id.ToString(),
                 Title = book.Title,
-                Author = author.FullName,
-                Genre = genre.Name,
+                Author = book.Author.FullName,
+                Genre = book.Genre.Name,
                 ImageUrl = book.ImageUrl
             };
 
