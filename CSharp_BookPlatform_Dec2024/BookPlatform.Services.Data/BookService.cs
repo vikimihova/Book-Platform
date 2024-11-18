@@ -69,8 +69,11 @@ namespace BookPlatform.Services.Data
             {
                 Id = book.Id.ToString(),
                 Title = book.Title,
+                PublicationYear = book.PublicationYear,
                 Author = book.Author.FullName,
                 Genre = book.Genre.Name,
+                Description = book.Description,
+                AverageRating = book.AverageRating,
                 ImageUrl = book.ImageUrl
             };
 
