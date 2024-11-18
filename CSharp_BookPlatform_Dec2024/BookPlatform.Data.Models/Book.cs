@@ -16,22 +16,23 @@ namespace BookPlatform.Data.Models
         [Comment("Full title of the book")]
         public string Title { get; set; } = null!;
 
+        [Required]
         [Comment("Official known first publication year of the book")]
-        public int? PublicationYear { get; set; }
+        public int PublicationYear { get; set; }
 
         [Required]
         public Guid AuthorId { get; set; }
 
         [Required]
         [ForeignKey(nameof(AuthorId))]
-        public Author Author { get; set; }
+        public Author Author { get; set; } = null!;
 
         [Required]
         public Guid GenreId { get; set; }
 
         [Required]
         [ForeignKey(nameof(GenreId))]
-        public Genre Genre { get; set; }
+        public Genre Genre { get; set; } = null!;
 
         [Required]
         [Comment("Book description")]
