@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.13.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BookPlatform.Common\BookPlatform.Common.csproj" />
     <ProjectReference Include="..\BookPlatform.Data.Models\BookPlatform.Data.Models.csproj" />
     <ProjectReference Include="..\BookPlatform.Data\BookPlatform.Data.csproj" />
