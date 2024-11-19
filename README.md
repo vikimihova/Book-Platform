@@ -1,9 +1,6 @@
-# SoftUni - Final Project: Social Platform for Books
-OCTOBER 2024 - (ongoing)
-
+# SoftUni-FinalProject-BookPlatform
 A social platform for book lovers to discover new titles, share their thoughts and actively engage with like-minded people. 
-
-My project for the Advanced ASP.NET Core course at SoftUni.
+My project for the Advanced ASP.NET Core course at SoftUni. OCTOBER 2024 - (ongoing)
 
 ## HOW IT WORKS
 Guest visitors:
