@@ -15,6 +15,11 @@ namespace BookPlatform.Web.Controllers
 
         public IActionResult Index()
         {
+            if (this.User?.Identity?.IsAuthenticated ?? false) 
+            {
+                return RedirectToAction("Index", "Book");
+            }
+
             return View();
         }
 
