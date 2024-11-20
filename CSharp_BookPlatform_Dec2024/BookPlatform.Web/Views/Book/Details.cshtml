@@ -6,33 +6,38 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-3">
-            <div class="card mb-2 shadow-sm" style="width: 250px">
-                <img src="@Model.ImageUrl" class="card-img-top" alt="Cover Image" style="height: 400px; object-fit: cover;">                
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="card mb-2 shadow-sm" style="width: 100%">
+                <img src="@Model.ImageUrl" class="card-img-top" alt="Cover Image" style="height: 450px; object-fit: cover;">                
+            </div>   
+            <div class="col-md-12">
+                <div class="buttons" style="width: 100%">
+                </div>
             </div>
         </div>
-        <div class="col-md">
-            <h3 class="card-title">@Model.Title</h3>
-            <p class="card-subtitle modal-title">@Model.Author</p>
-            <div class="card mb-2 shadow-sm">                
-                <div class="card-body">
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <svg class="col-auto" id="svgelem" width="50" height="50" xmlns="http://www.w3.org/2000/svg">
-                                <polygon points="10,1 4,18 19,6 1,6 16,18" fill="gold" />
-                            </svg>
-                            <p class="col">@Model.AverageRating.ToString("F2")</p>
-                        </div>
-                    </div>                    
-                    <p class="card-text">@Model.Description</p>
-                    <div class="card-footer">
-                                          
-                        @if (@Model.PublicationYear < 0){
-                            <p>First published in @Math.Abs(@Model.PublicationYear) BC</p>
+        
+
+        <div class="col-md-9 col-sm-6 col-xs-12 min-vw-50">
+            <h3>@Model.Title</h3>
+            <p>@Model.Author</p>
+            <div class="d-flex flex-row align-content-center">
+                <svg class="mx-0" width="19" height="19" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="10,1 4,18 19,6 1,6 16,18" fill="gold" />
+                </svg>
+                <p class="mx-2 my-0 py-0">@Model.AverageRating.ToString("F2")</p>
+            </div>
+            <div class="card mt-1 shadow-sm">
+                <div class="card-body">                                       
+                    <p class="card-text">@Model.Description</p>                    
+                    <div class="card-footer d-flex align-items-center">
+                        @if (@Model.PublicationYear < 0)
+                        {
+                            <p class="mb-0">First published in @Math.Abs(@Model.PublicationYear) BC</p>
                         }
-                        else{
-                            <p>First published in @Model.PublicationYear</p>
-                        }                         
+                        else
+                        {
+                            <p class="mb-0">First published in @Model.PublicationYear</p>
+                        }                  
                     </div>
                 </div>                
             </div>            
