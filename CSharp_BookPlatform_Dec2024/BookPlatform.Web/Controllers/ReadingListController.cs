@@ -3,6 +3,8 @@ using BookPlatform.Services.Data.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using static BookPlatform.Common.OutputMessages.ReadingList;
+
 namespace BookPlatform.Web.Controllers
 {
     public class ReadingListController : Controller
@@ -36,13 +38,13 @@ namespace BookPlatform.Web.Controllers
             // if false, redirect
             if (result == false)
             {
-                TempData["ErrorMessage"] = "Book already in reading list.";
+                TempData[nameof(FailedToAddBookToReadingList)] = FailedToAddBookToReadingList;
                 return RedirectToAction("Details", "Book", new { id = bookId });
             }
             else
             {
                 // send temp data for alert message
-                TempData["SuccessMessage"] = "Book successfully added to your reading list!";
+                TempData[nameof(SuccessfullyAddedToReadingList)] = SuccessfullyAddedToReadingList;
             }            
 
             return RedirectToAction("Details", "Book", new { id = bookId });
