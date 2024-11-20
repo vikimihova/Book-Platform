@@ -34,7 +34,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("FriendsId");
 
-                    b.ToTable("ApplicationUserApplicationUser");
+                    b.ToTable("ApplicationUserApplicationUser", (string)null);
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.ApplicationUser", b =>
@@ -133,7 +133,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Book", b =>
@@ -185,7 +185,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.BookApplicationUser", b =>
@@ -233,7 +233,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("ReadingStatusId");
 
-                    b.ToTable("BooksApplicationUsers");
+                    b.ToTable("BooksApplicationUsers", (string)null);
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.BookCharacter", b =>
@@ -248,7 +248,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("CharacterId");
 
-                    b.ToTable("BooksCharacters");
+                    b.ToTable("BooksCharacters", (string)null);
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Character", b =>
@@ -271,7 +271,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Characters");
+                    b.ToTable("Characters", (string)null);
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Genre", b =>
@@ -291,7 +291,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Quote", b =>
@@ -321,7 +321,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("Quotes");
+                    b.ToTable("Quotes", (string)null);
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.QuoteApplicationUser", b =>
@@ -336,7 +336,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("QuotesApplicationUsers");
+                    b.ToTable("QuotesApplicationUsers", (string)null);
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Rating", b =>
@@ -355,7 +355,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ratings");
+                    b.ToTable("Ratings", (string)null);
 
                     b.HasData(
                         new
@@ -401,7 +401,7 @@ namespace BookPlatform.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReadingStatuses");
+                    b.ToTable("ReadingStatuses", (string)null);
 
                     b.HasData(
                         new
@@ -461,7 +461,7 @@ namespace BookPlatform.Data.Migrations
                     b.HasIndex("BookId", "ApplicationUserId")
                         .IsUnique();
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
