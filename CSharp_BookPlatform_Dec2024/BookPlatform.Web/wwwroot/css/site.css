@@ -30,3 +30,9 @@ a.book-title:hover {
     color: inherit;
     text-decoration: underline;
 }
+
+.btn:hover {
+    background-color: orange;
+    border-color: orange;
+    color: white;
+}
