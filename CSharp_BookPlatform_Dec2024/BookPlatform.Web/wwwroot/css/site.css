@@ -31,7 +31,7 @@ a.book-title:hover {
     text-decoration: underline;
 }
 
-.btn:hover {
+.btn:not(.btn-link):not(.btn-lg):hover {
     background-color: orange;
     border-color: orange;
     color: white;
