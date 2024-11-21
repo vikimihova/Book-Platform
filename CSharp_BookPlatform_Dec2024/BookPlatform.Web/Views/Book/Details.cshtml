@@ -1,28 +1,41 @@
 ﻿@using BookPlatform.Data.Models
+@using BookPlatform.Data.Repository.Interfaces
 @using BookPlatform.Web.ViewModels.Book
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
 @using static BookPlatform.Common.OutputMessages.ReadingList;
 @model BookDetailsViewModel
 
-@* @inject UserManager<ApplicationUser> userManager; *@
+@inject UserManager<ApplicationUser> userManager;
+@inject IRepository<BookApplicationUser, object> bookApplicationUserRepository;
 
 @{
     ViewData["Title"] = "Details";
+
+    // set reading list button text
+    string readingListButtonText = "Add to Reading List";
+    if (TempData["ReadingStatus"] != null) 
+    {
+        readingListButtonText = TempData["ReadingStatus"] as string;
+    }
+
+    // set alerts for adding a book to reading list
+    if (TempData[nameof(SuccessfullyAddedToReadingList)] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData[nameof(SuccessfullyAddedToReadingList)] <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    if (TempData[nameof(FailedToAddBookToReadingList)] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData[nameof(FailedToAddBookToReadingList)] <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 }
 
-@if (TempData[nameof(SuccessfullyAddedToReadingList)] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData[nameof(SuccessfullyAddedToReadingList)] <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
 
-@if (TempData[nameof(FailedToAddBookToReadingList)] != null)
-{
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @TempData[nameof(FailedToAddBookToReadingList)] <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
 
 <div class="container">
     <div class="row">
@@ -34,10 +47,10 @@
                 <div class="buttons" style="width: 100%">
                     <div class="d-flex flex-column">
                         @if (this.User?.Identity?.IsAuthenticated ?? false)
-                        {
+                        {              
                             <div class="dropdown d-flex flex-column">
                                 <button type="button" class="btn btn-dark dropdown-toggle mb-2" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Add to Reading List
+                                    @readingListButtonText
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 100%">
                                     <a class="dropdown-item text-center" asp-controller="ReadingList" asp-action="AddToReadingList" asp-route-readingStatusId="1" asp-route-bookId="@Model.Id">Read</a>
