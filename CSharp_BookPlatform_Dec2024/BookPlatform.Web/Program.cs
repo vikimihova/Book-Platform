@@ -54,7 +54,9 @@ namespace BookPlatform.Web
             // Configure application cookie
             builder.Services.ConfigureApplicationCookie(options =>
             {
+                options.Cookie.HttpOnly = true;
                 options.LoginPath = "/Identity/Account/Login";
+                //options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
 
             // Add repositories for each entity (repository pattern) except for ApplicationUser (UserManager and SignInManager instead)
