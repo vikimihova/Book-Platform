@@ -1,10 +1,9 @@
 ﻿using BookPlatform.Data.Models;
 using BookPlatform.Data.Repository.Interfaces;
 using BookPlatform.Data.Repository;
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace BookPlatform.Web.Infrastructure.Extensions
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
