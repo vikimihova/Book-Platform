@@ -1,5 +1,8 @@
 ﻿using BookPlatform.Data.Models;
 using BookPlatform.Services.Data.Interfaces;
+using BookPlatform.Web.Infrastructure.Extensions;
+using BookPlatform.Web.ViewModels.ReadingList;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +21,23 @@ namespace BookPlatform.Web.Controllers
         {
             this.readingListService = readingListService;
             this.userManager = userManager;
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Index()
+        {
+            // get user id
+            string? userId = User.GetUserId();
+
+            // check if user is authenticated
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                return RedirectToPage("/Identity/Account/Login");
+            }
+
+            IEnumerable<ReadingListViewModel> model = await readingListService.GetUserReadingListByUserIdAsync(userId);
+
+            return View(model);
         }
 
         public async Task<IActionResult> AddToReadingList(string bookId, int readingStatusId)
