@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookPlatform.Data.Models
 {
@@ -8,6 +9,9 @@ namespace BookPlatform.Data.Models
         {
             this.Id = Guid.NewGuid();
         }
+
+        [Comment("Last login time")]
+        public DateTime? LastLogin { get; set; }
 
         public ICollection<ApplicationUser> Friends { get; set; } = new List<ApplicationUser>();
 
