@@ -30,7 +30,7 @@ namespace BookPlatform.Web
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             // Add identity     
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
                 options.Password.RequireDigit = builder.Configuration.GetValue<bool>("Identity:Password:RequireDigits");
                 options.Password.RequireLowercase = builder.Configuration.GetValue<bool>("Identity:Password:RequireLowercase");
@@ -46,7 +46,7 @@ namespace BookPlatform.Web
                 options.User.RequireUniqueEmail = builder.Configuration.GetValue<bool>("Identity:User:RequireUniqueEmail");
             })
             .AddEntityFrameworkStores<PlatformDbContext>()
-            .AddRoles<IdentityRole<Guid>>()
+            .AddRoles<ApplicationRole>()
             .AddSignInManager<SignInManager<ApplicationUser>>()
             .AddUserManager<UserManager<ApplicationUser>>();
 

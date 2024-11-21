@@ -1,14 +1,13 @@
 ﻿using BookPlatform.Data.Models;
 using BookPlatform.Services.Data.DataProcessor;
 using BookPlatform.Services.Data.DataProcessor.ImportDtos;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace BookPlatform.Data
 {
-    public class PlatformDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+    public class PlatformDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public PlatformDbContext(DbContextOptions<PlatformDbContext> options) : base(options)
         {            
