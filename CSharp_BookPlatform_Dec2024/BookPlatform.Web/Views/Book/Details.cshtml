@@ -1,20 +1,26 @@
-﻿@using BookPlatform.Web.ViewModels.Book
+﻿@using BookPlatform.Data.Models
+@using BookPlatform.Web.ViewModels.Book
+@using Microsoft.AspNetCore.Identity
+@using static BookPlatform.Common.OutputMessages.ReadingList;
 @model BookDetailsViewModel
+
+@* @inject UserManager<ApplicationUser> userManager; *@
+
 @{
     ViewData["Title"] = "Details";
 }
 
-@if (TempData["SuccessMessage"] != null)
+@if (TempData[nameof(SuccessfullyAddedToReadingList)] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["SuccessMessage"] <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        @TempData[nameof(SuccessfullyAddedToReadingList)] <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
-@if (TempData["ErrorMessage"] != null)
+@if (TempData[nameof(FailedToAddBookToReadingList)] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @TempData["ErrorMessage"] <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        @TempData[nameof(FailedToAddBookToReadingList)] <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
