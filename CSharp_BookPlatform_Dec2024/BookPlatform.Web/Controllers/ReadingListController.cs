@@ -39,7 +39,6 @@ namespace BookPlatform.Web.Controllers
             if (result == false)
             {
                 TempData[nameof(FailedToAddBookToReadingList)] = FailedToAddBookToReadingList;
-                return RedirectToAction("Details", "Book", new { id = bookId });
             }
             else
             {
@@ -47,7 +46,7 @@ namespace BookPlatform.Web.Controllers
                 TempData[nameof(SuccessfullyAddedToReadingList)] = SuccessfullyAddedToReadingList;
             }            
 
-            return RedirectToAction("Details", "Book", new { id = bookId });
+            return RedirectToAction("Details", "Book", new { bookId });
         }
     }
 }

@@ -40,12 +40,12 @@ namespace BookPlatform.Services.Data
             return allBooks;
         }
 
-        public async Task<BookDetailsViewModel?> GetBookDetailsAsync(string id)
+        public async Task<BookDetailsViewModel?> GetBookDetailsAsync(string bookId)
         {
             // check if string is a valid Guid
             Guid parsedGuid = Guid.Empty;
 
-            if (!IsGuidValid(id, ref parsedGuid))
+            if (!IsGuidValid(bookId, ref parsedGuid))
             {
                 return null;
             }
