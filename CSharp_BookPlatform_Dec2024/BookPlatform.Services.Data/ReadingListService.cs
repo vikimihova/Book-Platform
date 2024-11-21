@@ -2,7 +2,9 @@
 using BookPlatform.Data.Repository.Interfaces;
 using BookPlatform.Services.Data.Interfaces;
 using BookPlatform.Web.ViewModels.ReadingList;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace BookPlatform.Services.Data
 {
@@ -19,12 +21,25 @@ namespace BookPlatform.Services.Data
             this.bookApplicationUserRepository = bookApplicationUserRepository;
         }
 
-        public Task<IEnumerable<ReadingListViewModel>> GetUserReadingListByUserIdAsync(string userId)
+        public async Task<IEnumerable<ReadingListViewModel>> GetUserReadingListByUserIdAsync(string userId)
         {
-            throw new NotImplementedException();
+            // get UserBooks and create view model
+
+            IEnumerable<ReadingListViewModel> readingList = await this.bookApplicationUserRepository
+                .GetAllAttached()
+                .Where(bau => bau.ApplicationUserId.ToString() == userId)
+                .Include(bau => bau.ReadingStatus)
+                .Include(bau => bau.Rating)
+                .Select(bau => new ReadingListViewModel()
+                {
+
+                })
+                .ToListAsync();
+
+            return readingList;
         }
 
-        public async Task<bool> AddBookToUserReadingListAsync(string? bookId, string userId, int readingStatusId)
+        public async Task<bool> AddBookToUserReadingListAsync(string bookId, string userId, int readingStatusId)
         {
             // check Guid bookId (if false, return false)
             Guid bookGuid = Guid.Empty;
@@ -74,9 +89,21 @@ namespace BookPlatform.Services.Data
             }            
         }
 
-        public Task<bool> RemoveBookFromUserReadingListAsync(string? bookId, string userId)
+        public Task<bool> RemoveBookFromUserReadingListAsync(string bookId, string userId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<ReadingStatus?> GetReadingStatusForCurrentBookApplicationUserAsync(string bookId, Guid userGuid)
+        {
+            BookApplicationUser? bookApplicationUser = await this.bookApplicationUserRepository
+                                .GetAllAttached()
+                                .Include(x => x.ReadingStatus)
+                                .FirstOrDefaultAsync(x => x.BookId.ToString() == bookId && x.ApplicationUserId == userGuid);
+
+            ReadingStatus? readingStatus = bookApplicationUser?.ReadingStatus;
+
+            return readingStatus;
         }
     }
 }
