@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookPlatform.Web.Controllers
+namespace BookPlatform.Web.Areas.Admin.Controllers
 {
     public class AccountController : Controller
     {
@@ -27,12 +27,12 @@ namespace BookPlatform.Web.Controllers
 
             if (await roleManager.RoleExistsAsync(roleName) == false)
             {
-                roleToCreate = await this.roleManager.CreateAsync(new ApplicationRole(roleName));
+                roleToCreate = await roleManager.CreateAsync(new ApplicationRole(roleName));
             }
 
             if (!User.IsInRole(roleName) && (roleToCreate == null || roleToCreate.Succeeded))
             {
-                var currentUser = await this.userManager.FindByNameAsync(this.User.Identity!.Name!);
+                var currentUser = await userManager.FindByNameAsync(User.Identity!.Name!);
 
                 if (currentUser != null)
                 {
