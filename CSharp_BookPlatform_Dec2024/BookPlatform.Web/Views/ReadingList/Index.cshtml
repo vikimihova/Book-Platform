@@ -1,0 +1,60 @@
+﻿@using BookPlatform.Web.ViewModels.ReadingList;
+@model IEnumerable<ReadingListViewModel>
+
+<h2>All</h2>
+
+<table class="table table-hover text-start">
+    <thead class="table-dark">
+        <tr>
+            <th class="col-1 text-center">Cover</th>
+            <th class="col-2 text-wrap">Title</th>
+            <th class="col-2 text-wrap">Author</th>
+            <th class="col-1">Rating</th>
+            <th class="col-2">Status</th>
+            <th class="col-1">Added On</th>
+            <th class="col-1">Started On</th>
+            <th class="col-1">Finished On</th>
+            <th class="col-1">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-controller="Book" asp-action="Details" asp-route-bookId="@book.BookId">
+                        <img src="@book.ImageUrl" class="card-img-top" alt="Cover Image" style="width: 100px; height: 100px; object-fit: contain" />               
+                    </a>
+                </td>                    
+                <td>
+                    <a class="book-title" asp-controller="Book" asp-action="Details" asp-route-bookId="@book.BookId">
+                        @book.BookTitle
+                    </a>                    
+                </td>
+                <td>@book.Author</td>
+                <td>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gold" class="bi bi-star-fill" viewBox="0 0 16 16">
+                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
+                    </svg> 
+                    @book.Rating
+                </td>
+                <td>@book.ReadingStatus</td>
+                <td>@book.DateAdded</td>
+                <td>@book.DateStarted</td>
+                <td>@book.DateFinished</td>
+                <td>                    
+                    <a asp-controller="Book" asp-action="Details" asp-route-bookId="@book.BookId" class="btn btn-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z" />
+                        </svg>
+                    </a>
+                    <a asp-controller="Book" asp-action="Details" asp-route-bookId="@book.BookId" class="btn btn-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                        </svg>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -2,9 +2,9 @@
 using BookPlatform.Data.Repository.Interfaces;
 using BookPlatform.Services.Data.Interfaces;
 using BookPlatform.Web.ViewModels.ReadingList;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
+
+using static BookPlatform.Common.ApplicationConstants;
 
 namespace BookPlatform.Services.Data
 {
@@ -30,9 +30,19 @@ namespace BookPlatform.Services.Data
                 .Where(bau => bau.ApplicationUserId.ToString() == userId)
                 .Include(bau => bau.ReadingStatus)
                 .Include(bau => bau.Rating)
+                .Include(bau => bau.Book)
+                .ThenInclude(b => b.Author)
                 .Select(bau => new ReadingListViewModel()
                 {
-
+                    BookId = bau.BookId.ToString(),
+                    BookTitle = bau.Book.Title,
+                    Author = bau.Book.Author.FullName,
+                    Rating = bau.Rating.Id,
+                    ReadingStatus = bau.ReadingStatus.StatusDescription,
+                    DateAdded = bau.DateAdded.ToString(DateViewFormat),
+                    DateStarted = bau.DateStarted.ToString(),
+                    DateFinished = bau.DateFinished.ToString(),
+                    ImageUrl = bau.Book.ImageUrl
                 })
                 .ToListAsync();
 

@@ -6,6 +6,8 @@
 
         public string BookTitle { get; set; } = null!;
 
+        public string Author { get; set; } = null!;
+
         public int? Rating { get; set; }
 
         public string ReadingStatus { get; set; } = null!;
@@ -19,5 +21,7 @@
         public string? FavoriteCharacter { get; set; }
 
         public string? Review { get; set; }
+
+        public string ImageUrl { get; set; } = null!;
     }
 }
