@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
-using BookPlatform.Services.Data.DataProcessor.ImportDtos;
+using BookPlatform.Data.DataProcessor.ImportDtos;
+
 using static BookPlatform.Common.ApplicationConstants;
 
-namespace BookPlatform.Services.Data.DataProcessor
+namespace BookPlatform.Data.DataProcessor
 {
     public static class Deserializer
     {    

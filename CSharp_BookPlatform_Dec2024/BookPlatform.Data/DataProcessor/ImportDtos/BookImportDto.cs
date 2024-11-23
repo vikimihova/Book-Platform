@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+
+using static BookPlatform.Common.ApplicationConstants;
 using static BookPlatform.Common.EntityValidationConstants.AuthorValidationConstants;
 using static BookPlatform.Common.EntityValidationConstants.BookValidationConstants;
 using static BookPlatform.Common.EntityValidationConstants.GenreValidationConstants;
-using static BookPlatform.Common.ApplicationConstants;
 
-namespace BookPlatform.Services.Data.DataProcessor.ImportDtos
+namespace BookPlatform.Data.DataProcessor.ImportDtos
 {
     public class BookImportDto
     {

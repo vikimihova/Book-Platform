@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+
 using static BookPlatform.Common.EntityValidationConstants.BookValidationConstants;
 
-namespace BookPlatform.Services.Data.DataProcessor.ImportDtos
+namespace BookPlatform.Data.DataProcessor.ImportDtos
 {
     public class CharactersImportDto
     {

@@ -1,7 +1,7 @@
-﻿using BookPlatform.Core.ViewModels.ReadingList;
-using BookPlatform.Data.Models;
+﻿using BookPlatform.Data.Models;
+using BookPlatform.Core.ViewModels.ReadingList;
 
-namespace BookPlatform.Services.Data.Interfaces
+namespace BookPlatform.Core.Services.Interfaces
 {
     public interface IReadingListService
     {
@@ -11,6 +11,6 @@ namespace BookPlatform.Services.Data.Interfaces
 
         Task<bool> RemoveBookFromUserReadingListAsync(string bookId, string userId);
 
-        Task<ReadingStatus?> GetReadingStatusForCurrentBookApplicationUserAsync(string bookId, Guid userGuid); 
+        Task<ReadingStatus?> GetReadingStatusForCurrentBookApplicationUserAsync(string bookId, Guid userGuid);
     }
 }

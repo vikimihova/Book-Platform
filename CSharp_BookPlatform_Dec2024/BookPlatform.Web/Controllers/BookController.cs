@@ -1,8 +1,10 @@
-﻿using BookPlatform.Core.ViewModels.Book;
-using BookPlatform.Data.Models;
-using BookPlatform.Services.Data.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+
+using BookPlatform.Data.Models;
+
+using BookPlatform.Core.Services.Interfaces;
+using BookPlatform.Core.ViewModels.Book;
 
 namespace BookPlatform.Web.Controllers
 {

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+
 using static BookPlatform.Common.EntityValidationConstants.BookValidationConstants;
 
 namespace BookPlatform.Data.DataProcessor.ImportDtos

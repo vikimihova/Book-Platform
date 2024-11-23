@@ -1,7 +1,8 @@
-﻿using BookPlatform.Data.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
+using BookPlatform.Data.Models;
 
 namespace BookPlatform.Web.Areas.Admin.Controllers
 {

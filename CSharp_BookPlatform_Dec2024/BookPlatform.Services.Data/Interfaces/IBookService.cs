@@ -1,6 +1,6 @@
 ﻿using BookPlatform.Core.ViewModels.Book;
 
-namespace BookPlatform.Services.Data.Interfaces
+namespace BookPlatform.Core.Services.Interfaces
 {
     public interface IBookService
     {

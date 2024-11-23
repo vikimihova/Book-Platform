@@ -1,7 +1,8 @@
-﻿using BookPlatform.Data.Models;
-using BookPlatform.Data.Repository.Interfaces;
+﻿using System.Reflection;
+
+using BookPlatform.Data.Models;
 using BookPlatform.Data.Repository;
-using System.Reflection;
+using BookPlatform.Data.Repository.Interfaces;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

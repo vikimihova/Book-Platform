@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using BookPlatform.Data.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+using BookPlatform.Data.Models;
 
 namespace BookPlatform.Data.Configuration
 {

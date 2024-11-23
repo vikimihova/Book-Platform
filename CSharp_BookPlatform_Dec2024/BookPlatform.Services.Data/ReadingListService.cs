@@ -1,12 +1,14 @@
-﻿using BookPlatform.Core.ViewModels.ReadingList;
+﻿using Microsoft.EntityFrameworkCore;
+
 using BookPlatform.Data.Models;
 using BookPlatform.Data.Repository.Interfaces;
-using BookPlatform.Services.Data.Interfaces;
-using Microsoft.EntityFrameworkCore;
+
+using BookPlatform.Core.Services.Interfaces;
+using BookPlatform.Core.ViewModels.ReadingList;
 
 using static BookPlatform.Common.ApplicationConstants;
 
-namespace BookPlatform.Services.Data
+namespace BookPlatform.Core.Services
 {
     public class ReadingListService : BaseService, IReadingListService
     {
@@ -25,7 +27,7 @@ namespace BookPlatform.Services.Data
         {
             // get UserBooks and create view model
 
-            IEnumerable<ReadingListViewModel> readingList = await this.bookApplicationUserRepository
+            IEnumerable<ReadingListViewModel> readingList = await bookApplicationUserRepository
                 .GetAllAttached()
                 .Where(bau => bau.ApplicationUserId.ToString() == userId)
                 .Include(bau => bau.ReadingStatus)
@@ -54,13 +56,13 @@ namespace BookPlatform.Services.Data
             // check Guid bookId (if false, return false)
             Guid bookGuid = Guid.Empty;
 
-            if (!this.IsGuidValid(bookId, ref bookGuid))
+            if (!IsGuidValid(bookId, ref bookGuid))
             {
                 return false;
             }
 
             // check if book exists (if null, return false)
-            Book? book = await this.bookRepository
+            Book? book = await bookRepository
                 .GetByIdAsync(bookGuid);
 
             if (book == null)
@@ -72,7 +74,7 @@ namespace BookPlatform.Services.Data
             Guid userGuid = Guid.Parse(userId);
 
             // check bookApplicationUser exists
-            BookApplicationUser? bookApplicationUser = await this.bookApplicationUserRepository
+            BookApplicationUser? bookApplicationUser = await bookApplicationUserRepository
                 .GetAllAttached()
                 .FirstOrDefaultAsync(bau => bau.BookId == bookGuid && bau.ApplicationUserId == userGuid);
 
@@ -89,14 +91,14 @@ namespace BookPlatform.Services.Data
                 };
 
                 // add to dbSet and save Changes
-                await this.bookApplicationUserRepository.AddAsync(newBookApplicationUserToAdd);
+                await bookApplicationUserRepository.AddAsync(newBookApplicationUserToAdd);
 
                 return true;
             }
             else
             {
                 return false;
-            }            
+            }
         }
 
         public Task<bool> RemoveBookFromUserReadingListAsync(string bookId, string userId)
@@ -106,7 +108,7 @@ namespace BookPlatform.Services.Data
 
         public async Task<ReadingStatus?> GetReadingStatusForCurrentBookApplicationUserAsync(string bookId, Guid userGuid)
         {
-            BookApplicationUser? bookApplicationUser = await this.bookApplicationUserRepository
+            BookApplicationUser? bookApplicationUser = await bookApplicationUserRepository
                                 .GetAllAttached()
                                 .Include(x => x.ReadingStatus)
                                 .FirstOrDefaultAsync(x => x.BookId.ToString() == bookId && x.ApplicationUserId == userGuid);

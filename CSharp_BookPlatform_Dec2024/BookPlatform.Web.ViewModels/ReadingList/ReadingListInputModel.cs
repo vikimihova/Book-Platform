@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+
 using static BookPlatform.Common.EntityValidationConstants.BookValidationConstants;
 using static BookPlatform.Common.EntityValidationConstants.ReviewValidationConstants;
 using static BookPlatform.Common.EntityValidationConstants.CharacterValidationConstants;

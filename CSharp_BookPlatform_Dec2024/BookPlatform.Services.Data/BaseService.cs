@@ -1,16 +1,16 @@
-﻿using BookPlatform.Services.Data.Interfaces;
+﻿using BookPlatform.Core.Services.Interfaces;
 
-namespace BookPlatform.Services.Data
+namespace BookPlatform.Core.Services
 {
     public class BaseService : IBaseService
     {
         public bool IsGuidValid(string? id, ref Guid parsedGuid)
-        {            
-            if (String.IsNullOrWhiteSpace(id))
+        {
+            if (string.IsNullOrWhiteSpace(id))
             {
                 return false;
             }
-            
+
             bool isGuidValid = Guid.TryParse(id, out parsedGuid);
             if (!isGuidValid)
             {

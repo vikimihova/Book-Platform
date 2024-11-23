@@ -1,4 +1,4 @@
-﻿namespace BookPlatform.Services.Data.Interfaces
+﻿namespace BookPlatform.Core.Services.Interfaces
 {
     public interface IBaseService
     {

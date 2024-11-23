@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+
 using static BookPlatform.Common.EntityValidationConstants.GenreValidationConstants;
 
-namespace BookPlatform.Services.Data.DataProcessor.ImportDtos
+namespace BookPlatform.Data.DataProcessor.ImportDtos
 {
     public class GenreImportDto
     {

@@ -1,10 +1,12 @@
-﻿using BookPlatform.Core.ViewModels.Book;
+﻿using Microsoft.EntityFrameworkCore;
+
 using BookPlatform.Data.Models;
 using BookPlatform.Data.Repository.Interfaces;
-using BookPlatform.Services.Data.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
-namespace BookPlatform.Services.Data
+using BookPlatform.Core.Services.Interfaces;
+using BookPlatform.Core.ViewModels.Book;
+
+namespace BookPlatform.Core.Services
 {
     public class BookService : BaseService, IBookService
     {
@@ -14,14 +16,14 @@ namespace BookPlatform.Services.Data
 
         public BookService(IRepository<Book, Guid> _bookRepository, IRepository<Author, Guid> _authorRepository, IRepository<Genre, Guid> _genreRepository)
         {
-            this.bookRepository = _bookRepository;
-            this.authorRepository = _authorRepository;
-            this.genreRepository = _genreRepository;
+            bookRepository = _bookRepository;
+            authorRepository = _authorRepository;
+            genreRepository = _genreRepository;
         }
 
         public async Task<IEnumerable<BookIndexViewModel>> IndexGetAllAsync()
         {
-            IEnumerable<BookIndexViewModel> allBooks = await this.bookRepository
+            IEnumerable<BookIndexViewModel> allBooks = await bookRepository
                 .GetAllAttached()
                 .Where(b => b.IsDeleted == false)
                 .OrderBy(b => b.Author.LastName)
@@ -51,11 +53,11 @@ namespace BookPlatform.Services.Data
             }
 
             // get book
-            Book? book = await this.bookRepository
+            Book? book = await bookRepository
                 .GetAllAttached()
                 .Where(b => b.IsDeleted == false)
                 .Include(b => b.Author)
-                .Include(b => b.Genre)                
+                .Include(b => b.Genre)
                 .FirstOrDefaultAsync(b => b.Id == parsedGuid);
 
             // check if book exists

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+
 using BookPlatform.Data;
 
 namespace BookPlatform.Web.Infrastructure.Extensions
