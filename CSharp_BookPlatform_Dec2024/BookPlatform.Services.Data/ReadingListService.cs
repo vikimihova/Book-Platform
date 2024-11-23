@@ -99,10 +99,16 @@ namespace BookPlatform.Core.Services
 
                 return true;
             }
-            else
+
+            if (bookApplicationUser != null && bookApplicationUser.ReadingStatusId != readingStatusId)
             {
-                return false;
+                bookApplicationUser.ReadingStatusId = readingStatusId;
+                await bookApplicationUserRepository.UpdateAsync(bookApplicationUser);
+
+                return true;
             }
+            
+            return false;
         }
 
         public Task<bool> RemoveBookFromUserReadingListAsync(string bookId, string userId)
