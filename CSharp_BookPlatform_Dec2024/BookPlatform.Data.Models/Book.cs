@@ -45,10 +45,7 @@ namespace BookPlatform.Data.Models
 
         [Required]
         [Comment("Average rating based on users' ratings")]
-        public double AverageRating { get; set; } = 0.00;
-
-        [Required]
-        public bool IsSubmittedByUser { get; set; } = false;
+        public double AverageRating { get; set; } = 0.00;        
 
         [Required]
         public bool IsDeleted { get; set; } = false;
