@@ -7,18 +7,22 @@ using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Core.ViewModels.ReadingList;
 
 using static BookPlatform.Common.ApplicationConstants;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookPlatform.Core.Services
 {
     public class ReadingListService : BaseService, IReadingListService
     {
+        private readonly UserManager<ApplicationUser> userManager;
         private readonly IRepository<Book, Guid> bookRepository;
         private readonly IRepository<BookApplicationUser, object> bookApplicationUserRepository;
 
         public ReadingListService(
+            UserManager<ApplicationUser> userManager,
             IRepository<Book, Guid> bookRepository,
-            IRepository<BookApplicationUser, object> bookApplicationUserRepository)
+            IRepository<BookApplicationUser, object> bookApplicationUserRepository) : base(userManager)
         {
+            this.userManager = userManager;
             this.bookRepository = bookRepository;
             this.bookApplicationUserRepository = bookApplicationUserRepository;
         }

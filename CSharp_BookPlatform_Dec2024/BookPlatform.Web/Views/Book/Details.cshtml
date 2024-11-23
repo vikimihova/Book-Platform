@@ -26,10 +26,10 @@
         </div>
     }
 
-    if (TempData[nameof(FailedToAddBookToReadingList)] != null)
+    if (TempData[nameof(BookAlreadyInReadingList)] != null)
     {
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @TempData[nameof(FailedToAddBookToReadingList)] <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            @TempData[nameof(BookAlreadyInReadingList)] <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
 }

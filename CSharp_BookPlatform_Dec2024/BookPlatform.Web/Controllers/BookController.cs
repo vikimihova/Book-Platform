@@ -5,21 +5,25 @@ using BookPlatform.Data.Models;
 
 using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Core.ViewModels.Book;
+using BookPlatform.Core.Services;
 
 namespace BookPlatform.Web.Controllers
 {
     public class BookController : Controller
     {
+        private readonly IBaseService baseService;
         private readonly IBookService bookService;
         private readonly IReadingListService readingListService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public BookController(
-            IBookService _bookService,
+            IBaseService baseService,
+            IBookService bookService,
             IReadingListService readingListService,
             UserManager<ApplicationUser> userManager)
         {
-            this.bookService = _bookService;
+            this.baseService = baseService;
+            this.bookService = bookService;
             this.readingListService = readingListService;
             this.userManager = userManager;
         }
@@ -38,22 +42,17 @@ namespace BookPlatform.Web.Controllers
             // set TempData for reading status
             if (this.User?.Identity?.IsAuthenticated ?? false)
             {
-                ReadingStatus? readingStatus = null;
+                // get UserId
+                string userId = this.userManager.GetUserId(this.User)!;
 
-                ApplicationUser? currentUser = await userManager.FindByNameAsync(this.User.Identity.Name!);
+                // get reading status
+                string? readingStatusDescription = await baseService.GetReadingStatusAsync(userId, bookId, readingListService);
 
-                if (currentUser != null)
+                if (readingStatusDescription != null)
                 {
-                    // invoke method from ReadingListService
-
-                    readingStatus = await this.readingListService.GetReadingStatusForCurrentBookApplicationUserAsync(bookId, currentUser.Id);
+                    TempData["ReadingStatus"] = readingStatusDescription;
                 }
-
-                if (readingStatus != null)
-                {
-                    TempData["ReadingStatus"] = readingStatus.StatusDescription;
-                } 
-            }
+            }            
 
             // generate view model
             BookDetailsViewModel? model = await this.bookService.GetBookDetailsAsync(bookId);

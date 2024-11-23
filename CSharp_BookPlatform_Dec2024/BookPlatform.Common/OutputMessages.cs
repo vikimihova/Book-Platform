@@ -4,8 +4,8 @@
     {
         public static class ReadingList
         {
-            public const string SuccessfullyAddedToReadingList = "Book successfully added to your reading list!";
-            public const string FailedToAddBookToReadingList = "Book already in reading list.";
+            public const string SuccessfullyAddedToReadingList = "Book successfully added to your {0} list!";
+            public const string BookAlreadyInReadingList = "Book already in {0} list.";
         }
     }
 }

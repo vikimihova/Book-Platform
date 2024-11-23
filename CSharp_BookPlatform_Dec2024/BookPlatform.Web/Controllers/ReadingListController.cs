@@ -13,13 +13,16 @@ namespace BookPlatform.Web.Controllers
 {
     public class ReadingListController : Controller
     {
+        private readonly IBaseService baseService;
         private readonly IReadingListService readingListService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public ReadingListController(
+            IBaseService baseService,
             IReadingListService readingListService,
             UserManager<ApplicationUser> userManager)
         {
+            this.baseService = baseService;
             this.readingListService = readingListService;
             this.userManager = userManager;
         }
@@ -56,15 +59,18 @@ namespace BookPlatform.Web.Controllers
             bool result = await this.readingListService
                 .AddBookToUserReadingListAsync(bookId, userId, readingStatusId);
 
+            // get reading status
+            string? readingStatusDescription = await baseService.GetReadingStatusAsync(userId, bookId, readingListService);
+
             // if false, redirect
             if (result == false)
             {
-                TempData[nameof(FailedToAddBookToReadingList)] = FailedToAddBookToReadingList;
+                TempData[nameof(BookAlreadyInReadingList)] = string.Format(BookAlreadyInReadingList, readingStatusDescription);
             }
             else
             {
                 // send temp data for alert message
-                TempData[nameof(SuccessfullyAddedToReadingList)] = SuccessfullyAddedToReadingList;
+                TempData[nameof(SuccessfullyAddedToReadingList)] = string.Format(SuccessfullyAddedToReadingList, readingStatusDescription);
             }            
 
             return RedirectToAction("Details", "Book", new { bookId });
