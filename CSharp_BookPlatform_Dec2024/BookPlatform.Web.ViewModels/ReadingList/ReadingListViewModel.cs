@@ -1,4 +1,4 @@
-﻿namespace BookPlatform.Web.ViewModels.ReadingList
+﻿namespace BookPlatform.Core.ViewModels.ReadingList
 {
     public class ReadingListViewModel
     {

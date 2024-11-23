@@ -1,6 +1,6 @@
-﻿using BookPlatform.Data.Models;
+﻿using BookPlatform.Core.ViewModels.Book;
+using BookPlatform.Data.Models;
 using BookPlatform.Services.Data.Interfaces;
-using BookPlatform.Web.ViewModels.Book;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

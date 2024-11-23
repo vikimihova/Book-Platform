@@ -1,7 +1,7 @@
-﻿using BookPlatform.Data.Models;
+﻿using BookPlatform.Core.ViewModels.ReadingList;
+using BookPlatform.Data.Models;
 using BookPlatform.Data.Repository.Interfaces;
 using BookPlatform.Services.Data.Interfaces;
-using BookPlatform.Web.ViewModels.ReadingList;
 using Microsoft.EntityFrameworkCore;
 
 using static BookPlatform.Common.ApplicationConstants;

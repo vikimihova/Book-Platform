@@ -1,4 +1,4 @@
-namespace BookPlatform.Web.ViewModels
+namespace BookPlatform.Core.ViewModels
 {
     public class ErrorViewModel
     {

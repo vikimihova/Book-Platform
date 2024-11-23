@@ -1,4 +1,4 @@
-﻿namespace BookPlatform.Web.ViewModels.Book
+﻿namespace BookPlatform.Core.ViewModels.Book
 {
     public class BookDetailsViewModel
     {

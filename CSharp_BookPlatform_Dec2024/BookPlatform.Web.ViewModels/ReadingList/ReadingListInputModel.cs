@@ -4,7 +4,7 @@ using static BookPlatform.Common.EntityValidationConstants.BookValidationConstan
 using static BookPlatform.Common.EntityValidationConstants.ReviewValidationConstants;
 using static BookPlatform.Common.EntityValidationConstants.CharacterValidationConstants;
 
-namespace BookPlatform.Web.ViewModels.ReadingList
+namespace BookPlatform.Core.ViewModels.ReadingList
 {
     public class ReadingListInputModel
     {

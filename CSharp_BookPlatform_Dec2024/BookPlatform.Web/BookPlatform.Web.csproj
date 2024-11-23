@@ -35,7 +35,7 @@
     <ProjectReference Include="..\BookPlatform.Data\BookPlatform.Data.csproj" />
     <ProjectReference Include="..\BookPlatform.Services.Data\BookPlatform.Services.Data.csproj" />
     <ProjectReference Include="..\BookPlatform.Web.Infrastructure\BookPlatform.Web.Infrastructure.csproj" />
-    <ProjectReference Include="..\BookPlatform.Web.ViewModels\BookPlatform.Web.ViewModels.csproj" />
+    <ProjectReference Include="..\BookPlatform.Web.ViewModels\BookPlatform.Core.ViewModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>

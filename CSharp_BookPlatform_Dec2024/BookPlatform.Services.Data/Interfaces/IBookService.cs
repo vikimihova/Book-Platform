@@ -1,4 +1,4 @@
-﻿using BookPlatform.Web.ViewModels.Book;
+﻿using BookPlatform.Core.ViewModels.Book;
 
 namespace BookPlatform.Services.Data.Interfaces
 {

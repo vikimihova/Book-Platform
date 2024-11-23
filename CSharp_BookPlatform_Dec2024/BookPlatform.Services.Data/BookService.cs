@@ -1,7 +1,7 @@
-﻿using BookPlatform.Data.Models;
+﻿using BookPlatform.Core.ViewModels.Book;
+using BookPlatform.Data.Models;
 using BookPlatform.Data.Repository.Interfaces;
 using BookPlatform.Services.Data.Interfaces;
-using BookPlatform.Web.ViewModels.Book;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookPlatform.Services.Data

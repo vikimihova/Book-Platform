@@ -1,7 +1,7 @@
-﻿using BookPlatform.Data.Models;
+﻿using BookPlatform.Core.ViewModels.ReadingList;
+using BookPlatform.Data.Models;
 using BookPlatform.Services.Data.Interfaces;
 using BookPlatform.Web.Infrastructure.Extensions;
-using BookPlatform.Web.ViewModels.ReadingList;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

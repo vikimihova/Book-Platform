@@ -1,4 +1,4 @@
-using BookPlatform.Web.ViewModels;
+using BookPlatform.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

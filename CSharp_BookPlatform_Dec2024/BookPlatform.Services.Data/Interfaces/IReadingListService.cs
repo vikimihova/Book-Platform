@@ -1,5 +1,5 @@
-﻿using BookPlatform.Data.Models;
-using BookPlatform.Web.ViewModels.ReadingList;
+﻿using BookPlatform.Core.ViewModels.ReadingList;
+using BookPlatform.Data.Models;
 
 namespace BookPlatform.Services.Data.Interfaces
 {
