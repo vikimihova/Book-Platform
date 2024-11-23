@@ -39,11 +39,11 @@ namespace BookPlatform.Core.Services
                     BookId = bau.BookId.ToString(),
                     BookTitle = bau.Book.Title,
                     Author = bau.Book.Author.FullName,
-                    Rating = bau.Rating.Id,
+                    Rating = bau.RatingId != null ? bau.RatingId.Value : 0,
                     ReadingStatus = bau.ReadingStatus.StatusDescription,
                     DateAdded = bau.DateAdded.ToString(DateViewFormat),
-                    DateStarted = bau.DateStarted.ToString(),
-                    DateFinished = bau.DateFinished.ToString(),
+                    DateStarted = bau.DateStarted.HasValue ? bau.DateStarted.Value.ToString(DateViewFormat) : String.Empty,
+                    DateFinished = bau.DateFinished.HasValue ? bau.DateFinished.Value.ToString(DateViewFormat) : String.Empty,
                     ImageUrl = bau.Book.ImageUrl
                 })
                 .ToListAsync();

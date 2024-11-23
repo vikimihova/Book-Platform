@@ -8,13 +8,13 @@
 
         public string Author { get; set; } = null!;
 
-        public int? Rating { get; set; }
+        public int Rating { get; set; }
 
         public string ReadingStatus { get; set; } = null!;
 
-        public string? DateStarted { get; set; }
+        public string DateStarted { get; set; } = null!;
 
-        public string? DateFinished { get; set; }
+        public string DateFinished { get; set; } = null!;
 
         public string DateAdded { get; set; } = null!;
 
