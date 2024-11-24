@@ -28,6 +28,7 @@ namespace BookPlatform.Web.Controllers
         }
 
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             // get user id
@@ -44,6 +45,7 @@ namespace BookPlatform.Web.Controllers
             return View(model);
         }
 
+        [HttpGet]
         public async Task<IActionResult> AddToReadingList(string bookId, int readingStatusId)
         {
             // get UserId

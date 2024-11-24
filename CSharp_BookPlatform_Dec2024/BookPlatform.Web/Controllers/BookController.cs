@@ -55,6 +55,7 @@ namespace BookPlatform.Web.Controllers
             throw new NotImplementedException();
         }
 
+        [HttpGet]
         public async Task<IActionResult> Details(string bookId)
         {
             // set TempData for reading status
