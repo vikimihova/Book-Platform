@@ -37,6 +37,24 @@ namespace BookPlatform.Web.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> IndexByGenre(string? genreId)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> IndexByAuthor(string? authorId)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> IndexOrderedBy(IEnumerable<BookIndexViewModel> model, string order)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IActionResult> Details(string bookId)
         {
             // set TempData for reading status
