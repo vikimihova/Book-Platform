@@ -15,5 +15,11 @@ namespace BookPlatform.Core.Services.Interfaces
         Task<IEnumerable<BookIndexViewModel>> GetBooksOrderedByYearDescendingAsync(IEnumerable<BookIndexViewModel> model);
 
         Task<BookDetailsViewModel?> GetBookDetailsAsync(string id);
+
+        //Task<BookDetailsViewModel> AddBookAsync();
+
+        //Task<BookDetailsViewModel> UpdateBookAsync();
+
+        //Task<BookDetailsViewModel> DeleteBookAsync();
     }
 }
