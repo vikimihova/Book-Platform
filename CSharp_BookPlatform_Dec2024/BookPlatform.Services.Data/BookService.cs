@@ -11,21 +11,13 @@ namespace BookPlatform.Core.Services
 {
     public class BookService : BaseService, IBookService
     {
-        private readonly UserManager<ApplicationUser> userManager;
         private readonly IRepository<Book, Guid> bookRepository;
-        private readonly IRepository<Author, Guid> authorRepository;
-        private readonly IRepository<Genre, Guid> genreRepository;
 
         public BookService(
             UserManager<ApplicationUser> userManager,
-            IRepository<Book, Guid> _bookRepository, 
-            IRepository<Author, Guid> _authorRepository, 
-            IRepository<Genre, Guid> _genreRepository) : base(userManager)
+            IRepository<Book, Guid> _bookRepository) : base(userManager)
         {
-            this.userManager = userManager;
             bookRepository = _bookRepository;
-            authorRepository = _authorRepository;
-            genreRepository = _genreRepository;
         }
 
         public async Task<IEnumerable<BookIndexViewModel>> IndexGetAllAsync()
@@ -108,5 +100,6 @@ namespace BookPlatform.Core.Services
 
             return model;
         }
+
     }
 }
