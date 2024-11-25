@@ -9,8 +9,14 @@ namespace BookPlatform.Core.Services.Interfaces
 
         Task<bool> AddBookToUserReadingListAsync(string bookId, string userId, int readingStatusId);
 
+        Task<bool> AddBookToUserReadingListReadAsync(ReadingListInputModel model, string userId);
+
         Task<bool> RemoveBookFromUserReadingListAsync(string bookId, string userId);
 
         Task<ReadingStatus?> GetReadingStatusForCurrentBookApplicationUserAsync(string bookId, Guid userGuid);
+
+        Task<bool> CheckIfBookAlreadyReadAsync(string bookId, string userId, int readingStatusId);
+
+        Task UpdateBookRating(string bookId);
     }
 }
