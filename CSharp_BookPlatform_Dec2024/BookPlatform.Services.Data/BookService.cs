@@ -101,5 +101,14 @@ namespace BookPlatform.Core.Services
             return model;
         }
 
+        public async Task<Book?> GetBookByIdAsync(string bookId)
+        {
+            Book? book = await this.bookRepository
+                .GetAllAttached()
+                .FirstOrDefaultAsync(b => b.Id.ToString().ToLower() == bookId.ToLower());
+
+            return book;
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BookPlatform.Core.ViewModels.Book;
+using BookPlatform.Data.Models;
 
 namespace BookPlatform.Core.Services.Interfaces
 {
@@ -15,6 +16,8 @@ namespace BookPlatform.Core.Services.Interfaces
         Task<IEnumerable<BookIndexViewModel>> GetBooksOrderedByYearDescendingAsync(IEnumerable<BookIndexViewModel> model);
 
         Task<BookDetailsViewModel?> GetBookDetailsAsync(string id);
+
+        Task<Book?> GetBookByIdAsync(string bookId);
 
         //Task<BookDetailsViewModel> AddBookAsync();
 
