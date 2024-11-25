@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using BookPlatform.Data.Models;
+using System.Security.Claims;
 
 namespace BookPlatform.Core.Services.Interfaces
 {
