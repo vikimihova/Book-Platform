@@ -12,10 +12,6 @@ namespace BookPlatform.Core.Services
             
         }
 
-        //Task<ReviewInputModel> AddReviewAsync();
-
-        //Task<ReviewInputModel> UpdateReviewAsync();
-
-        //Task<ReviewInputModel> DeleteReviewAsync();
+        
     }
 }
