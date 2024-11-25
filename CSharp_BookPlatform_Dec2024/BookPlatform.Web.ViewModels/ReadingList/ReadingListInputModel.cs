@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using static BookPlatform.Common.ApplicationConstants;
 using static BookPlatform.Common.EntityValidationConstants.BookValidationConstants;
 using static BookPlatform.Common.EntityValidationConstants.ReviewValidationConstants;
 using static BookPlatform.Common.EntityValidationConstants.CharacterValidationConstants;
+using BookPlatform.Core.ViewModels.Character;
 
 namespace BookPlatform.Core.ViewModels.ReadingList
 {
@@ -16,6 +18,7 @@ namespace BookPlatform.Core.ViewModels.ReadingList
         [MaxLength(TitleMaxLength)]
         public string BookTitle { get; set; } = null!;
 
+        [Range(1, 5)]
         public int? Rating { get; set; }
 
         [Required]
@@ -24,16 +27,17 @@ namespace BookPlatform.Core.ViewModels.ReadingList
         public string? DateStarted { get; set; }
 
         public string? DateFinished { get; set; }
+                
+        public string? CharacterId { get; set; }
 
-        [Required]
-        public string DateAdded { get; set; } = null!;
-
-        [MinLength(CharacterNameMinLength)]
-        [MaxLength(CharacterNameMaxLength)]
-        public string? FavoriteCharacter { get; set; }
+        public ICollection<SelectCharacterViewModel> Characters { get; set; } = new List<SelectCharacterViewModel>();
 
         [MinLength(ReviewContentMinLength)]
         [MaxLength(ReviewContentMaxLength)]
         public string? Review { get; set; }
+
+        [Required]
+        [MaxLength(MaxImageUrlLength)]
+        public string ImageUrl { get; set; } = NoImageUrl;
     }
 }
