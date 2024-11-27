@@ -178,8 +178,7 @@ namespace BookPlatform.Core.Services
             if (model.CharacterId != null)
             {
                 Guid characterGuid = Guid.Parse(model.CharacterId);
-                bookApplicationUser.CharacterId = characterGuid;
-                await bookApplicationUserRepository.UpdateAsync(bookApplicationUser);
+                bookApplicationUser.CharacterId = characterGuid;                
             }
 
             // add review
