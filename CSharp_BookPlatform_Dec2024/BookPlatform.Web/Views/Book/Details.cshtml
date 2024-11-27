@@ -52,9 +52,9 @@
                                     @readingListButtonText
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 100%">
-                                    <a id="loadReadingListPartial" class="dropdown-item text-center" asp-controller="ReadingList" asp-action="AddToReadingListRead" asp-route-readingStatusId="1" asp-route-bookId="@Model.Id">Read</a>
-                                    <a class="dropdown-item text-center" asp-controller="ReadingList" asp-action="AddToReadingList" asp-route-readingStatusId="2" asp-route-bookId="@Model.Id">Currently reading</a>
-                                    <a class="dropdown-item text-center" asp-controller="ReadingList" asp-action="AddToReadingList" asp-route-readingStatusId="3" asp-route-bookId="@Model.Id">Want to read</a>
+                                    <a id="loadReadingListPartial" class="dropdown-item text-center" asp-controller="ReadingList" asp-action="AddAsRead" asp-route-readingStatusId="1" asp-route-bookId="@Model.Id">Read</a>
+                                    <a class="dropdown-item text-center" asp-controller="ReadingList" asp-action="Add" asp-route-readingStatusId="2" asp-route-bookId="@Model.Id">Currently reading</a>
+                                    <a class="dropdown-item text-center" asp-controller="ReadingList" asp-action="Add" asp-route-readingStatusId="3" asp-route-bookId="@Model.Id">Want to read</a>
                                 </div>
                             </div>
                         }        

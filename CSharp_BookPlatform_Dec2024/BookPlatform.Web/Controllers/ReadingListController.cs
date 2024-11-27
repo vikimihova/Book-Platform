@@ -59,7 +59,7 @@ namespace BookPlatform.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddToReadingList(string bookId, int readingStatusId)
+        public async Task<IActionResult> Add(string bookId, int readingStatusId)
         {
             // get UserId
             string userId = this.userManager.GetUserId(this.User)!;
@@ -100,7 +100,7 @@ namespace BookPlatform.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddToReadingListRead(string bookId, int readingStatusId)
+        public async Task<IActionResult> AddAsRead(string bookId, int readingStatusId)
         {
             // check if book exists
             Book? book = await this.bookService.GetBookByIdAsync(bookId);
@@ -133,7 +133,7 @@ namespace BookPlatform.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddToReadingListRead(ReadingListInputModel model)
+        public async Task<IActionResult> AddAsRead(ReadingListInputModel model)
         {
             // check userId
             string userId = this.userManager.GetUserId(this.User)!;
@@ -206,7 +206,8 @@ namespace BookPlatform.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> RemoveFromReadingList(string bookId)
+        [HttpGet]
+        public async Task<IActionResult> Remove(string bookId)
         {
             string userId = this.userManager.GetUserId(this.User)!;
 
