@@ -31,39 +31,8 @@ namespace BookPlatform.Data.Repository
             await this.context.SaveChangesAsync();
         }
 
-        // Delete
-        public bool Delete(TId id)
-        {
-            TType item = this.GetById(id);
-
-            if (item == null)
-            {
-                return false;
-            }
-
-            this.dbSet.Remove(item);
-            this.context.SaveChanges();
-
-            return true;
-        }
-
-        public async Task<bool> DeleteAsync(TId id)
-        {
-            TType item = await this.GetByIdAsync(id);
-
-            if (item == null)
-            {
-                return false;
-            }
-
-            this.dbSet.Remove(item);
-            await this.context.SaveChangesAsync();
-
-            return true;
-        }
-
-        // GetAll
-        public IEnumerable<TType> GetAll() // detached from the database (because of .ToArray())
+        // GET ALL
+        public IEnumerable<TType> GetAll()
         {
             return this.dbSet.ToArray();
         }
@@ -73,12 +42,13 @@ namespace BookPlatform.Data.Repository
             return await this.dbSet.ToArrayAsync();
         }
 
-        public IQueryable<TType> GetAllAttached() // still attached to the database
+        public IQueryable<TType> GetAllAttached()
         {
             return this.dbSet.AsQueryable();
         }
 
-        // GetById
+
+        // GET BY ID
         public TType GetById(TId id)
         {
             return this.dbSet.Find(id);
@@ -89,7 +59,39 @@ namespace BookPlatform.Data.Repository
             return await this.dbSet.FindAsync(id);
         }
 
-        // Update
+
+        // GET FIRST OR DEFAULT
+        public TType FirstOrDefault(Func<TType, bool> predicate)
+        {
+            TType? entity = this.dbSet
+                .FirstOrDefault(predicate);
+
+            return entity;
+        }
+
+        public async Task<TType> FirstOrDefaultAsync(Expression<Func<TType, bool>> predicate)
+        {
+            TType? entity = await this.dbSet
+                .FirstOrDefaultAsync(predicate);
+
+            return entity;
+        }
+
+
+        // ADD
+        public void AddRange(TType[] items)
+        {
+            this.dbSet.AddRange(items);
+            this.context.SaveChanges();
+        }
+
+        public async Task AddRangeAsync(TType[] items)
+        {
+            await this.dbSet.AddRangeAsync(items);
+            await this.context.SaveChangesAsync();
+        }
+
+        // UPDATE
         public bool Update(TType item)
         {
             try
@@ -122,34 +124,31 @@ namespace BookPlatform.Data.Repository
             }
         }
 
-        // Add range
-        public void AddRange(TType[] items)
+        // DELETE
+        public bool Delete(TType item)
         {
-            this.dbSet.AddRange(items);
+            if (item == null)
+            {
+                return false;
+            }
+
+            this.dbSet.Remove(item);
             this.context.SaveChanges();
+
+            return true;
         }
 
-        public async Task AddRangeAsync(TType[] items)
+        public async Task<bool> DeleteAsync(TType item)
         {
-            await this.dbSet.AddRangeAsync(items);
+            if (item == null)
+            {
+                return false;
+            }
+
+            this.dbSet.Remove(item);
             await this.context.SaveChangesAsync();
-        }
 
-        // Get first or default
-        public TType FirstOrDefault(Func<TType, bool> predicate)
-        {
-            TType? entity = this.dbSet
-                .FirstOrDefault(predicate);
-
-            return entity;
-        }
-
-        public async Task<TType> FirstOrDefaultAsync(Expression<Func<TType, bool>> predicate)
-        {
-            TType? entity = await this.dbSet
-                .FirstOrDefaultAsync(predicate);
-
-            return entity;
+            return true;
         }
     }
 }
