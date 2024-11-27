@@ -14,11 +14,13 @@
                 <input type="hidden" asp-for="BookId" value="@Model.BookId" />
                 <input type="hidden" asp-for="BookTitle" value="@Model.BookTitle" />
                 <input type="hidden" asp-for="ImageUrl" value="@Model.ImageUrl" />
-                <input type="hidden" asp-for="ReadingStatus" value="@Model.ReadingStatus" />
+                <input type="hidden" asp-for="ReadingStatus" value="@Model.ReadingStatus" />                
                 <div>
-                    <label for="Rating">Rating</label>
-                    <input asp-for="Rating" class="form-control" />
-                    <span asp-validation-for="Rating" class="text-danger"></span>
+                    <label asp-for="@Model.Rating" class="form-label-add-edit">Select Rating</label>
+                    <select asp-for="@Model.Rating" class="form-control" aria-required="true" asp-items="@(new SelectList(Model.Ratings, "Id", "Description"))">
+                        <option value="">Select Rating...</option>
+                    </select>
+                    <span asp-validation-for="@Model.Rating" class="text-danger"></span>
                 </div>
                 <div>
                     <label for="DateStarted">Date Started</label>

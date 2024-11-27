@@ -20,6 +20,7 @@ namespace BookPlatform.Web.Controllers
         private readonly IBaseService baseService;
         private readonly IBookService bookService;
         private readonly ICharacterService characterService;
+        private readonly IRatingService ratingService;
         private readonly IReadingListService readingListService;
         private readonly UserManager<ApplicationUser> userManager;
 
@@ -27,12 +28,14 @@ namespace BookPlatform.Web.Controllers
             IBaseService baseService,
             IBookService bookService,
             ICharacterService characterService,
-        IReadingListService readingListService,
+            IRatingService ratingService,
+            IReadingListService readingListService,
             UserManager<ApplicationUser> userManager)
         {
             this.baseService = baseService;
             this.bookService = bookService;
             this.characterService = characterService;
+            this.ratingService = ratingService;
             this.readingListService = readingListService;
             this.userManager = userManager;
         }
@@ -124,6 +127,7 @@ namespace BookPlatform.Web.Controllers
             model.ReadingStatus = readingStatusId;
             model.ImageUrl = book.ImageUrl;
             model.Characters = await this.characterService.GetCharactersAsync(bookId);
+            model.Ratings = await this.ratingService.GetRatingsAsync();
 
             return View(model);
         }
@@ -143,6 +147,7 @@ namespace BookPlatform.Web.Controllers
             if (!this.ModelState.IsValid) 
             {
                 model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                model.Ratings = await this.ratingService.GetRatingsAsync();
                 return View(model);
             }
 
@@ -154,6 +159,7 @@ namespace BookPlatform.Web.Controllers
                 {
                     ModelState.AddModelError(nameof(model.DateStarted), WrongDateViewFormat);
                     model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                    model.Ratings = await this.ratingService.GetRatingsAsync();
                     return View(model);
                 }
 
@@ -161,6 +167,7 @@ namespace BookPlatform.Web.Controllers
                 {
                     ModelState.AddModelError(nameof(model.DateStarted), DateInFuture);
                     model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                    model.Ratings = await this.ratingService.GetRatingsAsync();
                     return View(model);
                 }
             }
@@ -172,6 +179,7 @@ namespace BookPlatform.Web.Controllers
                 {
                     ModelState.AddModelError(nameof(model.DateFinished), WrongDateViewFormat);
                     model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                    model.Ratings = await this.ratingService.GetRatingsAsync();
                     return View(model);
                 }
 
@@ -179,6 +187,7 @@ namespace BookPlatform.Web.Controllers
                 {
                     ModelState.AddModelError(nameof(model.DateFinished), DateInFuture);
                     model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                    model.Ratings = await this.ratingService.GetRatingsAsync();
                     return View(model);
                 }
             }        
@@ -189,6 +198,7 @@ namespace BookPlatform.Web.Controllers
             if (result == false)
             {
                 model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                model.Ratings = await this.ratingService.GetRatingsAsync();
                 return View(model);
             }
 

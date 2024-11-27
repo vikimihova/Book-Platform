@@ -2,7 +2,7 @@
 {
     public class SelectRatingViewModel
     {
-        public string Id { get; set; } = null!;
+        public int Id { get; set; }
 
         public string Description { get; set; } = null!;
     }

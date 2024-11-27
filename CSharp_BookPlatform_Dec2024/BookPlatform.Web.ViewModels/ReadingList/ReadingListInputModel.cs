@@ -5,6 +5,7 @@ using static BookPlatform.Common.EntityValidationConstants.BookValidationConstan
 using static BookPlatform.Common.EntityValidationConstants.ReviewValidationConstants;
 using static BookPlatform.Common.EntityValidationConstants.CharacterValidationConstants;
 using BookPlatform.Core.ViewModels.Character;
+using BookPlatform.Core.ViewModels.Rating;
 
 namespace BookPlatform.Core.ViewModels.ReadingList
 {
@@ -20,6 +21,8 @@ namespace BookPlatform.Core.ViewModels.ReadingList
 
         [Range(1, 5)]
         public int? Rating { get; set; }
+
+        public ICollection<SelectRatingViewModel> Ratings { get; set; } = new List<SelectRatingViewModel>();
 
         [Required]
         public int ReadingStatus { get; set; }
