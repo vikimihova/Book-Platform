@@ -5,6 +5,7 @@ namespace BookPlatform.Core.Services.Interfaces
 {
     public interface IReadingListService
     {
+        // MAIN
         Task<IEnumerable<ReadingListViewModel>> GetUserReadingListByUserIdAsync(string userId);
 
         Task<bool> AddBookToUserReadingListAsync(string bookId, string userId, int readingStatusId);
@@ -13,7 +14,10 @@ namespace BookPlatform.Core.Services.Interfaces
 
         Task<bool> RemoveBookFromUserReadingListAsync(string bookId, string userId);
 
-        Task<ReadingStatus?> GetReadingStatusForCurrentBookApplicationUserAsync(string bookId, Guid userGuid);
+        // AUXILIARY
+        Task<ReadingStatus?> GetCurrentReadingStatusAsync(string bookId, string userId);
+
+        Task<string?> GetCurrentReadingStatusDescriptionAsync(string bookId, string userId);
 
         Task<bool> CheckIfBookAlreadyReadAsync(string bookId, string userId, int readingStatusId);
 

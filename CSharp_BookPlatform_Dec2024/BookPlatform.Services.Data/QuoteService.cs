@@ -6,8 +6,7 @@ namespace BookPlatform.Core.Services
 {
     public class QuoteService : BaseService, IQuoteService
     {
-        public QuoteService(
-            UserManager<ApplicationUser> userManager) : base(userManager)
+        public QuoteService()
         {
             
         }

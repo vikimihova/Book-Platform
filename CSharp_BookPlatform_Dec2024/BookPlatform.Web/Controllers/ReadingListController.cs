@@ -80,7 +80,7 @@ namespace BookPlatform.Web.Controllers
                 .AddBookToUserReadingListAsync(bookId, userId, readingStatusId);
 
             // get reading status
-            string? readingStatusDescription = await baseService.GetReadingStatusAsync(userId, bookId, readingListService);
+            string? readingStatusDescription = await this.readingListService.GetCurrentReadingStatusDescriptionAsync(bookId, userId);
 
             // if false, redirect
             if (result == false)

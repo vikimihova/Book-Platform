@@ -13,9 +13,7 @@ namespace BookPlatform.Core.Services
     {
         private readonly IRepository<Book, Guid> bookRepository;
 
-        public BookService(
-            UserManager<ApplicationUser> userManager,
-            IRepository<Book, Guid> _bookRepository) : base(userManager)
+        public BookService(IRepository<Book, Guid> _bookRepository)
         {
             bookRepository = _bookRepository;
         }

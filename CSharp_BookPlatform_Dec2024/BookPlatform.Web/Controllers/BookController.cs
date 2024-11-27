@@ -65,7 +65,7 @@ namespace BookPlatform.Web.Controllers
                 string userId = this.userManager.GetUserId(this.User)!;
 
                 // get reading status
-                string? readingStatusDescription = await baseService.GetReadingStatusAsync(userId, bookId, readingListService);
+                string? readingStatusDescription = await this.readingListService.GetCurrentReadingStatusDescriptionAsync(bookId, userId);
 
                 if (readingStatusDescription != null)
                 {

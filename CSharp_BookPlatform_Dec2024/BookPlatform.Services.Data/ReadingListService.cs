@@ -20,11 +20,10 @@ namespace BookPlatform.Core.Services
         private readonly IRepository<BookApplicationUser, object> bookApplicationUserRepository;
 
         public ReadingListService(
-            UserManager<ApplicationUser> userManager,
             IRepository<Book, Guid> bookRepository,
             IRepository<Character, Guid> characterRepository,
             IRepository<Review, Guid> reviewRepository,
-            IRepository<BookApplicationUser, object> bookApplicationUserRepository) : base(userManager)
+            IRepository<BookApplicationUser, object> bookApplicationUserRepository)
         {
             this.bookRepository = bookRepository;
             this.characterRepository = characterRepository;
@@ -120,11 +119,6 @@ namespace BookPlatform.Core.Services
 
         public async Task<bool> AddBookToUserReadingListReadAsync(ReadingListInputModel model, string userId)
         {
-            // parse userId to Guid
-            Guid userGuid = Guid.Parse(userId);
-
-            ReadingStatus? currentReadingStatus = await GetReadingStatusForCurrentBookApplicationUserAsync(model.BookId, userGuid);
-
             // 1. ADD BOOK TO STANDARD READING LIST
             bool result = await AddBookToUserReadingListAsync(model.BookId, userId, model.ReadingStatus);
 
@@ -132,7 +126,10 @@ namespace BookPlatform.Core.Services
             if (result == false) 
             {
                 return false;
-            }            
+            }
+
+            // parse userId to Guid
+            Guid userGuid = Guid.Parse(userId);
 
             // check if bookApplicationUser exists after invoking add to reading list method
             BookApplicationUser? bookApplicationUser = await bookApplicationUserRepository
@@ -244,16 +241,29 @@ namespace BookPlatform.Core.Services
 
         // AUXILIARY
 
-        public async Task<ReadingStatus?> GetReadingStatusForCurrentBookApplicationUserAsync(string bookId, Guid userGuid)
+        public async Task<ReadingStatus?> GetCurrentReadingStatusAsync(string bookId, string userId)
         {
             BookApplicationUser? bookApplicationUser = await bookApplicationUserRepository
                                 .GetAllAttached()
                                 .Include(x => x.ReadingStatus)
-                                .FirstOrDefaultAsync(x => x.BookId.ToString() == bookId && x.ApplicationUserId == userGuid);
+                                .FirstOrDefaultAsync(x => x.BookId.ToString().ToLower() == bookId.ToLower() 
+                                                       && x.ApplicationUserId.ToString().ToLower() == userId.ToLower());
 
             ReadingStatus? readingStatus = bookApplicationUser?.ReadingStatus;
 
             return readingStatus;
+        }
+
+        public async Task<string?> GetCurrentReadingStatusDescriptionAsync(string bookId, string userId)
+        {
+            ReadingStatus?  readingStatus = await GetCurrentReadingStatusAsync(bookId, userId);
+
+            if (readingStatus != null)
+            {
+                return readingStatus.StatusDescription;
+            }
+
+            return null;
         }
 
         public async Task<bool> CheckIfBookAlreadyReadAsync(string bookId, string userId, int readingStatusId)

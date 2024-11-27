@@ -14,8 +14,7 @@ namespace BookPlatform.Core.Services
 
         public CharacterService(
             IRepository<Character, Guid> characterRepository,
-            IRepository<BookCharacter, object> bookCharacterRepository,
-            UserManager<ApplicationUser> userManager) : base(userManager)
+            IRepository<BookCharacter, object> bookCharacterRepository)
         {
             this.characterRepository = characterRepository;
             this.bookCharacterRepository = bookCharacterRepository;
