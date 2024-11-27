@@ -14,7 +14,6 @@ namespace BookPlatform.Core.Services
 {
     public class ReadingListService : BaseService, IReadingListService
     {
-        private readonly UserManager<ApplicationUser> userManager;
         private readonly IRepository<Book, Guid> bookRepository;
         private readonly IRepository<Character, Guid> characterRepository;
         private readonly IRepository<Review, Guid> reviewRepository;
@@ -27,12 +26,13 @@ namespace BookPlatform.Core.Services
             IRepository<Review, Guid> reviewRepository,
             IRepository<BookApplicationUser, object> bookApplicationUserRepository) : base(userManager)
         {
-            this.userManager = userManager;
             this.bookRepository = bookRepository;
             this.characterRepository = characterRepository;
             this.reviewRepository = reviewRepository;
             this.bookApplicationUserRepository = bookApplicationUserRepository;
         }
+
+        // MAIN
 
         public async Task<IEnumerable<ReadingListViewModel>> GetUserReadingListByUserIdAsync(string userId)
         {
@@ -119,7 +119,12 @@ namespace BookPlatform.Core.Services
         }
 
         public async Task<bool> AddBookToUserReadingListReadAsync(ReadingListInputModel model, string userId)
-        {          
+        {
+            // parse userId to Guid
+            Guid userGuid = Guid.Parse(userId);
+
+            ReadingStatus? currentReadingStatus = await GetReadingStatusForCurrentBookApplicationUserAsync(model.BookId, userGuid);
+
             // 1. ADD BOOK TO STANDARD READING LIST
             bool result = await AddBookToUserReadingListAsync(model.BookId, userId, model.ReadingStatus);
 
@@ -127,10 +132,7 @@ namespace BookPlatform.Core.Services
             if (result == false) 
             {
                 return false;
-            }
-
-            // parse userId to Guid
-            Guid userGuid = Guid.Parse(userId);
+            }            
 
             // check if bookApplicationUser exists after invoking add to reading list method
             BookApplicationUser? bookApplicationUser = await bookApplicationUserRepository
@@ -146,8 +148,7 @@ namespace BookPlatform.Core.Services
             // 2. EXTEND INFORMATION ABOUT BookApplicationUser:
 
             // add rating
-            bookApplicationUser.RatingId = model.Rating;
-            await UpdateBookRating(model.BookId);
+            bookApplicationUser.RatingId = model.Rating;            
 
             // add date started
             if (model.DateStarted != null)
@@ -200,7 +201,13 @@ namespace BookPlatform.Core.Services
 
                     await this.reviewRepository.AddAsync(review);
                 }                
-            }           
+            }
+
+            // update repository
+            await bookApplicationUserRepository.UpdateAsync(bookApplicationUser);
+
+            // update book rating
+            await UpdateBookRating(model.BookId);
 
             return true;
         }
@@ -236,6 +243,8 @@ namespace BookPlatform.Core.Services
             return false;
         }
 
+        // AUXILIARY
+
         public async Task<ReadingStatus?> GetReadingStatusForCurrentBookApplicationUserAsync(string bookId, Guid userGuid)
         {
             BookApplicationUser? bookApplicationUser = await bookApplicationUserRepository
@@ -270,19 +279,33 @@ namespace BookPlatform.Core.Services
 
         public async Task UpdateBookRating(string bookId)
         {
-            Guid bookGuid = Guid.Parse(bookId);
-
-            Book? book = this.bookRepository.GetById(bookGuid);
-
-            if (book != null)
+            // check string
+            Guid bookGuid = Guid.Empty;
+            
+            if (IsGuidValid(bookId, ref bookGuid))
             {
-                book.AverageRating = this.bookApplicationUserRepository
-                    .GetAllAttached()
-                    .Where(bau => bau.RatingId != null)
-                    .Average(bau => bau.RatingId!.Value);
+                // check book
+                Book? book = this.bookRepository.GetById(bookGuid);
 
-                await this.bookRepository.UpdateAsync(book);
-            }
+                if (book != null)
+                {
+                    List<BookApplicationUser> relevantBookApplicationUsersWithRating = await this.bookApplicationUserRepository
+                        .GetAllAttached()
+                        .Where(bau => bau.BookId == bookGuid && bau.RatingId != null)
+                        .ToListAsync();
+
+                    if (relevantBookApplicationUsersWithRating.Any())
+                    {
+                        book.AverageRating = relevantBookApplicationUsersWithRating.Average(bau => bau.RatingId!.Value);                        
+                    }
+                    else
+                    {
+                        book.AverageRating = 0;
+                    }
+
+                    await this.bookRepository.UpdateAsync(book);
+                }
+            }            
         }
     }
 }
