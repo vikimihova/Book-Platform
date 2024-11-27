@@ -189,12 +189,12 @@ namespace BookPlatform.Core.Services
                                               r.ApplicationUserId == bookApplicationUser.ApplicationUserId);
 
                 if (review == null)
-                {
+                {         
                     review = new Review()
                     {
                         Content = model.Review,
                         BookId = bookApplicationUser.BookId,
-                        ApplicationUserId = bookApplicationUser.ApplicationUserId
+                        ApplicationUserId = bookApplicationUser.ApplicationUserId                        
                     };
 
                     await this.reviewRepository.AddAsync(review);
@@ -262,29 +262,32 @@ namespace BookPlatform.Core.Services
             }
 
             // update review
-            if (model.Review != null)
-            {
-                Review? review = await this.reviewRepository
+            Review? review = await this.reviewRepository
                     .FirstOrDefaultAsync(r => r.BookId == bookApplicationUser.BookId &&
                                               r.ApplicationUserId == bookApplicationUser.ApplicationUserId);
 
-                if (review == null)
+            if (model.Review != null && review == null)
+            {
+                review = new Review()
                 {
-                    review = new Review()
-                    {
-                        Content = model.Review,
-                        BookId = bookApplicationUser.BookId,
-                        ApplicationUserId = bookApplicationUser.ApplicationUserId
-                    };
+                    Content = model.Review,
+                    BookId = bookApplicationUser.BookId,
+                    ApplicationUserId = bookApplicationUser.ApplicationUserId
+                };
 
-                    await this.reviewRepository.AddAsync(review);
-                }
-                else
-                {
-                    review.Content = model.Review;
-                    review.ModifiedOn = DateTime.Now;
-                    await this.reviewRepository.UpdateAsync(review);
-                }
+                await this.reviewRepository.AddAsync(review);
+            }
+
+            if (model.Review != null && review != null)
+            {
+                review.Content = model.Review;
+                review.ModifiedOn = DateTime.Now;
+                await this.reviewRepository.UpdateAsync(review);
+            }
+
+            if (model.Review == null && review != null)
+            {
+                await this.reviewRepository.DeleteAsync(review);
             }
 
             // update repository

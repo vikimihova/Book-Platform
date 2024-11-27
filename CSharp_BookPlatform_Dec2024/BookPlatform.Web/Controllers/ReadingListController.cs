@@ -185,7 +185,7 @@ namespace BookPlatform.Web.Controllers
                     model.Ratings = await this.ratingService.GetRatingsAsync();
                     return View(model);
                 }
-            }        
+            }
 
             // try to add book to reading list
             bool result = await this.readingListService.AddBookToUserReadingListReadAsync(model, userId);
@@ -239,7 +239,7 @@ namespace BookPlatform.Web.Controllers
             if (String.IsNullOrWhiteSpace(userId))
             {
                 return RedirectToPage("/Identity/Account/Login");
-            }
+            }            
 
             // check model state
             if (!this.ModelState.IsValid)
