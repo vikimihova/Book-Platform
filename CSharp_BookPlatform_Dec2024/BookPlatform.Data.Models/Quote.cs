@@ -29,6 +29,10 @@ namespace BookPlatform.Data.Models
         public Book Book { get; set; } = null!;
 
         [Required]
+        [Comment("Number of likes")]
+        public int Likes { get; set; } = 0;
+
+        [Required]
         public bool IsDeleted { get; set; } = false;
 
         public ICollection<QuoteApplicationUser> QuoteApplicationUsers { get; set; } = new List<QuoteApplicationUser>();

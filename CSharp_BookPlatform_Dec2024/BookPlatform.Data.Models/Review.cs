@@ -22,10 +22,6 @@ namespace BookPlatform.Data.Models
         public DateTime? ModifiedOn { get; set; }
 
         [Required]
-        [Comment("Number of likes")]
-        public int Likes { get; set; } = 0;
-
-        [Required]
         [Comment("The book the review is about")]
         public Guid BookId { get; set; }
 
