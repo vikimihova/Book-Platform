@@ -153,5 +153,21 @@ namespace BookPlatform.Web.Controllers
 
             return RedirectToAction("Details", "Book", new { model.BookId });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> RemoveFromReadingList(string bookId)
+        {
+            string userId = this.userManager.GetUserId(this.User)!;
+
+            bool result = await this.readingListService
+                .RemoveBookFromUserReadingListAsync(bookId, userId);
+
+            if (result == false)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

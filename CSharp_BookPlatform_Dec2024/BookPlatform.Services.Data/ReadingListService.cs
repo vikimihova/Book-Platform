@@ -205,9 +205,35 @@ namespace BookPlatform.Core.Services
             return true;
         }
 
-        public Task<bool> RemoveBookFromUserReadingListAsync(string bookId, string userId)
+        public async Task<bool> RemoveBookFromUserReadingListAsync(string bookId, string userId)
         {
-            throw new NotImplementedException();
+            // try parse string to guid
+            Guid bookGuid = Guid.Empty;
+            Guid userGuid = Guid.Empty;
+
+            if (!IsGuidValid(bookId, ref bookGuid) || !IsGuidValid(userId, ref userGuid))
+            {
+                return false;
+            }
+
+            // get entry to delete
+            BookApplicationUser? bookApplicationUserToDelete = await this.bookApplicationUserRepository
+                .FirstOrDefaultAsync(bau => bau.BookId == bookGuid && bau.ApplicationUserId == userGuid);
+
+            // delete entry
+            if (bookApplicationUserToDelete != null) 
+            {
+                await this.bookApplicationUserRepository
+                .DeleteAsync(bookApplicationUserToDelete);
+
+
+                // update average rating
+                await UpdateBookRating(bookId);
+
+                return true;
+            }
+
+            return false;
         }
 
         public async Task<ReadingStatus?> GetReadingStatusForCurrentBookApplicationUserAsync(string bookId, Guid userGuid)
