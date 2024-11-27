@@ -58,8 +58,8 @@
                                 </div>
                             </div>
                         }        
-                        <button type="button" class="btn btn-outline-dark mb-2">Reviews</button>
-                        <button type="button" class="btn btn-info mb-2">Quotes</button>
+                        <a class="btn btn-outline-dark mb-2" asp-controller="Review" asp-action="AllBookReviews" asp-route-bookId="@Model.Id">Reviews</a>
+                        <a class="btn btn-info mb-2" asp-controller="Quote" asp-action="AllBookQuotes" asp-route-bookId="@Model.Id">Quotes</a>
                     </div>
                 </div>
             </div>
