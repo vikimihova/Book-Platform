@@ -26,11 +26,7 @@ namespace BookPlatform.Data.Models
         [Required]
         [ForeignKey(nameof(BookId))]
         [Comment("The book the quote is from")]
-        public Book Book { get; set; } = null!;
-
-        [Required]
-        [Comment("Number of likes")]
-        public int Likes { get; set; } = 0;
+        public Book Book { get; set; } = null!;        
 
         [Required]
         public bool IsDeleted { get; set; } = false;
