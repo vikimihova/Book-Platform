@@ -5,12 +5,12 @@
 @using BookPlatform.Data.Repository.Interfaces
 @using BookPlatform.Core.ViewModels.ReadingList
 
-@model ReadingListInputModel
+@model ReadingListAddInputModel
 
 <div class="container">
     <div class="row">
         <div class="col-md-9 col-sm-6 col-xs-12 min-vw-50">      
-            <form asp-action="AddToReadingListRead" method="post">
+            <form asp-action="AddAsRead" method="post">
                 <input type="hidden" asp-for="BookId" value="@Model.BookId" />
                 <input type="hidden" asp-for="BookTitle" value="@Model.BookTitle" />
                 <input type="hidden" asp-for="ImageUrl" value="@Model.ImageUrl" />

@@ -10,6 +10,8 @@
 
         public int Rating { get; set; }
 
+        public int ReadingStatusId { get; set; }
+
         public string ReadingStatus { get; set; } = null!;
 
         public string DateStarted { get; set; } = null!;

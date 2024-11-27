@@ -120,12 +120,7 @@ namespace BookPlatform.Web.Controllers
             }
 
             // create input model to pass book information        
-            ReadingListInputModel model = new ReadingListInputModel();
-
-            model.BookId = bookId;
-            model.BookTitle = book.Title;
-            model.ReadingStatus = readingStatusId;
-            model.ImageUrl = book.ImageUrl;
+            ReadingListAddInputModel model = this.readingListService.GenerateAddInputModel(book, readingStatusId);
             model.Characters = await this.characterService.GetCharactersAsync(bookId);
             model.Ratings = await this.ratingService.GetRatingsAsync();
 
@@ -133,7 +128,7 @@ namespace BookPlatform.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAsRead(ReadingListInputModel model)
+        public async Task<IActionResult> AddAsRead(ReadingListAddInputModel model)
         {
             // check userId
             string userId = this.userManager.GetUserId(this.User)!;
@@ -206,6 +201,108 @@ namespace BookPlatform.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Edit(string bookId, int readingStatusId)
+        {            
+            // check if book exists
+            Book? book = await this.bookService.GetBookByIdAsync(bookId);
+
+            if (book == null)
+            {
+                return RedirectToAction("Index", "Book");
+            }
+
+            // check if book already read
+            string userId = this.userManager.GetUserId(this.User)!;
+
+            bool IsAlreadyRead = await this.readingListService.CheckIfBookAlreadyReadAsync(bookId, userId, readingStatusId);
+
+            if (!IsAlreadyRead)
+            {
+                return RedirectToAction("Details", "Book", new { bookId });
+            }
+
+            // create input model to pass book information        
+            ReadingListEditInputModel model = await this.readingListService.GenerateEditInputModelAsync(bookId, userId);
+            model.Characters = await this.characterService.GetCharactersAsync(bookId);
+            model.Ratings = await this.ratingService.GetRatingsAsync();
+
+            return View(model);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(ReadingListEditInputModel model)
+        {
+            // check userId
+            string userId = this.userManager.GetUserId(this.User)!;
+
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                return RedirectToPage("/Identity/Account/Login");
+            }
+
+            // check model state
+            if (!this.ModelState.IsValid)
+            {
+                model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                model.Ratings = await this.ratingService.GetRatingsAsync();
+                return View(model);
+            }
+
+            // check date formats
+            if (model.DateStarted != null)
+            {
+                if (!DateTime.TryParseExact(model.DateStarted, DateViewFormat,
+                CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateStarted))
+                {
+                    ModelState.AddModelError(nameof(model.DateStarted), WrongDateViewFormat);
+                    model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                    model.Ratings = await this.ratingService.GetRatingsAsync();
+                    return View(model);
+                }
+
+                if (dateStarted > DateTime.Today)
+                {
+                    ModelState.AddModelError(nameof(model.DateStarted), DateInFuture);
+                    model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                    model.Ratings = await this.ratingService.GetRatingsAsync();
+                    return View(model);
+                }
+            }
+
+            if (model.DateFinished != null)
+            {
+                if (!DateTime.TryParseExact(model.DateFinished, DateViewFormat,
+                CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateFinished))
+                {
+                    ModelState.AddModelError(nameof(model.DateFinished), WrongDateViewFormat);
+                    model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                    model.Ratings = await this.ratingService.GetRatingsAsync();
+                    return View(model);
+                }
+
+                if (dateFinished > DateTime.Today)
+                {
+                    ModelState.AddModelError(nameof(model.DateFinished), DateInFuture);
+                    model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                    model.Ratings = await this.ratingService.GetRatingsAsync();
+                    return View(model);
+                }
+            }
+
+            // try to update book entry in reading list
+            bool result = await this.readingListService.EditInReadingListAsync(model, userId);
+
+            if (result == false)
+            {
+                model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                model.Ratings = await this.ratingService.GetRatingsAsync();
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
         [HttpGet]
         public async Task<IActionResult> Remove(string bookId)
         {

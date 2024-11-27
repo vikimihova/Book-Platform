@@ -9,6 +9,7 @@ using BookPlatform.Core.ViewModels.ReadingList;
 using static BookPlatform.Common.ApplicationConstants;
 using Microsoft.AspNetCore.Identity;
 using System.Globalization;
+using System.Net;
 
 namespace BookPlatform.Core.Services
 {
@@ -50,6 +51,7 @@ namespace BookPlatform.Core.Services
                     BookTitle = bau.Book.Title,
                     Author = bau.Book.Author.FullName,
                     Rating = bau.RatingId != null ? bau.RatingId.Value : 0,
+                    ReadingStatusId = bau.ReadingStatus.Id, // changed
                     ReadingStatus = bau.ReadingStatus.StatusDescription,
                     DateAdded = bau.DateAdded.ToString(DateViewFormat),
                     DateStarted = bau.DateStarted.HasValue ? bau.DateStarted.Value.ToString(DateViewFormat) : String.Empty,
@@ -117,7 +119,7 @@ namespace BookPlatform.Core.Services
             return false;
         }
 
-        public async Task<bool> AddBookToUserReadingListReadAsync(ReadingListInputModel model, string userId)
+        public async Task<bool> AddBookToUserReadingListReadAsync(ReadingListAddInputModel model, string userId)
         {
             // 1. ADD BOOK TO STANDARD READING LIST
             bool result = await AddBookToUserReadingListAsync(model.BookId, userId, model.ReadingStatus);
@@ -197,6 +199,92 @@ namespace BookPlatform.Core.Services
 
                     await this.reviewRepository.AddAsync(review);
                 }                
+            }
+
+            // update repository
+            await bookApplicationUserRepository.UpdateAsync(bookApplicationUser);
+
+            // update book rating
+            await UpdateBookRating(model.BookId);
+
+            return true;
+        }
+
+        public async Task<bool> EditInReadingListAsync(ReadingListEditInputModel model, string userId)
+        {
+            // parse userId to Guid
+            Guid userGuid = Guid.Parse(userId);
+
+            // check if bookApplicationUser exists
+            BookApplicationUser? bookApplicationUser = await bookApplicationUserRepository
+                .FirstOrDefaultAsync(bau => bau.BookId.ToString().ToLower() == model.BookId.ToLower() &&
+                                            bau.ApplicationUserId == userGuid);
+
+            if (bookApplicationUser == null)
+            {
+                return false;
+            }
+
+            // UPDATE INFORMATION ABOUT BookApplicationUser:
+
+            // update rating
+            bookApplicationUser.RatingId = model.Rating;
+
+            // update date started
+            if (model.DateStarted != null)
+            {
+                bool isStartDateValid = DateTime.TryParseExact(model.DateStarted, DateViewFormat,
+                    CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateStarted);
+
+                if (isStartDateValid == true)
+                {
+                    bookApplicationUser.DateStarted = dateStarted;
+                }
+            }
+
+            // update date finished
+            if (model.DateFinished != null)
+            {
+                bool isFinishDateValid = DateTime.TryParseExact(model.DateFinished, DateViewFormat,
+                    CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateFinished);
+
+                if (isFinishDateValid == true)
+                {
+                    bookApplicationUser.DateFinished = dateFinished;
+                }
+            }
+
+            // update favourite character
+            if (model.CharacterId != null)
+            {
+                Guid characterGuid = Guid.Parse(model.CharacterId);
+                bookApplicationUser.CharacterId = characterGuid;
+            }
+
+            // update review
+            if (model.Review != null)
+            {
+                Review? review = await this.reviewRepository
+                    .FirstOrDefaultAsync(r => r.BookId == bookApplicationUser.BookId &&
+                                              r.ApplicationUserId == bookApplicationUser.ApplicationUserId);
+
+                if (review == null)
+                {
+                    review = new Review()
+                    {
+                        Content = model.Review,
+                        BookId = bookApplicationUser.BookId,
+                        ApplicationUserId = bookApplicationUser.ApplicationUserId
+                    };
+
+                    await this.reviewRepository.AddAsync(review);
+                }
+                else
+                {
+                    review.Content = model.Review;
+                    review.ModifiedOn = DateTime.Now;
+                    await this.reviewRepository.UpdateAsync(review);
+                }
             }
 
             // update repository
@@ -315,6 +403,51 @@ namespace BookPlatform.Core.Services
                     await this.bookRepository.UpdateAsync(book);
                 }
             }            
+        }
+
+        public ReadingListAddInputModel GenerateAddInputModel(Book book, int readingStatusId)
+        {
+            ReadingListAddInputModel model = new ReadingListAddInputModel();
+
+            model.BookId = book.Id.ToString();
+            model.BookTitle = book.Title;
+            model.ReadingStatus = readingStatusId;
+            model.ImageUrl = book.ImageUrl;
+
+            return model;
+        }
+
+        public async Task<ReadingListEditInputModel> GenerateEditInputModelAsync(string bookId, string userId)
+        {
+            Book? book = await this.bookRepository
+                .FirstOrDefaultAsync(b => b.Id.ToString().ToLower() == bookId.ToLower());
+
+            BookApplicationUser? bookApplicationUser = await this.bookApplicationUserRepository
+                .FirstOrDefaultAsync(bau => bau.BookId.ToString().ToLower() == bookId.ToLower()
+                                         && bau.ApplicationUserId.ToString().ToLower() == userId.ToLower());            
+
+            ReadingListEditInputModel model = new ReadingListEditInputModel()
+            {
+                BookId = bookId,
+                BookTitle = book.Title,
+                Rating = bookApplicationUser.RatingId != null ? bookApplicationUser.RatingId : null,
+                ReadingStatus = 3,
+                DateStarted = bookApplicationUser.DateStarted.HasValue ? bookApplicationUser.DateStarted.Value.ToString(DateViewFormat) : String.Empty,
+                DateFinished = bookApplicationUser.DateFinished.HasValue ? bookApplicationUser.DateFinished.Value.ToString(DateViewFormat) : String.Empty,
+                CharacterId = bookApplicationUser.CharacterId.ToString(),
+                ImageUrl = book.ImageUrl
+            };
+
+            Review? review = await this.reviewRepository
+                .FirstOrDefaultAsync(r => r.BookId.ToString().ToLower() == bookId.ToLower()
+                                       && r.ApplicationUserId.ToString().ToLower() == userId.ToLower());
+
+            if (review != null)
+            {
+                model.Review = review.Content;                
+            }
+
+            return model;
         }
     }
 }
