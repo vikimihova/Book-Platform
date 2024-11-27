@@ -7,8 +7,11 @@ using BookPlatform.Core.ViewModels.ReadingList;
 using BookPlatform.Data.Models;
 using BookPlatform.Web.Infrastructure.Extensions;
 
+using static BookPlatform.Common.ApplicationConstants;
 using static BookPlatform.Common.OutputMessages.ReadingList;
-using System.Drawing;
+using static BookPlatform.Common.ModelValidationErrorMessages.DateTimeFormats;
+
+using System.Globalization;
 
 namespace BookPlatform.Web.Controllers
 {
@@ -128,10 +131,9 @@ namespace BookPlatform.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddToReadingListRead(ReadingListInputModel model)
         {
-            // get UserId
+            // check userId
             string userId = this.userManager.GetUserId(this.User)!;
 
-            // check UserId StringNullOrEmpty (if false, redirect)
             if (String.IsNullOrWhiteSpace(userId))
             {
                 return RedirectToPage("/Identity/Account/Login");
@@ -140,14 +142,53 @@ namespace BookPlatform.Web.Controllers
             // check model state
             if (!this.ModelState.IsValid) 
             {
+                model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
                 return View(model);
             }
+
+            // check date formats
+            if (model.DateStarted != null)
+            {
+                if (!DateTime.TryParseExact(model.DateStarted, DateViewFormat,
+                CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateStarted))
+                {
+                    ModelState.AddModelError(nameof(model.DateStarted), WrongDateViewFormat);
+                    model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                    return View(model);
+                }
+
+                if (dateStarted > DateTime.Today)
+                {
+                    ModelState.AddModelError(nameof(model.DateStarted), DateInFuture);
+                    model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                    return View(model);
+                }
+            }
+
+            if (model.DateFinished != null)
+            {
+                if (!DateTime.TryParseExact(model.DateFinished, DateViewFormat,
+                CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateFinished))
+                {
+                    ModelState.AddModelError(nameof(model.DateFinished), WrongDateViewFormat);
+                    model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                    return View(model);
+                }
+
+                if (dateFinished > DateTime.Today)
+                {
+                    ModelState.AddModelError(nameof(model.DateFinished), DateInFuture);
+                    model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
+                    return View(model);
+                }
+            }        
 
             // try to add book to reading list
             bool result = await this.readingListService.AddBookToUserReadingListReadAsync(model, userId);
 
             if (result == false)
             {
+                model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
                 return View(model);
             }
 
