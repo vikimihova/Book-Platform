@@ -194,6 +194,38 @@ namespace BookPlatform.Core.Services
             return true;
         }
 
+        public async Task<bool> SoftDeleteBookAsync(string bookId)
+        {
+            // check if bookId is valid guid
+            Guid bookGuid = Guid.Empty;
+
+            if (!IsGuidValid(bookId, ref bookGuid))
+            {
+                return false;
+            }
+
+            // check if book exists
+            Book? book = await this.bookRepository
+                .GetByIdAsync(bookGuid);
+
+            if (book == null)
+            {
+                return false;
+            }
+
+            // check if book already deleted
+            if (book.IsDeleted == true)
+            {
+                return false;
+            }
+
+            // soft delete book
+            book.IsDeleted = true;
+            await this.bookRepository.UpdateAsync(book);
+
+            return true;
+        }
+
         // AUXILIARY
 
         public async Task<EditBookInputModel?> GenerateEditBookInputModelAsync(string bookId)

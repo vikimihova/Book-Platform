@@ -25,7 +25,7 @@ namespace BookPlatform.Core.Services.Interfaces
 
         Task<bool> EditBookAsync(EditBookInputModel model);
 
-        //Task<BookDetailsViewModel> DeleteBookAsync();
+        Task<bool> SoftDeleteBookAsync(string bookId);
 
         Task<EditBookInputModel?> GenerateEditBookInputModelAsync(string bookId);
     }

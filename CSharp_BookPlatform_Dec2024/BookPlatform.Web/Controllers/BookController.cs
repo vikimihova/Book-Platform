@@ -164,5 +164,18 @@ namespace BookPlatform.Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> SoftDelete(string bookId)
+        {
+            bool result = await this.bookService.SoftDeleteBookAsync(bookId);
+
+            if (!result)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
