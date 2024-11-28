@@ -4,6 +4,7 @@ using BookPlatform.Data.Models;
 using BookPlatform.Data.Repository.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace BookPlatform.Core.Services
 {
@@ -85,6 +86,38 @@ namespace BookPlatform.Core.Services
             {
                 return false;
             }            
+        }
+
+        public async Task<bool> SoftDeleteCharacterAsync(string characterId)
+        {
+            // check if characterId is valid guid
+            Guid characterGuid = Guid.Empty;
+
+            if (!IsGuidValid(characterId, ref characterGuid))
+            {
+                return false;
+            }
+
+            // check if character exists
+            Character? character = await this.characterRepository
+                .GetByIdAsync(characterGuid);
+
+            if (character == null)
+            {
+                return false;
+            }
+
+            // check if character already deleted
+            if (character.IsDeleted == true)
+            {
+                return false;
+            }
+
+            // soft delete character
+            character.IsDeleted = true;
+            await this.characterRepository.UpdateAsync(character);
+
+            return true;
         }
     }
 }

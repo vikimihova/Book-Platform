@@ -46,5 +46,18 @@ namespace BookPlatform.Web.Controllers
 
             return RedirectToAction("Edit", "ReadingList", new { model.BookId });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> SoftDelete(string characterId)
+        {
+            bool result = await this.characterService.SoftDeleteCharacterAsync(characterId);
+
+            if (!result)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

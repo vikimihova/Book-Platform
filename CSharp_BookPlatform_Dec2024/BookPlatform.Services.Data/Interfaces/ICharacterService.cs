@@ -7,5 +7,7 @@ namespace BookPlatform.Core.Services.Interfaces
         Task<ICollection<SelectCharacterViewModel>> GetCharactersAsync(string bookId);
 
         Task<bool> AddCharacterAsync(AddCharacterInputModel model);
+
+        Task<bool> SoftDeleteCharacterAsync(string characterId);
     }
 }
