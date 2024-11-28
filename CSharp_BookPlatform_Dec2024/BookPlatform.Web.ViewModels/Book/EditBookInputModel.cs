@@ -8,7 +8,7 @@ using static BookPlatform.Common.EntityValidationConstants.BookValidationConstan
 
 namespace BookPlatform.Core.ViewModels.Book
 {
-    public class AddBookInputModel
+    public class EditBookInputModel
     {
         [Required]
         [MinLength(TitleMinLength)]

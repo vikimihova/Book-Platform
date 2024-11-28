@@ -124,5 +124,45 @@ namespace BookPlatform.Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(string bookId)
+        {
+            EditBookInputModel? model = await this.bookService.GenerateEditBookInputModelAsync(bookId);
+
+            if (model == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            model.Authors = await this.authorService.GetAuthorsAsync();
+            model.Genres = await this.genreService.GetGenresAsync();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditBookInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Authors = await this.authorService.GetAuthorsAsync();
+                model.Genres = await this.genreService.GetGenresAsync();
+
+                return View(model);
+            }
+
+            bool result = await this.bookService.EditBookAsync(model);
+
+            if (!result)
+            {
+                model.Authors = await this.authorService.GetAuthorsAsync();
+                model.Genres = await this.genreService.GetGenresAsync();
+
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

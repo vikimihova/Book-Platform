@@ -23,8 +23,10 @@ namespace BookPlatform.Core.Services.Interfaces
 
         Task<bool> AddBookAsync(AddBookInputModel model);
 
-        //Task<BookDetailsViewModel> UpdateBookAsync();
+        Task<bool> EditBookAsync(EditBookInputModel model);
 
         //Task<BookDetailsViewModel> DeleteBookAsync();
+
+        Task<EditBookInputModel?> GenerateEditBookInputModelAsync(string bookId);
     }
 }

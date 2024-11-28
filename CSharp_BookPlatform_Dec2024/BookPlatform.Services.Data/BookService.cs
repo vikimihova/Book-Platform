@@ -156,7 +156,76 @@ namespace BookPlatform.Core.Services
                 GenreId = genreGuid,
             };
 
+            await this.bookRepository.AddAsync(book);
+
             return true;
+        }
+
+        public async Task<bool> EditBookAsync(EditBookInputModel model)
+        {
+            // check if book already exists
+            Book? book = await this.bookRepository
+                .FirstOrDefaultAsync(b => b.Title == model.Title
+                                       && b.AuthorId.ToString().ToLower() == model.AuthorId);
+
+            if (book == null)
+            {
+                return false;
+            }
+
+            // check if guids are valid
+            Guid authorGuid = Guid.Empty;
+            Guid genreGuid = Guid.Empty;
+
+            if (!IsGuidValid(model.AuthorId, ref authorGuid) || !IsGuidValid(model.GenreId, ref genreGuid))
+            {
+                return false;
+            }
+
+            book.Title = model.Title;
+            book.PublicationYear = model.PublicationYear;
+            book.Description = model.Description;
+            book.ImageUrl = model.ImageUrl;
+            book.AuthorId = authorGuid;
+            book.GenreId = genreGuid;
+
+            await this.bookRepository.UpdateAsync(book);
+
+            return true;
+        }
+
+        // AUXILIARY
+
+        public async Task<EditBookInputModel?> GenerateEditBookInputModelAsync(string bookId)
+        {
+            // check if bookId is valid guid
+            Guid bookGuid = Guid.Empty;
+
+            if (!IsGuidValid(bookId, ref bookGuid))
+            {
+                return null;
+            }
+
+            // check if book exists
+            Book? book = await this.bookRepository
+                .GetByIdAsync(bookGuid);
+
+            if (book == null)
+            {
+                return null;
+            }
+
+            EditBookInputModel model = new EditBookInputModel()
+            {
+                Title = book.Title,
+                PublicationYear = book.PublicationYear,
+                Description = book.Description,
+                ImageUrl = book.ImageUrl,
+                AuthorId = book.AuthorId.ToString(),
+                GenreId = book.GenreId.ToString(),
+            };
+
+            return model;
         }
     }
 }
