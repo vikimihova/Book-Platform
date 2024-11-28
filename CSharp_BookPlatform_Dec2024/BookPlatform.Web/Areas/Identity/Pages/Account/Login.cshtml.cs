@@ -14,11 +14,13 @@ namespace BookPlatform.Web.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
             _logger = logger;
         }
 
@@ -106,8 +108,15 @@ namespace BookPlatform.Web.Areas.Identity.Pages.Account
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
-                {
+                {               
                     _logger.LogInformation("User logged in.");
+
+                    // addition
+                    ApplicationUser user = await _userManager.FindByNameAsync(Input.Username);
+                    user.LastLogin = DateTime.Now;
+                    await _userManager.UpdateAsync(user);
+                    //
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

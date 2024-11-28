@@ -113,6 +113,12 @@ namespace BookPlatform.Web.Areas.Identity.Pages.Account
                     var userId = await _userManager.GetUserIdAsync(user);
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    // addition
+                    user.LastLogin = DateTime.Now;
+                    await _userManager.UpdateAsync(user);
+                    //
+
                     return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)

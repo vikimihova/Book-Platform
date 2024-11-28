@@ -2,6 +2,8 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 using BookPlatform.Core.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using BookPlatform.Data.Models;
 
 namespace BookPlatform.Web.Controllers
 {
@@ -9,7 +11,8 @@ namespace BookPlatform.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(
+            ILogger<HomeController> logger)
         {
             _logger = logger;
         }
