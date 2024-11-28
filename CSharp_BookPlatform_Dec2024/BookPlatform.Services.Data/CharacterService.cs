@@ -25,6 +25,7 @@ namespace BookPlatform.Core.Services
             ICollection<SelectCharacterViewModel> characters = await this.bookCharacterRepository
                 .GetAllAttached()
                 .Include(bc => bc.Character)
+                .Where(bc => bc.Character.IsDeleted == false)
                 .Where(bc => bc.BookId.ToString().ToLower() == bookId.ToLower())
                 .Select(bc => new SelectCharacterViewModel()
                 {
