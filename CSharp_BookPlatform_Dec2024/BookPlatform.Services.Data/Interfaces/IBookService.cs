@@ -21,7 +21,7 @@ namespace BookPlatform.Core.Services.Interfaces
 
         Task<ICollection<SelectBookViewModel>> GetBooksAsync();
 
-        //Task<BookDetailsViewModel> AddBookAsync();
+        Task<bool> AddBookAsync(AddBookInputModel model);
 
         //Task<BookDetailsViewModel> UpdateBookAsync();
 

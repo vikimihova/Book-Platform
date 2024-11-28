@@ -13,17 +13,23 @@ namespace BookPlatform.Web.Controllers
     {
         private readonly IBaseService baseService;
         private readonly IBookService bookService;
+        private readonly IAuthorService authorService;
+        private readonly IGenreService genreService;
         private readonly IReadingListService readingListService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public BookController(
             IBaseService baseService,
             IBookService bookService,
+            IAuthorService authorService,
+            IGenreService genreService,
             IReadingListService readingListService,
             UserManager<ApplicationUser> userManager)
         {
             this.baseService = baseService;
             this.bookService = bookService;
+            this.authorService = authorService;
+            this.genreService = genreService;
             this.readingListService = readingListService;
             this.userManager = userManager;
         }
@@ -82,6 +88,41 @@ namespace BookPlatform.Web.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Add()
+        {
+            AddBookInputModel model = new AddBookInputModel();
+
+            model.Authors = await this.authorService.GetAuthorsAsync();
+            model.Genres = await this.genreService.GetGenresAsync();
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(AddBookInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Authors = await this.authorService.GetAuthorsAsync();
+                model.Genres = await this.genreService.GetGenresAsync();
+
+                return View(model);
+            }
+
+            bool result = await this.bookService.AddBookAsync(model);
+
+            if (result == false)
+            {
+                model.Authors = await this.authorService.GetAuthorsAsync();
+                model.Genres = await this.genreService.GetGenresAsync();
+
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -124,5 +124,39 @@ namespace BookPlatform.Core.Services
 
             return books;
         }
+
+        public async Task<bool> AddBookAsync(AddBookInputModel model)
+        {
+            // check if book already exists
+            Book? book = await this.bookRepository
+                .FirstOrDefaultAsync(b => b.Title == model.Title 
+                                       && b.AuthorId.ToString().ToLower() == model.AuthorId);
+
+            if (book != null)
+            {
+                return false;
+            }
+
+            // check if guids are valid
+            Guid authorGuid = Guid.Empty;
+            Guid genreGuid = Guid.Empty;
+
+            if (!IsGuidValid(model.AuthorId, ref authorGuid) || !IsGuidValid(model.GenreId, ref genreGuid))
+            {
+                return false;                
+            }
+
+            book = new Book()
+            {
+                Title = model.Title,
+                PublicationYear = model.PublicationYear,
+                Description = model.Description,
+                ImageUrl = model.ImageUrl,
+                AuthorId = authorGuid,
+                GenreId = genreGuid,
+            };
+
+            return true;
+        }
     }
 }
