@@ -1,12 +1,50 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BookPlatform.Core.Services.Interfaces;
+using BookPlatform.Core.ViewModels.Character;
+using BookPlatform.Data.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookPlatform.Web.Controllers
 {
     public class CharacterController : Controller
     {
-        public IActionResult Index()
+        private readonly ICharacterService characterService;
+        private readonly IBookService bookService;
+
+        public CharacterController(
+            ICharacterService characterService,
+            IBookService bookService)
         {
-            return View();
+            this.characterService = characterService;
+            this.bookService = bookService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Add(string bookId)
+        {
+            AddCharacterInputModel model = new AddCharacterInputModel();
+            model.Books = await this.bookService.GetBooksAsync();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(AddCharacterInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Books = await this.bookService.GetBooksAsync();
+                return View(model);
+            }
+
+            bool result = await this.characterService.AddCharacterAsync(model);
+
+            if (!result)
+            {
+                model.Books = await this.bookService.GetBooksAsync();
+                return View(model);
+            }
+
+            return RedirectToAction("Edit", "ReadingList", new { model.BookId });
         }
     }
 }

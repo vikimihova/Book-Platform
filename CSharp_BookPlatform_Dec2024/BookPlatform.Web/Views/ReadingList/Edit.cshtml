@@ -34,10 +34,13 @@
                 </div>
                 <div>
                     <label asp-for="@Model.CharacterId" class="form-label-add-edit">Select Character</label>
-                    <select asp-for="@Model.CharacterId" class="form-control" aria-required="true" asp-items="@(new SelectList(Model.Characters, "Id", "Name"))">
-                        <option value="">Select Character...</option>
-                    </select>
-                    <span asp-validation-for="@Model.CharacterId" class="text-danger"></span>
+                    <div class="d-flex">
+                        <select asp-for="@Model.CharacterId" class="form-control" aria-required="true" asp-items="@(new SelectList(Model.Characters, "Id", "Name"))">
+                            <option value="">Select Character...</option>
+                        </select>
+                        <span asp-validation-for="@Model.CharacterId" class="text-danger"></span>
+                        <a class="btn btn-info mb-2" asp-controller="Character" asp-action="Add" asp-route-bookId="@Model.BookId">Add Character</a>
+                    </div>       
                 </div>
                 <div>
                     <label for="Review">Review</label>

@@ -6,6 +6,8 @@ using BookPlatform.Data.Repository.Interfaces;
 using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Core.ViewModels.Book;
 using Microsoft.AspNetCore.Identity;
+using BookPlatform.Core.ViewModels.Character;
+using System.Net;
 
 namespace BookPlatform.Core.Services
 {
@@ -108,5 +110,19 @@ namespace BookPlatform.Core.Services
             return book;
         }
 
+        public async Task<ICollection<SelectBookViewModel>> GetBooksAsync()
+        {
+            ICollection<SelectBookViewModel> books = await this.bookRepository
+                .GetAllAttached()
+                .Where(b => b.IsDeleted == false)
+                .Select(b => new SelectBookViewModel()
+                {
+                    Id = b.Id.ToString(),
+                    Title = b.Title
+                })
+                .ToListAsync();
+
+            return books;
+        }
     }
 }

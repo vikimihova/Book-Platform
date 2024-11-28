@@ -19,6 +19,8 @@ namespace BookPlatform.Core.Services.Interfaces
 
         Task<Book?> GetBookByIdAsync(string bookId);
 
+        Task<ICollection<SelectBookViewModel>> GetBooksAsync();
+
         //Task<BookDetailsViewModel> AddBookAsync();
 
         //Task<BookDetailsViewModel> UpdateBookAsync();

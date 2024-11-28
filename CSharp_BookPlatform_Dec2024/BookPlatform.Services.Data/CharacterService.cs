@@ -35,5 +35,55 @@ namespace BookPlatform.Core.Services
 
             return characters;
         }
+
+        public async Task<bool> AddCharacterAsync(AddCharacterInputModel model)
+        {
+            // check if bookId is valid
+            Guid bookGuid = Guid.Empty;
+
+            if (!IsGuidValid(model.BookId, ref bookGuid))
+            {
+                return false;
+            }
+
+            // check if character already exists, then add
+            Character? character = await this.characterRepository
+                .FirstOrDefaultAsync(c => c.Name == model.Name);            
+
+            if (character == null)
+            {
+                character = new Character()
+                {
+                    Name = model.Name,
+                    IsSubmittedByUser = true
+                };
+
+                await this.characterRepository.AddAsync(character);
+            }
+
+            Guid characterGuid = character.Id;
+
+            // check if bookCharacter already exists, then add
+            BookCharacter? bookCharacter = await this.bookCharacterRepository
+                .FirstOrDefaultAsync(bc => bc.CharacterId == characterGuid 
+                                        && bc.BookId == bookGuid);
+
+            if (bookCharacter == null)
+            {
+                bookCharacter = new BookCharacter()
+                {
+                    BookId = bookGuid,
+                    CharacterId = characterGuid
+                };
+
+                await this.bookCharacterRepository.AddAsync(bookCharacter);
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }            
+        }
     }
 }
