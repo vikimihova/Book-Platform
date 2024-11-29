@@ -10,6 +10,8 @@ using static BookPlatform.Common.ApplicationConstants;
 using Microsoft.AspNetCore.Identity;
 using System.Globalization;
 using System.Net;
+using BookPlatform.Core.ViewModels.ApplicationUser;
+using static BookPlatform.Common.OutputMessages;
 
 namespace BookPlatform.Core.Services
 {
@@ -19,26 +21,45 @@ namespace BookPlatform.Core.Services
         private readonly IRepository<Character, Guid> characterRepository;
         private readonly IRepository<Review, Guid> reviewRepository;
         private readonly IRepository<BookApplicationUser, object> bookApplicationUserRepository;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public ReadingListService(
             IRepository<Book, Guid> bookRepository,
             IRepository<Character, Guid> characterRepository,
             IRepository<Review, Guid> reviewRepository,
-            IRepository<BookApplicationUser, object> bookApplicationUserRepository)
+            IRepository<BookApplicationUser, object> bookApplicationUserRepository,
+            UserManager<ApplicationUser> userManager)
         {
             this.bookRepository = bookRepository;
             this.characterRepository = characterRepository;
             this.reviewRepository = reviewRepository;
             this.bookApplicationUserRepository = bookApplicationUserRepository;
+            this.userManager = userManager;
         }
 
         // MAIN
 
         public async Task<IEnumerable<ReadingListViewModel>> GetUserReadingListByUserIdAsync(string userId)
         {
-            // get UserBooks and create view model
+            IEnumerable<ReadingListViewModel> readingList = new List<ReadingListViewModel>();
 
-            IEnumerable<ReadingListViewModel> readingList = await bookApplicationUserRepository
+            // check if user id is a valid guid
+            Guid userGuid = Guid.Empty;
+            if (!IsGuidValid(userId, ref userGuid))
+            {
+                return readingList;
+            }
+
+            // find user
+            ApplicationUser? user = await this.userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return readingList;
+            }
+
+            // get UserBooks and create view model
+            readingList = await bookApplicationUserRepository
                 .GetAllAttached()
                 .Where(bau => bau.ApplicationUserId.ToString() == userId)
                 .Include(bau => bau.ReadingStatus)
@@ -507,6 +528,6 @@ namespace BookPlatform.Core.Services
             }
 
             return model;
-        }
+        }        
     }
 }
