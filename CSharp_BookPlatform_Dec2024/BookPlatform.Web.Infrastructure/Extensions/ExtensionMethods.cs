@@ -7,6 +7,9 @@ using BookPlatform.Data.Models;
 using Microsoft.AspNetCore.Identity;
 
 using static BookPlatform.Common.ApplicationConstants;
+using static BookPlatform.Common.ErrorMessages.Roles;
+using static BookPlatform.Common.ErrorMessages.Services;
+using static BookPlatform.Common.ErrorMessages.UserCreation;
 
 namespace BookPlatform.Web.Infrastructure.Extensions
 {
@@ -59,8 +62,8 @@ namespace BookPlatform.Web.Infrastructure.Extensions
 
             if (roleManager == null)
             {
-                throw new ArgumentNullException(nameof(roleManager),
-                    $"Service for {typeof(RoleManager<ApplicationRole>)} cannot be obtained!");
+                throw new ArgumentNullException(nameof(roleManager), 
+                    String.Format(ErrorTryingToObtainService, typeof(RoleManager<ApplicationRole>)));
             }
 
             // get user store
@@ -70,8 +73,8 @@ namespace BookPlatform.Web.Infrastructure.Extensions
 
             if (userStore == null)
             {
-                throw new ArgumentNullException(nameof(userStore),
-                    $"Service for {typeof(IUserStore<ApplicationUser>)} cannot be obtained!");
+                throw new ArgumentNullException(nameof(userStore), 
+                    String.Format(ErrorTryingToObtainService, typeof(IUserStore<ApplicationUser>)));
             }
 
             // get user manager
@@ -81,8 +84,8 @@ namespace BookPlatform.Web.Infrastructure.Extensions
 
             if (userManager == null)
             {
-                throw new ArgumentNullException(nameof(userManager),
-                    $"Service for {typeof(UserManager<ApplicationUser>)} cannot be obtained!");
+                throw new ArgumentNullException(nameof(userManager), 
+                    String.Format(ErrorTryingToObtainService, typeof(UserManager<ApplicationUser>)));                    
             }
                         
             Task.Run(async () =>
@@ -99,7 +102,7 @@ namespace BookPlatform.Web.Infrastructure.Extensions
 
                     if (!result.Succeeded)
                     {
-                        throw new InvalidOperationException($"Error occurred while creating the {UserRoleName} role!");
+                        throw new InvalidOperationException(String.Format(ErrorWhileCreatingRole, UserRoleName));
                     }
                 }
                 else
@@ -119,7 +122,7 @@ namespace BookPlatform.Web.Infrastructure.Extensions
 
                     if (!result.Succeeded)
                     {
-                        throw new InvalidOperationException($"Error occurred while creating the {AdminRoleName} role!");
+                        throw new InvalidOperationException(String.Format(ErrorWhileCreatingRole, AdminRoleName));
                     }
                 }
                 else
@@ -146,7 +149,7 @@ namespace BookPlatform.Web.Infrastructure.Extensions
 
                 if (!userResult.Succeeded)
                 {
-                    throw new InvalidOperationException($"Error occurred while adding the user {username} to the {AdminRoleName} role!");
+                    throw new InvalidOperationException(String.Format(ErrorWhileAddingUserToRole, username, AdminRoleName));
                 }
 
                 return app;
@@ -169,12 +172,12 @@ namespace BookPlatform.Web.Infrastructure.Extensions
             // set username
             await userStore.SetUserNameAsync(applicationUser, username, CancellationToken.None);
 
-            // add user and set password
+            // register user and set password
             IdentityResult result = await userManager.CreateAsync(applicationUser, password);
 
             if (!result.Succeeded)
             {
-                throw new InvalidOperationException($"Error occurred while registering {AdminRoleName} user!");
+                throw new InvalidOperationException(String.Format(ErrorWhileRegisteringUser, username));
             }
 
             return applicationUser;
