@@ -12,6 +12,7 @@ using static BookPlatform.Common.OutputMessages.ReadingList;
 using static BookPlatform.Common.ModelValidationErrorMessages.DateTimeFormats;
 
 using System.Globalization;
+using BookPlatform.Core.ViewModels.ApplicationUser;
 
 namespace BookPlatform.Web.Controllers
 {
@@ -53,7 +54,27 @@ namespace BookPlatform.Web.Controllers
                 return RedirectToPage("/Identity/Account/Login");
             }
 
+            // generate view model
             IEnumerable<ReadingListViewModel> model = await readingListService.GetUserReadingListByUserIdAsync(userId);
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> IndexFriends()
+        {
+            // get user id
+            string? userId = User.GetUserId();
+
+            // check if user is authenticated
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                return RedirectToPage("/Identity/Account/Login");
+            }
+
+            // generate view model
+            IEnumerable<FriendBookViewModel> model = await this.readingListService.GetFriendBooksByUserIdAsync(userId);
 
             return View(model);
         }

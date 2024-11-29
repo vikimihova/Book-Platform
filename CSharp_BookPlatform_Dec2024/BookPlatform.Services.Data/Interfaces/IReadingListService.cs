@@ -1,5 +1,6 @@
 ﻿using BookPlatform.Data.Models;
 using BookPlatform.Core.ViewModels.ReadingList;
+using BookPlatform.Core.ViewModels.ApplicationUser;
 
 namespace BookPlatform.Core.Services.Interfaces
 {
@@ -7,6 +8,8 @@ namespace BookPlatform.Core.Services.Interfaces
     {
         // MAIN
         Task<IEnumerable<ReadingListViewModel>> GetUserReadingListByUserIdAsync(string userId);
+
+        Task<ICollection<FriendBookViewModel>> GetFriendBooksByUserIdAsync(string userId);
 
         Task<bool> AddBookToUserReadingListAsync(string bookId, string userId, int readingStatusId);
 

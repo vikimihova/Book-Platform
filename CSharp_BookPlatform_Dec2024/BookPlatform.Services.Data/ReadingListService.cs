@@ -63,6 +63,62 @@ namespace BookPlatform.Core.Services
             return readingList;
         }
 
+        public async Task<ICollection<FriendBookViewModel>> GetFriendBooksByUserIdAsync(string userId)
+        {
+            ICollection<FriendBookViewModel> model = new List<FriendBookViewModel>();
+
+            // check if user id is a valid guid
+            Guid userGuid = Guid.Empty;
+            if (!IsGuidValid(userId, ref userGuid))
+            {
+                return model;
+            }
+
+            // find user
+            ApplicationUser? user = await this.userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return model;
+            }
+
+            // check if user has any friends
+            if (!user.Friends.Any())
+            {
+                return model;
+            }            
+
+            foreach(var friend in user.Friends)
+            {
+                List<BookApplicationUser> friendsReadingList = await bookApplicationUserRepository
+                    .GetAllAttached()
+                    .Where(bau => bau.ApplicationUserId == friend.Id)
+                    .Include(bau => bau.ReadingStatus)
+                    .Include(bau => bau.Book)                    
+                    .ToListAsync();
+
+                if (!friendsReadingList.Any())
+                {
+                    continue;
+                }
+
+                foreach (var bau in friendsReadingList)
+                {
+                    FriendBookViewModel viewModel = new FriendBookViewModel()
+                    {
+                        FriendUserName = friend.UserName!,
+                        BookId = bau.BookId.ToString(),
+                        Title = bau.Book.Title,
+                        ReadingStatusDescription = bau.ReadingStatus.StatusDescription
+                    };
+
+                    model.Add(viewModel);
+                }                
+            }
+
+            return model;
+        }
+
         public async Task<bool> AddBookToUserReadingListAsync(string bookId, string userId, int readingStatusId)
         {
             // check Guid bookId (if false, return false)
