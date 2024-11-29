@@ -28,6 +28,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{99C3E0F2-56AE-4ABC-9C4D-DCC935A9C1A7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ViewModels", "ViewModels", "{FA6B9CB9-DA63-4DD7-A448-49899E5692DE}"
+	ProjectSection(SolutionItems) = preProject
+		BookPlatform.Services.Data\ReviewService.cs = BookPlatform.Services.Data\ReviewService.cs
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutoMapping", "AutoMapping", "{7A5CDA49-9BD9-4A63-89BB-1E26F18DAF1F}"
 EndProject
