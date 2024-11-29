@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using BookPlatform.Data.Models;
 
+using static BookPlatform.Common.ApplicationConstants;
+using static BookPlatform.Common.ErrorMessages.Roles;
+
 namespace BookPlatform.Web.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
@@ -110,11 +113,20 @@ namespace BookPlatform.Web.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    // Add user to role User
+                    IdentityResult userRoleResult = await _userManager.AddToRoleAsync(user, UserRoleName);
+
+                    if (!userRoleResult.Succeeded)
+                    {
+                        throw new InvalidOperationException(String.Format(ErrorWhileAddingUserToRole, user.UserName, UserRoleName));
+                    }
+                    //
+
                     var userId = await _userManager.GetUserIdAsync(user);
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    // addition
+                    // Set LastLogin to now
                     user.LastLogin = DateTime.Now;
                     await _userManager.UpdateAsync(user);
                     //
