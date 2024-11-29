@@ -16,6 +16,11 @@ namespace BookPlatform.Web
             var builder = WebApplication.CreateBuilder(args);
             var connectionString = builder.Configuration.GetConnectionString("SqlServer");
 
+            // Get login info for admin user
+            string adminEmail = builder.Configuration.GetValue<string>("Administrator:Email")!;
+            string adminUsername = builder.Configuration.GetValue<string>("Administrator:Username")!;
+            string adminPassword = builder.Configuration.GetValue<string>("Administrator:Password")!;
+
             // ADD SERVICES TO THE CONTAINER
 
             // Add dbContext
@@ -99,6 +104,9 @@ namespace BookPlatform.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Seed roles User and Admin and create an admin user
+            app.SeedRoles(adminEmail, adminUsername, adminPassword);
 
             app.MapControllerRoute(
                 name: "default",
