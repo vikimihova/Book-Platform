@@ -5,9 +5,6 @@ using BookPlatform.Data.Repository.Interfaces;
 
 using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Core.ViewModels.Book;
-using Microsoft.AspNetCore.Identity;
-using BookPlatform.Core.ViewModels.Character;
-using System.Net;
 
 namespace BookPlatform.Core.Services
 {
@@ -22,9 +19,11 @@ namespace BookPlatform.Core.Services
 
         public async Task<IEnumerable<BookIndexViewModel>> IndexGetAllAsync()
         {
+            Random random = new Random();
+
             IEnumerable<BookIndexViewModel> allBooks = await bookRepository
                 .GetAllAttached()
-                .Where(b => b.IsDeleted == false)
+                .Where(b => b.IsDeleted == false)                
                 .OrderBy(b => b.Author.LastName)
                 .ThenBy(b => b.PublicationYear)
                 .Select(b => new BookIndexViewModel()
@@ -36,9 +35,11 @@ namespace BookPlatform.Core.Services
                     ImageUrl = b.ImageUrl,
                     AverageRating = b.AverageRating,
                 })
-                .ToArrayAsync();
+                .ToListAsync();
 
-            return allBooks;
+            List<BookIndexViewModel> allBooksRandom = allBooks.OrderBy(b => random.Next()).ToList();
+
+            return allBooksRandom;
         }
 
         public Task<IEnumerable<BookIndexViewModel>> GetBooksPerGenreAsync(string genreId)
