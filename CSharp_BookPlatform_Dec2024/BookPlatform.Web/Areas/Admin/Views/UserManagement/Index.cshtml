@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+
+@using BookPlatform.Data.Models
+﻿@using BookPlatform.Core.ViewModels.Admin.UserManagement
+
+@using static BookPlatform.Common.ApplicationConstants;
+
+@model IEnumerable<AllApplicationUsersViewModel>
+
+@inject UserManager<ApplicationUser> userManager
+
+<div class="container mt-5">
+    <h1 class="text-start mb-4">User Management</h1>
+
+    <table class="table table-bordered table-hover" style="width: 50%">
+        <thead class="thead-light">
+            <tr>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (AllApplicationUsersViewModel userViewModel in Model)
+            {
+                <tr>
+                    <td>@userViewModel.Email</td>                    
+                    <td>
+                        @{
+                            ApplicationUser? user = await this.userManager.FindByIdAsync(userViewModel.Id);
+
+                            if (await userManager.IsInRoleAsync(user!, AdminRoleName))
+                            {                                
+                                <form method="post" asp-area="Admin" asp-controller="UserManagement" asp-action="RemoveAdmin" class="d-inline ms-2">
+                                    <input type="hidden" name="userId" value="@userViewModel.Id" />
+                                    <button type="submit" class="btn btn-warning btn-sm" style="width: 150px;">Remove Admin</button>
+                                </form>
+                            }
+                            else{
+                                <form method="post" asp-area="Admin" asp-controller="UserManagement" asp-action="MakeAdmin" class="d-inline ms-2">
+                                    <input type="hidden" name="userId" value="@userViewModel.Id" />
+                                    <button type="submit" class="btn btn-primary btn-sm" style="width: 150px;">Make Admin</button>
+                                </form>                                
+                            }
+                        }
+                        <form method="post" asp-area="Admin" asp-controller="UserManagement" asp-action="DeleteUser" class="d-inline ms-2">
+                            <input type="hidden" name="userId" value="@userViewModel.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
