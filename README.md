@@ -7,24 +7,21 @@ Guest visitors:
 - browse books
 - view book details
 - view book reviews
-- view book quotes
 
 Logged Users:
 - all of the above +
 - add books to reading lists
 - give ratings
 - add and modify book reviews
-- add and modify book quotes
-- like other people's reviews and quotes
 - add book characters
 - choose a favourite book character
 - add friends
 - discover what titles friends are reading
-- see recent book reviews or quotes related to the titles in their own reading lists
+- see recent book reviews related to the titles in their own reading lists
 
 Admin:
-- creates/deletes books, reviews, quotes or characters
-- reviews user submitted books, quotes and characters
+- creates/edits/deletes books
+- creates/deletes characters
 
 ## BUILT WITH
 - ASP.NET Core 8.0
@@ -35,13 +32,9 @@ Admin:
 - Razor Pages, Sections, Partial Views
 - View Components
 - Repository Pattern
-- Auto Мapping
 - Dependency Injection
-- Status Code Pages Middleware
-- Exception Handling Middleware
 - Sorting, Filtering, and Paging with EF Core
 - Data Validation, both Client-side and Server-side
-- Data Validation in the Models and Input View Models
 - Bootstrap
 
 ## HOME PAGE
