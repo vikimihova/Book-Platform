@@ -14,8 +14,5 @@ namespace BookPlatform.Core.ViewModels.Character
 
         [Required]
         public string BookId { get; set; } = null!;
-
-        [Required]
-        public ICollection<SelectBookViewModel> Books { get; set; } = new List<SelectBookViewModel>();
     }
 }

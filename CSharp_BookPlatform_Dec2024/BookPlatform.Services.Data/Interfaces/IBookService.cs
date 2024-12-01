@@ -7,25 +7,21 @@ namespace BookPlatform.Core.Services.Interfaces
     {
         Task<IEnumerable<BookIndexViewModel>> IndexGetAllAsync();
 
-        Task<IEnumerable<BookIndexViewModel>> GetBooksPerGenreAsync(string genreId);
-
-        Task<IEnumerable<BookIndexViewModel>> GetBooksPerAuthorAsync(string authorId);
-
-        Task<IEnumerable<BookIndexViewModel>> GetBooksOrderedByYearAscendingAsync(IEnumerable<BookIndexViewModel> model);
-
-        Task<IEnumerable<BookIndexViewModel>> GetBooksOrderedByYearDescendingAsync(IEnumerable<BookIndexViewModel> model);
+        Task<IEnumerable<BookIndexViewModel>> IndexGetAllRandomAsync();
 
         Task<BookDetailsViewModel?> GetBookDetailsAsync(string id);
 
         Task<Book?> GetBookByIdAsync(string bookId);
 
-        Task<ICollection<SelectBookViewModel>> GetBooksAsync();
+        //Task<ICollection<SelectBookViewModel>> GetBooksAsync();
 
         Task<bool> AddBookAsync(AddBookInputModel model);
 
         Task<bool> EditBookAsync(EditBookInputModel model);
 
         Task<bool> SoftDeleteBookAsync(string bookId);
+
+        Task<bool> IncludeBookAsync(string bookId);
 
         Task<EditBookInputModel?> GenerateEditBookInputModelAsync(string bookId);
     }

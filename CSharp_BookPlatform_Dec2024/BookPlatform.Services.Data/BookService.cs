@@ -19,11 +19,8 @@ namespace BookPlatform.Core.Services
 
         public async Task<IEnumerable<BookIndexViewModel>> IndexGetAllAsync()
         {
-            Random random = new Random();
-
             IEnumerable<BookIndexViewModel> allBooks = await bookRepository
                 .GetAllAttached()
-                .Where(b => b.IsDeleted == false)                
                 .OrderBy(b => b.Author.LastName)
                 .ThenBy(b => b.PublicationYear)
                 .Select(b => new BookIndexViewModel()
@@ -31,13 +28,27 @@ namespace BookPlatform.Core.Services
                     Id = b.Id.ToString(),
                     Title = b.Title,
                     Author = b.Author.FullName,
+                    AuthorLastName = b.Author.LastName != null ? b.Author.LastName : "-",
+                    AuthorFirstName = b.Author.FirstName != null ? b.Author.FirstName : "-",
                     Genre = b.Genre.Name,
                     ImageUrl = b.ImageUrl,
                     AverageRating = b.AverageRating,
+                    IsDeleted = b.IsDeleted
                 })
                 .ToListAsync();
 
-            List<BookIndexViewModel> allBooksRandom = allBooks.OrderBy(b => random.Next()).ToList();
+            return allBooks;
+        }
+
+        public async Task<IEnumerable<BookIndexViewModel>> IndexGetAllRandomAsync()
+        {
+            Random random = new Random();
+
+            IEnumerable<BookIndexViewModel> allBooks = await IndexGetAllAsync();
+
+            List<BookIndexViewModel> allBooksRandom = allBooks
+                .Where(b => b.IsDeleted == false)
+                .OrderBy(b => random.Next()).ToList();
 
             return allBooksRandom;
         }
@@ -63,7 +74,8 @@ namespace BookPlatform.Core.Services
         }
 
         public async Task<BookDetailsViewModel?> GetBookDetailsAsync(string bookId)
-        {
+        {           
+
             // check if string is a valid Guid
             Guid parsedGuid = Guid.Empty;
 
@@ -111,20 +123,20 @@ namespace BookPlatform.Core.Services
             return book;
         }
 
-        public async Task<ICollection<SelectBookViewModel>> GetBooksAsync()
-        {
-            ICollection<SelectBookViewModel> books = await this.bookRepository
-                .GetAllAttached()
-                .Where(b => b.IsDeleted == false)
-                .Select(b => new SelectBookViewModel()
-                {
-                    Id = b.Id.ToString(),
-                    Title = b.Title
-                })
-                .ToListAsync();
+        //public async Task<ICollection<SelectBookViewModel>> GetBooksAsync()
+        //{
+        //    ICollection<SelectBookViewModel> books = await this.bookRepository
+        //        .GetAllAttached()
+        //        .Where(b => b.IsDeleted == false)
+        //        .Select(b => new SelectBookViewModel()
+        //        {
+        //            Id = b.Id.ToString(),
+        //            Title = b.Title
+        //        })
+        //        .ToListAsync();
 
-            return books;
-        }
+        //    return books;
+        //}
 
         public async Task<bool> AddBookAsync(AddBookInputModel model)
         {
@@ -222,6 +234,38 @@ namespace BookPlatform.Core.Services
 
             // soft delete book
             book.IsDeleted = true;
+            await this.bookRepository.UpdateAsync(book);
+
+            return true;
+        }
+
+        public async Task<bool> IncludeBookAsync(string bookId)
+        {
+            // check if bookId is valid guid
+            Guid bookGuid = Guid.Empty;
+
+            if (!IsGuidValid(bookId, ref bookGuid))
+            {
+                return false;
+            }
+
+            // check if book exists
+            Book? book = await this.bookRepository
+                .GetByIdAsync(bookGuid);
+
+            if (book == null)
+            {
+                return false;
+            }
+
+            // check if book already deleted
+            if (book.IsDeleted != true)
+            {
+                return false;
+            }
+
+            // include book
+            book.IsDeleted = false;
             await this.bookRepository.UpdateAsync(book);
 
             return true;

@@ -28,7 +28,7 @@ namespace BookPlatform.Core.ViewModels.Book
         public string GenreId { get; set; } = null!;
 
         [Required]
-        public ICollection<SelectGenreViewModel> Genres { get; set; } = null!;
+        public ICollection<SelectGenreViewModel> Genres { get; set; } = new List<SelectGenreViewModel>();
 
         [Required]
         [MinLength(DescriptionMinLength)]
