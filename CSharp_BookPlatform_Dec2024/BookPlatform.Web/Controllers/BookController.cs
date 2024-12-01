@@ -38,32 +38,19 @@ namespace BookPlatform.Web.Controllers
         public async Task<IActionResult> Index()
         {
             IEnumerable<BookIndexViewModel> model =
-                await this.bookService.IndexGetAllAsync();
+                await this.bookService.IndexGetAllRandomAsync();
 
             return View(model);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> IndexByGenre(string? genreId)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> IndexByAuthor(string? authorId)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> IndexOrderedBy(IEnumerable<BookIndexViewModel> model, string order)
-        {
-            throw new NotImplementedException();
-        }
-
+               
         [HttpGet]
         public async Task<IActionResult> Details(string bookId)
         {
+            if (string.IsNullOrWhiteSpace(bookId))
+            {
+                throw new ArgumentNullException(nameof(bookId));
+            }
+
             // set TempData for reading status
             if (this.User?.Identity?.IsAuthenticated ?? false)
             {
@@ -88,94 +75,6 @@ namespace BookPlatform.Web.Controllers
             }
 
             return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Add()
-        {
-            AddBookInputModel model = new AddBookInputModel();
-
-            model.Authors = await this.authorService.GetAuthorsAsync();
-            model.Genres = await this.genreService.GetGenresAsync();
-
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Add(AddBookInputModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                model.Authors = await this.authorService.GetAuthorsAsync();
-                model.Genres = await this.genreService.GetGenresAsync();
-
-                return View(model);
-            }
-
-            bool result = await this.bookService.AddBookAsync(model);
-
-            if (result == false)
-            {
-                model.Authors = await this.authorService.GetAuthorsAsync();
-                model.Genres = await this.genreService.GetGenresAsync();
-
-                return View(model);
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Edit(string bookId)
-        {
-            EditBookInputModel? model = await this.bookService.GenerateEditBookInputModelAsync(bookId);
-
-            if (model == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
-            model.Authors = await this.authorService.GetAuthorsAsync();
-            model.Genres = await this.genreService.GetGenresAsync();
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit(EditBookInputModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                model.Authors = await this.authorService.GetAuthorsAsync();
-                model.Genres = await this.genreService.GetGenresAsync();
-
-                return View(model);
-            }
-
-            bool result = await this.bookService.EditBookAsync(model);
-
-            if (!result)
-            {
-                model.Authors = await this.authorService.GetAuthorsAsync();
-                model.Genres = await this.genreService.GetGenresAsync();
-
-                return View(model);
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> SoftDelete(string bookId)
-        {
-            bool result = await this.bookService.SoftDeleteBookAsync(bookId);
-
-            if (!result)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
+        }      
     }
 }
