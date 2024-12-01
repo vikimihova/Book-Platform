@@ -20,5 +20,11 @@ namespace BookPlatform.Data.Models
         [Required]
         [ForeignKey(nameof(CharacterId))]
         public Character Character { get; set; } = null!;
+
+        [Required]
+        public bool IsSubmittedByUser { get; set; } = false;
+
+        [Required]
+        public bool IsDeleted { get; set; } = false;
     }
 }
