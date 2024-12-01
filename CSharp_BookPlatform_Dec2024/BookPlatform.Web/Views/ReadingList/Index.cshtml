@@ -18,7 +18,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var book in Model.OrderByDescending(b => b.DateAdded))
+        @foreach (var book in Model.OrderBy(b => b.DateAdded))
         {
             <tr>
                 <td>
