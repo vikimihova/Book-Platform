@@ -1,0 +1,18 @@
+﻿@using BookPlatform.Core.ViewModels.Character
+@model AddCharacterInputModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-9 col-sm-6 col-xs-12 min-vw-50">
+            <form asp-action="Add" method="post">
+                <input type="hidden" name="bookId" value="@Model.BookId" />
+                <div>
+                    <label for="Name">Name</label>                    
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Save</button>
+            </form>
+        </div>
+    </div>
+</div>

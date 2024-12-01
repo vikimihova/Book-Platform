@@ -1,0 +1,55 @@
+﻿@using BookPlatform.Core.ViewModels.Book
+
+@model IEnumerable<BookIndexViewModel>
+
+<div class="container mt-5">
+    <h1 class="text-start mb-4">Book Management</h1>
+
+    <form method="get" asp-area="Admin" asp-controller="Home" asp-action="Index" class="d-inline">
+        <button type="submit" class="btn btn-warning btn-sm" style="width: 150px;">Go back</button>
+    </form>
+    <form method="get" asp-area="Admin" asp-controller="BookManagement" asp-action="Add" class="d-inline ms-2">
+        <button type="submit" class="btn btn-warning btn-sm" style="width: 150px;">Add book</button>
+    </form>
+
+    <table class="table table-bordered table-hover mt-4">
+        <thead class="thead-light">
+            <tr>
+                <th>Author</th>
+                <th>Title</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (BookIndexViewModel book in Model)
+            {
+                <tr>
+                    <td>@book.AuthorLastName, @book.AuthorFirstName</td>
+                    <td>@book.Title</td>
+                    <td>
+                        <form method="get" asp-area="Admin" asp-controller="CharacterManagement" asp-action="Index" class="d-inline ms-2">
+                            <input type="hidden" name="bookId" value="@book.Id" />
+                            <button type="submit" class="btn btn-primary btn-sm" style="width: 100px;">Characters</button>
+                        </form>
+                        <form method="get" asp-area="Admin" asp-controller="BookManagement" asp-action="Edit" class="d-inline ms-2">
+                            <input type="hidden" name="bookId" value="@book.Id" />
+                            <button type="submit" class="btn btn-primary btn-sm" style="width: 100px;">Edit</button>
+                        </form>
+                        @if(book.IsDeleted == false){
+                            <form method="post" asp-area="Admin" asp-controller="BookManagement" asp-action="Delete" class="d-inline ms-2">
+                                <input type="hidden" name="bookId" value="@book.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm" style="width: 100px;">Delete</button>
+                            </form>
+                        }
+                        else{
+                            <form method="post" asp-area="Admin" asp-controller="BookManagement" asp-action="Include" class="d-inline ms-2">
+                                <input type="hidden" name="bookId" value="@book.Id" />
+                                <button type="submit" class="btn btn-primary btn-sm" style="width: 100px;">Include</button>
+                            </form>
+                        }                        
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

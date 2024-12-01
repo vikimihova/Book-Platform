@@ -1,0 +1,56 @@
+﻿@using BookPlatform.Core.ViewModels.Character
+
+@model IEnumerable<CharacterIndexViewModel>
+
+@{
+    string bookId = TempData["BookId"] as string;
+}
+
+<div class="container mt-5">
+    <h1 class="text-start mb-4">Character Management</h1>
+
+    <form method="get" asp-area="Admin" asp-controller="BookManagement" asp-action="Index" class="d-inline">
+        <button type="submit" class="btn btn-warning btn-sm" style="width: 150px;">Go back</button>
+    </form>
+    <form method="get" asp-area="Admin" asp-controller="CharacterManagement" asp-action="Add" class="d-inline">
+        <input type="hidden" name="bookId" value="@bookId" />
+        <button type="submit" class="btn btn-warning btn-sm" style="width: 150px;">Add character</button>
+    </form>
+
+    <table class="table table-bordered table-hover mt-4">
+        <thead class="thead-light">
+            <tr>
+                <th>Character</th>
+                <th>Submitted By User</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CharacterIndexViewModel character in Model)
+            {
+                <tr>
+                    <td>@character.Name</td>
+                    <td>@character.IsSubmittedByUser</td>
+                    <td>
+                        @if (character.IsDeleted == false)
+                        {
+                            <form method="post" asp-area="Admin" asp-controller="CharacterManagement" asp-action="Delete" class="d-inline ms-2">
+                                <input type="hidden" name="characterId" value="@character.Id" />
+                                <input type="hidden" name="bookId" value="@character.BookId" />
+                                <button type="submit" class="btn btn-danger btn-sm" style="width: 100px;">Delete</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form method="post" asp-area="Admin" asp-controller="CharacterManagement" asp-action="Include" class="d-inline ms-2">
+                                <input type="hidden" name="characterId" value="@character.Id" />
+                                <input type="hidden" name="bookId" value="@character.BookId" />
+                                <button type="submit" class="btn btn-primary btn-sm" style="width: 100px;">Include</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
