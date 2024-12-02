@@ -6,6 +6,7 @@ using BookPlatform.Data.Models;
 
 using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Web.Infrastructure.Extensions;
+using BookPlatform.Web.Infrastructure.Middleware;
 
 namespace BookPlatform.Web
 {
@@ -105,12 +106,19 @@ namespace BookPlatform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseMiddleware<CustomExceptionMiddleware>();
+            app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
+
             // Seed roles User and Admin and create an admin user
             app.SeedRoles(adminEmail, adminUsername, adminPassword);
 
             app.MapControllerRoute(
                 name: "Areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+            app.MapControllerRoute(
+                name: "Errors",
+                pattern: "{controller=Home}/{action=Index}/{statusCode?}");
 
             app.MapControllerRoute(
                 name: "default",
