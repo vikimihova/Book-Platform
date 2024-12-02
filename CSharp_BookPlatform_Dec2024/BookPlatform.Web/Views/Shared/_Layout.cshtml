@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using static BookPlatform.Common.ApplicationConstants;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -15,7 +17,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <as class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</as>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Book" asp-action="Index">Browse</a>
@@ -25,11 +27,14 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="ReadingList" asp-action="Index">My Books</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Friend" asp-action="Index">My Friends</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Friend" asp-action="Index">Friends</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Discover" asp-action="Index">Discover</a>
-                            </li>
+                            @if (this.User.IsInRole(AdminRoleName))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin Panel</a>
+                                </li>
+                            }
                         }                        
                     </ul>
                     <ul class="navbar-nav flex-grow-1">
