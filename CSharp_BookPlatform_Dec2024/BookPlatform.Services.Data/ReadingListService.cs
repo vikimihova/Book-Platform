@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Net;
 using BookPlatform.Core.ViewModels.ApplicationUser;
 using static BookPlatform.Common.OutputMessages;
+using System.Linq;
 
 namespace BookPlatform.Core.Services
 {
@@ -60,7 +61,7 @@ namespace BookPlatform.Core.Services
 
             // get UserBooks and create view model
             readingList = await bookApplicationUserRepository
-                .GetAllAttached()
+                .GetAllAttached()                
                 .Where(bau => bau.ApplicationUserId.ToString() == userId)
                 .Include(bau => bau.ReadingStatus)
                 .Include(bau => bau.Rating)
@@ -78,7 +79,7 @@ namespace BookPlatform.Core.Services
                     DateStarted = bau.DateStarted.HasValue ? bau.DateStarted.Value.ToString(DateViewFormat) : String.Empty,
                     DateFinished = bau.DateFinished.HasValue ? bau.DateFinished.Value.ToString(DateViewFormat) : String.Empty,
                     ImageUrl = bau.Book.ImageUrl
-                })
+                })                
                 .ToListAsync();
 
             return readingList;

@@ -51,37 +51,16 @@ namespace BookPlatform.Core.Services
                 .OrderBy(b => random.Next()).ToList();
 
             return allBooksRandom;
-        }
-
-        public Task<IEnumerable<BookIndexViewModel>> GetBooksPerGenreAsync(string genreId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<BookIndexViewModel>> GetBooksPerAuthorAsync(string authorId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<BookIndexViewModel>> GetBooksOrderedByYearAscendingAsync(IEnumerable<BookIndexViewModel> model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<BookIndexViewModel>> GetBooksOrderedByYearDescendingAsync(IEnumerable<BookIndexViewModel> model)
-        {
-            throw new NotImplementedException();
-        }
+        }       
 
         public async Task<BookDetailsViewModel?> GetBookDetailsAsync(string bookId)
         {           
-
             // check if string is a valid Guid
             Guid parsedGuid = Guid.Empty;
 
             if (!IsGuidValid(bookId, ref parsedGuid))
             {
-                return null;
+                throw new ArgumentException();
             }
 
             // get book

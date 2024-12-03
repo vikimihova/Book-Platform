@@ -26,7 +26,7 @@ namespace BookPlatform.Web.Controllers
             // check if user is authenticated
             if (String.IsNullOrWhiteSpace(userId))
             {
-                return RedirectToPage("/Identity/Account/Login");
+                return View("BadRequest");
             }
 
             IEnumerable<ApplicationUserViewModel> model = await this.friendService.GetFriendsAsync(userId);
@@ -43,7 +43,7 @@ namespace BookPlatform.Web.Controllers
 
             // check if user is authenticated
             if (String.IsNullOrWhiteSpace(userId))
-            {
+            {                
                 return RedirectToPage("/Identity/Account/Login");
             }
 
