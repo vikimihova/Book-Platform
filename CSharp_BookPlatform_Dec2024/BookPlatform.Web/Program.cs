@@ -7,6 +7,7 @@ using BookPlatform.Data.Models;
 using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Web.Infrastructure.Extensions;
 using BookPlatform.Web.Infrastructure.Middleware;
+using static BookPlatform.Common.ErrorMessages;
 
 namespace BookPlatform.Web
 {
@@ -65,6 +66,12 @@ namespace BookPlatform.Web
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = "/Identity/Account/Login";
                 //options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
+
+            // Mark cookies with secure attribute (cookies sent only over HTTPS)
+            builder.Services.AddAntiforgery(options => 
+            { 
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
             });
 
             // Add repositories for each entity (repository pattern) except for ApplicationUser (UserManager and SignInManager instead)
