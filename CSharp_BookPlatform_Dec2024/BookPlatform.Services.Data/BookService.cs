@@ -51,7 +51,31 @@ namespace BookPlatform.Core.Services
                 .OrderBy(b => random.Next()).ToList();
 
             return allBooksRandom;
-        }       
+        }
+
+        public async Task<IEnumerable<BookIndexViewModel>> SearchBooksAsync(string title)
+        {
+            IEnumerable<BookIndexViewModel> books = await bookRepository
+                .GetAllAttached()
+                .Where(b => b.Title.ToLower().Contains(title.ToLower()))
+                .OrderBy(b => b.Author.LastName)
+                .ThenBy(b => b.PublicationYear)
+                .Select(b => new BookIndexViewModel()
+                {
+                    Id = b.Id.ToString(),
+                    Title = b.Title,
+                    Author = b.Author.FullName,
+                    AuthorLastName = b.Author.LastName != null ? b.Author.LastName : "-",
+                    AuthorFirstName = b.Author.FirstName != null ? b.Author.FirstName : "-",
+                    Genre = b.Genre.Name,
+                    ImageUrl = b.ImageUrl,
+                    AverageRating = b.AverageRating,
+                    IsDeleted = b.IsDeleted
+                })
+                .ToListAsync();
+
+            return books;
+        }
 
         public async Task<BookDetailsViewModel?> GetBookDetailsAsync(string bookId)
         {           

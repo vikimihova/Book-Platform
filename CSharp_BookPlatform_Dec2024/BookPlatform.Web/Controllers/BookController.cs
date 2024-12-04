@@ -75,6 +75,19 @@ namespace BookPlatform.Web.Controllers
             }
 
             return View(model);
-        }      
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Search(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            IEnumerable<BookIndexViewModel> books = await this.bookService.SearchBooksAsync(title);
+
+            return View(nameof(Index), books);
+        }
     }
 }

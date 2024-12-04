@@ -7,23 +7,30 @@
 
 <h2>Browse All Books</h2>
 
-<partial name="_SearchPartial" model="new BookIndexViewModel()" />
+<partial name="_SearchPartial" />
 
-<div class="row">
-    @foreach (var book in Model)
-    {
-        <div class="col-md-2">
-            <div class="card mb-2 shadow-sm" style="width: 200px; height: 425px">
-                <a class="card-title" asp-controller="Book" asp-action="Details" asp-route-bookId="@book.Id">
-                    <img src="@book.ImageUrl" class="card-img-top" alt="Cover Image" style="height: 300px; object-fit: cover;">
-                </a>
-                <div class="card-body">
-                    <a class="book-title card-title" asp-controller="Book" asp-action="Details" asp-route-bookId="@book.Id">
-                        <h6>@book.Title</h6>
+@if(Model.Any()){
+    <div class="row">
+        @foreach (var book in Model)
+        {
+            <div class="col-md-2">
+                <div class="card mb-2 shadow-sm" style="width: 200px; height: 425px">
+                    <a class="card-title" asp-controller="Book" asp-action="Details" asp-route-bookId="@book.Id">
+                        <img src="@book.ImageUrl" class="card-img-top" alt="Cover Image" style="height: 300px; object-fit: cover;">
                     </a>
-                    <p class="card-text">@book.Author</p>
+                    <div class="card-body">
+                        <a class="book-title card-title" asp-controller="Book" asp-action="Details" asp-route-bookId="@book.Id">
+                            <h6>@book.Title</h6>
+                        </a>
+                        <p class="card-text">@book.Author</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
-</div>
+        }
+    </div>
+}
+else{
+    <h3>No Results</h3>
+}
+
+
