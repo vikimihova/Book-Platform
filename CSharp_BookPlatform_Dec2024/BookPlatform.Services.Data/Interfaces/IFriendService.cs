@@ -6,7 +6,7 @@ namespace BookPlatform.Core.Services.Interfaces
     {
         Task<IEnumerable<ApplicationUserViewModel>> GetFriendsAsync(string userId);
 
-        Task<ApplicationUserViewModel?> FindFriendAsync(string friendEmail);
+        Task<IEnumerable<ApplicationUserViewModel>> FindFriendAsync(string friendEmail);
 
         Task<bool> AddFriendAsync(string mainUserId, string friendEmail);
 

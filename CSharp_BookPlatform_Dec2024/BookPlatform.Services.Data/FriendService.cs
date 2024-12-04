@@ -3,6 +3,8 @@ using BookPlatform.Core.ViewModels.ApplicationUser;
 using BookPlatform.Data.Models;
 using BookPlatform.Data.Repository.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace BookPlatform.Core.Services
@@ -29,7 +31,10 @@ namespace BookPlatform.Core.Services
             }
 
             // find user
-            ApplicationUser? user = await this.userManager.FindByIdAsync(userId);
+            ApplicationUser? user = await this.userManager
+                .Users
+                .Include(u => u.Friends)
+                .FirstOrDefaultAsync(u => u.Id.ToString().ToLower() == userId.ToLower());
 
             if (user == null)
             {
@@ -54,28 +59,33 @@ namespace BookPlatform.Core.Services
             return model;
         }
 
-        public async Task<ApplicationUserViewModel?> FindFriendAsync(string friendEmail)
+        public async Task<IEnumerable<ApplicationUserViewModel>> FindFriendAsync(string friendEmail)
         {
-            // check username
+            IEnumerable<ApplicationUserViewModel> model = new List<ApplicationUserViewModel>();
+
+            // check email
             if (String.IsNullOrWhiteSpace(friendEmail))
             {
-                return null;
+                return model;
             }
 
             // find user
-            ApplicationUser? user = await this.userManager.FindByNameAsync(friendEmail);
+            ApplicationUser? user = await this.userManager.FindByEmailAsync(friendEmail);
 
             if (user == null)
             {
-                return null;
+                return model;
             }
 
-            // generate view model
-            ApplicationUserViewModel model = new ApplicationUserViewModel()
+            model = new List<ApplicationUserViewModel>()
             {
-                Email = user.Email!,
-                UserName = user.UserName!,
-            };
+                new ApplicationUserViewModel()
+                {
+                    Email = user.Email!,
+                    UserName = user.UserName!,
+                }
+            }
+            .ToList();
 
             return model;
         }
@@ -89,15 +99,22 @@ namespace BookPlatform.Core.Services
                 return false;
             }
 
-            // check username
+            // check email
             if (String.IsNullOrWhiteSpace(friendEmail))
             {
                 return false;
             }
 
             // find users
-            ApplicationUser? mainUser = await this.userManager.FindByIdAsync(mainUserId);
-            ApplicationUser? friendUser = await this.userManager.FindByNameAsync(friendEmail);
+            ApplicationUser? mainUser = await this.userManager
+                .Users
+                .Include(u => u.Friends)
+                .FirstOrDefaultAsync(u => u.Id.ToString().ToLower() == mainUserId.ToLower());
+
+            ApplicationUser? friendUser = await this.userManager
+                .Users
+                .Include(u => u.Friends)
+                .FirstOrDefaultAsync(u => u.Email == friendEmail);
 
             if (mainUser == null || friendUser == null)
             {
@@ -123,15 +140,22 @@ namespace BookPlatform.Core.Services
                 return false;
             }
 
-            // check username
+            // check email
             if (String.IsNullOrWhiteSpace(friendEmail))
             {
                 return false;
             }
 
             // find users
-            ApplicationUser? mainUser = await this.userManager.FindByIdAsync(mainUserId);
-            ApplicationUser? friendUser = await this.userManager.FindByNameAsync(friendEmail);
+            ApplicationUser? mainUser = await this.userManager
+                .Users
+                .Include(u => u.Friends)
+                .FirstOrDefaultAsync(u => u.Id.ToString().ToLower() == mainUserId.ToLower());
+
+            ApplicationUser? friendUser = await this.userManager
+                .Users
+                .Include(u => u.Friends)
+                .FirstOrDefaultAsync(u => u.Email == friendEmail);
 
             if (mainUser == null || friendUser == null)
             {

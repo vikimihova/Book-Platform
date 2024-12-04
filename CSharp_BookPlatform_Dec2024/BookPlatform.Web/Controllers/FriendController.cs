@@ -47,9 +47,9 @@ namespace BookPlatform.Web.Controllers
                 return RedirectToPage("/Identity/Account/Login");
             }
 
-            ApplicationUserViewModel? model = await this.friendService.FindFriendAsync(email);
+            IEnumerable<ApplicationUserViewModel> model = await this.friendService.FindFriendAsync(email);
 
-            return View(model);
+            return View("Index", model);
         }
 
         [Authorize]
