@@ -6,10 +6,10 @@ namespace BookPlatform.Core.Services.Interfaces
     {
         Task<IEnumerable<ApplicationUserViewModel>> GetFriendsAsync(string userId);
 
-        Task<ApplicationUserViewModel?> FindFriendAsync(string friendUserName);
+        Task<ApplicationUserViewModel?> FindFriendAsync(string friendEmail);
 
-        Task<bool> AddFriendAsync(string mainUserId, string friendUserName);
+        Task<bool> AddFriendAsync(string mainUserId, string friendEmail);
 
-        Task<bool> RemoveFriendAsync(string mainUserId, string friendUserName);
+        Task<bool> RemoveFriendAsync(string mainUserId, string friendEmail);
     }
 }

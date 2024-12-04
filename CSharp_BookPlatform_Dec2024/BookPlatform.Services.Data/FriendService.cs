@@ -54,16 +54,16 @@ namespace BookPlatform.Core.Services
             return model;
         }
 
-        public async Task<ApplicationUserViewModel?> FindFriendAsync(string friendUserName)
+        public async Task<ApplicationUserViewModel?> FindFriendAsync(string friendEmail)
         {
             // check username
-            if (String.IsNullOrWhiteSpace(friendUserName))
+            if (String.IsNullOrWhiteSpace(friendEmail))
             {
                 return null;
             }
 
             // find user
-            ApplicationUser? user = await this.userManager.FindByNameAsync(friendUserName);
+            ApplicationUser? user = await this.userManager.FindByNameAsync(friendEmail);
 
             if (user == null)
             {
@@ -80,7 +80,7 @@ namespace BookPlatform.Core.Services
             return model;
         }
 
-        public async Task<bool> AddFriendAsync(string mainUserId, string friendUserName)
+        public async Task<bool> AddFriendAsync(string mainUserId, string friendEmail)
         {
             // check if user id is a valid guid
             Guid mainUserGuid = Guid.Empty;
@@ -90,14 +90,14 @@ namespace BookPlatform.Core.Services
             }
 
             // check username
-            if (String.IsNullOrWhiteSpace(friendUserName))
+            if (String.IsNullOrWhiteSpace(friendEmail))
             {
                 return false;
             }
 
             // find users
             ApplicationUser? mainUser = await this.userManager.FindByIdAsync(mainUserId);
-            ApplicationUser? friendUser = await this.userManager.FindByNameAsync(friendUserName);
+            ApplicationUser? friendUser = await this.userManager.FindByNameAsync(friendEmail);
 
             if (mainUser == null || friendUser == null)
             {
@@ -114,7 +114,7 @@ namespace BookPlatform.Core.Services
             return true;
         }
 
-        public async Task<bool> RemoveFriendAsync(string mainUserId, string friendUserName)
+        public async Task<bool> RemoveFriendAsync(string mainUserId, string friendEmail)
         {
             // check if user id is a valid guid
             Guid mainUserGuid = Guid.Empty;
@@ -124,14 +124,14 @@ namespace BookPlatform.Core.Services
             }
 
             // check username
-            if (String.IsNullOrWhiteSpace(friendUserName))
+            if (String.IsNullOrWhiteSpace(friendEmail))
             {
                 return false;
             }
 
             // find users
             ApplicationUser? mainUser = await this.userManager.FindByIdAsync(mainUserId);
-            ApplicationUser? friendUser = await this.userManager.FindByNameAsync(friendUserName);
+            ApplicationUser? friendUser = await this.userManager.FindByNameAsync(friendEmail);
 
             if (mainUser == null || friendUser == null)
             {
