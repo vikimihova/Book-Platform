@@ -1,34 +1,66 @@
-﻿@using BookPlatform.Core.ViewModels.ApplicationUser
+﻿@using Microsoft.AspNetCore.Identity
 
+@using BookPlatform.Data.Models
+@using BookPlatform.Core.ViewModels.ApplicationUser
 @model IEnumerable<ApplicationUserViewModel>
 
-<div class="container mt-5">
-    <h1 class="text-start mb-4">My Friends</h1>
+@inject UserManager<ApplicationUser> userManager
 
-    <form method="get" asp-controller="Home" asp-action="Index" class="d-inline">
-        <button type="submit" class="btn btn-warning btn-sm" style="width: 150px;">Go back</button>
-    </form>
+<form asp-action="Find" method="get">
+    <div class="d-flex mb-4 align-items-center" style="width: 500px;">
+        <div class="me-2 flex-grow-1">
+            <input name="email" class="form-control" style="height: 40px;" placeholder="Search friends by email" />
+        </div>
+        <button type="submit" class="btn btn-outline-dark" style="height: 40px;">Search</button>
+    </div>
+</form>
 
-    <table class="table table-bordered table-hover mt-4">
-        <thead class="thead-light">
-            <tr>
-                <th>User</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (ApplicationUserViewModel friend in Model)
-            {
+<form method="get" asp-controller="Home" asp-action="Index" class="d-inline">
+    <button type="submit" class="btn btn-warning btn-sm" style="width: 150px;">Go back</button>
+</form>
+
+@if(Model.Any()){
+    <div class="container mt-5">
+        <h1 class="text-start mb-4">My Friends</h1>  
+        <table class="table table-bordered table-hover mt-4">
+            <thead class="thead-light">
                 <tr>
-                    <td>@friend.UserName</td>
-                    <td>
-                        <form method="get" asp-controller="Friend" asp-action="Remove" class="d-inline ms-2">
-                            <input type="hidden" name="email" value="@friend.Email" />
-                            <button type="submit" class="btn btn-primary btn-sm" style="width: 150px;">Remove friend</button>
-                        </form>
-                    </td>
+                    <th>User</th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach (ApplicationUserViewModel friend in Model)
+                {
+                    <tr>
+                        <td>@friend.UserName</td>
+                        <td>
+                            @if(this.User?.Identity?.IsAuthenticated ?? false){
+                                ApplicationUser? currentUser = await userManager.FindByNameAsync(this.User.Identity.Name!);
+
+                                @if (currentUser!.Friends.Any(fr => fr.UserName == friend.UserName))
+                                {
+                                    <form method="get" asp-controller="Friend" asp-action="Remove" class="d-inline ms-2">
+                                        <input type="hidden" name="email" value="@friend.Email" />
+                                        <button type="submit" class="btn btn-warning btn-sm" style="width: 150px;">Remove friend</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form method="get" asp-controller="Friend" asp-action="Add" class="d-inline ms-2">
+                                        <input type="hidden" name="email" value="@friend.Email" />
+                                        <button type="submit" class="btn btn-primary btn-sm" style="width: 150px;">Add friend</button>
+                                    </form>
+                                }
+                            }                                                        
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else{
+    <h3>No Results</h3>
+}
+
