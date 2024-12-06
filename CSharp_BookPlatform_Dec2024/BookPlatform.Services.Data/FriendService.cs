@@ -49,6 +49,7 @@ namespace BookPlatform.Core.Services
 
             // generate view model
             model = user.Friends
+                .OrderBy(u => u.UserName)
                 .Select(u => new ApplicationUserViewModel()
                 {
                     Email = u.Email!,
