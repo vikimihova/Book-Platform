@@ -66,6 +66,7 @@ namespace BookPlatform.Core.Services
                 .Where(bau => bau.ApplicationUserId.ToString() == userId)
                 .Include(bau => bau.ReadingStatus)
                 .Include(bau => bau.Rating)
+                .Include(bau => bau.Character)
                 .Include(bau => bau.Book)
                 .ThenInclude(b => b.Author)
                 .OrderByDescending(b => b.DateAdded)
@@ -79,6 +80,7 @@ namespace BookPlatform.Core.Services
                     ReadingStatus = bau.ReadingStatus.StatusDescription,
                     DateAdded = bau.DateAdded.ToString(DateViewFormat),
                     DateFinished = bau.DateFinished.HasValue ? bau.DateFinished.Value.ToString(DateViewFormat) : String.Empty,
+                    FavoriteCharacter = bau.Character != null ? bau.Character.Name : null,
                     ImageUrl = bau.Book.ImageUrl
                 })                
                 .ToListAsync();
@@ -320,8 +322,17 @@ namespace BookPlatform.Core.Services
             // update favourite character
             if (model.CharacterId != null)
             {
-                Guid characterGuid = Guid.Parse(model.CharacterId);
+                Guid characterGuid = Guid.Empty;
+                if (!IsGuidValid(model.CharacterId, ref characterGuid))
+                {
+                    throw new ArgumentException();
+                }
+
                 bookApplicationUser.CharacterId = characterGuid;
+            }
+            else
+            {
+                bookApplicationUser.CharacterId = null;
             }
 
             // update review
