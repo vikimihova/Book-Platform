@@ -35,20 +35,26 @@ namespace BookPlatform.Core.Services
             }
 
             // find user
-            ApplicationUser? user = await this.userManager.FindByIdAsync(userId);
+            ApplicationUser? user = await this.userManager
+                .Users
+                .Include(u => u.UserBooks)
+                .FirstOrDefaultAsync(u => u.Id == userGuid);
 
-            if (user == null)
+            if (user == null || user.LastLogin == null)
             {
                 return reviews;
             }
 
+            var userBookIds = user.UserBooks.Select(ub => ub.BookId).ToList();
+
             // generate reviews
             reviews = await this.reviewRepository
-                .GetAllAttached()
+                .GetAllAttached()                
                 .Include(r => r.BookApplicationUser)
                 .ThenInclude(bau => bau.ApplicationUser)
-                .Where(bau => bau.ApplicationUserId == userGuid)
-                .Where(r => r.CreatedOn > user.LastLogin || r.ModifiedOn > user.LastLogin)
+                .Where(r => r.ApplicationUserId != user.Id &&
+                            userBookIds.Contains(r.BookApplicationUser.BookId) 
+                            /*&& r.CreatedOn > user.LastLogin || r.ModifiedOn > user.LastLogin*/)
                 .Select(r => new ReviewViewModel()
                 {
                     Id = r.Id.ToString(),
