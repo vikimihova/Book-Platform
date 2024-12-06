@@ -165,28 +165,7 @@ namespace BookPlatform.Web.Controllers
                 model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
                 model.Ratings = await this.ratingService.GetRatingsAsync();
                 return View(model);
-            }
-
-            // check date formats
-            if (model.DateStarted != null)
-            {
-                if (!DateTime.TryParseExact(model.DateStarted, DateViewFormat,
-                CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateStarted))
-                {
-                    ModelState.AddModelError(nameof(model.DateStarted), WrongDateViewFormat);
-                    model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
-                    model.Ratings = await this.ratingService.GetRatingsAsync();
-                    return View(model);
-                }
-
-                if (dateStarted > DateTime.Today)
-                {
-                    ModelState.AddModelError(nameof(model.DateStarted), DateInFuture);
-                    model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
-                    model.Ratings = await this.ratingService.GetRatingsAsync();
-                    return View(model);
-                }
-            }
+            }            
 
             if (model.DateFinished != null)
             {
@@ -268,28 +247,7 @@ namespace BookPlatform.Web.Controllers
                 model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
                 model.Ratings = await this.ratingService.GetRatingsAsync();
                 return View(model);
-            }
-
-            // check date formats
-            if (model.DateStarted != null)
-            {
-                if (!DateTime.TryParseExact(model.DateStarted, DateViewFormat,
-                CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateStarted))
-                {
-                    ModelState.AddModelError(nameof(model.DateStarted), WrongDateViewFormat);
-                    model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
-                    model.Ratings = await this.ratingService.GetRatingsAsync();
-                    return View(model);
-                }
-
-                if (dateStarted > DateTime.Today)
-                {
-                    ModelState.AddModelError(nameof(model.DateStarted), DateInFuture);
-                    model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
-                    model.Ratings = await this.ratingService.GetRatingsAsync();
-                    return View(model);
-                }
-            }
+            }           
 
             if (model.DateFinished != null)
             {

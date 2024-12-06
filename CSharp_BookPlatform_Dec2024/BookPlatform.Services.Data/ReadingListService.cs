@@ -78,7 +78,6 @@ namespace BookPlatform.Core.Services
                     ReadingStatusId = bau.ReadingStatus.Id, // changed
                     ReadingStatus = bau.ReadingStatus.StatusDescription,
                     DateAdded = bau.DateAdded.ToString(DateViewFormat),
-                    DateStarted = bau.DateStarted.HasValue ? bau.DateStarted.Value.ToString(DateViewFormat) : String.Empty,
                     DateFinished = bau.DateFinished.HasValue ? bau.DateFinished.Value.ToString(DateViewFormat) : String.Empty,
                     ImageUrl = bau.Book.ImageUrl
                 })                
@@ -235,19 +234,7 @@ namespace BookPlatform.Core.Services
             // 2. EXTEND INFORMATION ABOUT BookApplicationUser:
 
             // add rating
-            bookApplicationUser.RatingId = model.Rating;            
-
-            // add date started
-            if (model.DateStarted != null)
-            {
-                bool isStartDateValid = DateTime.TryParseExact(model.DateStarted, DateViewFormat,
-                    CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateStarted);
-
-                if (isStartDateValid == true)
-                {
-                    bookApplicationUser.DateStarted = dateStarted;
-                }
-            }
+            bookApplicationUser.RatingId = model.Rating;           
 
             // add date finished
             if (model.DateFinished != null)
@@ -316,19 +303,7 @@ namespace BookPlatform.Core.Services
             // UPDATE INFORMATION ABOUT BookApplicationUser:
 
             // update rating
-            bookApplicationUser.RatingId = model.Rating;
-
-            // update date started
-            if (model.DateStarted != null)
-            {
-                bool isStartDateValid = DateTime.TryParseExact(model.DateStarted, DateViewFormat,
-                    CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateStarted);
-
-                if (isStartDateValid == true)
-                {
-                    bookApplicationUser.DateStarted = dateStarted;
-                }
-            }
+            bookApplicationUser.RatingId = model.Rating;                       
 
             // update date finished
             if (model.DateFinished != null)
@@ -353,7 +328,7 @@ namespace BookPlatform.Core.Services
             Review? review = await this.reviewRepository
                     .FirstOrDefaultAsync(r => r.BookId == bookApplicationUser.BookId &&
                                               r.ApplicationUserId == bookApplicationUser.ApplicationUserId);
-
+            
             if (model.Review != null && review == null)
             {
                 review = new Review()
@@ -523,7 +498,6 @@ namespace BookPlatform.Core.Services
                 BookTitle = book.Title,
                 Rating = bookApplicationUser.RatingId != null ? bookApplicationUser.RatingId : null,
                 ReadingStatus = 3,
-                DateStarted = bookApplicationUser.DateStarted.HasValue ? bookApplicationUser.DateStarted.Value.ToString(DateViewFormat) : String.Empty,
                 DateFinished = bookApplicationUser.DateFinished.HasValue ? bookApplicationUser.DateFinished.Value.ToString(DateViewFormat) : String.Empty,
                 CharacterId = bookApplicationUser.CharacterId.ToString(),
                 ImageUrl = book.ImageUrl

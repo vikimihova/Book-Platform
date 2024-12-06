@@ -27,8 +27,6 @@ namespace BookPlatform.Core.ViewModels.ReadingList
         [Required]
         public int ReadingStatus { get; set; }
 
-        public string? DateStarted { get; set; }
-
         public string? DateFinished { get; set; }
                 
         public string? CharacterId { get; set; }

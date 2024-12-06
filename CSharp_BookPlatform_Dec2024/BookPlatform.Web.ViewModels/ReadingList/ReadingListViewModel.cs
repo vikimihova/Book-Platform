@@ -14,8 +14,6 @@
 
         public string ReadingStatus { get; set; } = null!;
 
-        public string DateStarted { get; set; } = null!;
-
         public string DateFinished { get; set; } = null!;
 
         public string DateAdded { get; set; } = null!;
