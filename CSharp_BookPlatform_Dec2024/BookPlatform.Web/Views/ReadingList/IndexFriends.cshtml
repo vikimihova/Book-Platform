@@ -1,0 +1,44 @@
+﻿@using BookPlatform.Core.ViewModels.ApplicationUser
+@model ICollection<FriendBookViewModel>
+
+@if (Model.Any())
+{
+    <div class="container mt-5">
+        <div class="row">
+            @foreach (FriendBookViewModel friendBook in Model)
+            {
+                <div class="col-md-2 my-5">
+                    <p>
+                        <strong>@friendBook.FriendUserName</strong><br>
+                        @if (friendBook.ReadingStatusDescription == "Read")
+                        {
+                            <span>has read</span>
+                        }
+                        else if (friendBook.ReadingStatusDescription == "Currently Reading")
+                        {
+                            <span>is reading</span>
+                        }
+                        else if (friendBook.ReadingStatusDescription == "Want to Read")
+                        {
+                            <span>wants to read</span>
+                        }
+                    </p>
+                    <div class="card mb-2 shadow-sm" style="width: 200px; height: 390px">
+                        <a class="card-title" asp-controller="Book" asp-action="Details" asp-route-bookId="@friendBook.BookId">
+                            <img src="@friendBook.ImageUrl" class="card-img-top" alt="Cover Image" style="height: 300px; object-fit: cover;">
+                        </a>
+                        <div class="card-body">
+                            <a class="book-title card-title" asp-controller="Book" asp-action="Details" asp-route-bookId="@friendBook.BookId">
+                                <h6>@friendBook.Title</h6>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <h3>No Results</h3>
+}

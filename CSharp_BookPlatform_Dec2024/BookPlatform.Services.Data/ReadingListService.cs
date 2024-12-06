@@ -13,6 +13,7 @@ using System.Net;
 using BookPlatform.Core.ViewModels.ApplicationUser;
 using static BookPlatform.Common.OutputMessages;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace BookPlatform.Core.Services
 {
@@ -67,6 +68,7 @@ namespace BookPlatform.Core.Services
                 .Include(bau => bau.Rating)
                 .Include(bau => bau.Book)
                 .ThenInclude(b => b.Author)
+                .OrderByDescending(b => b.DateAdded)
                 .Select(bau => new ReadingListViewModel()
                 {
                     BookId = bau.BookId.ToString(),
@@ -97,7 +99,9 @@ namespace BookPlatform.Core.Services
             }
 
             // find user
-            ApplicationUser? user = await this.userManager.FindByIdAsync(userId);
+            ApplicationUser? user = await this.userManager.Users
+                .Include(u => u.Friends)
+                .FirstOrDefaultAsync(u => u.Id == userGuid);
 
             if (user == null)
             {
@@ -116,7 +120,7 @@ namespace BookPlatform.Core.Services
                     .GetAllAttached()
                     .Where(bau => bau.ApplicationUserId == friend.Id)
                     .Include(bau => bau.ReadingStatus)
-                    .Include(bau => bau.Book)                    
+                    .Include(bau => bau.Book)
                     .ToListAsync();
 
                 if (!friendsReadingList.Any())
@@ -131,14 +135,20 @@ namespace BookPlatform.Core.Services
                         FriendUserName = friend.UserName!,
                         BookId = bau.BookId.ToString(),
                         Title = bau.Book.Title,
-                        ReadingStatusDescription = bau.ReadingStatus.StatusDescription
+                        ReadingStatusDescription = bau.ReadingStatus.StatusDescription,
+                        DateAdded = bau.DateAdded,
+                        ImageUrl = bau.Book.ImageUrl
                     };
 
                     model.Add(viewModel);
                 }                
             }
 
-            return model;
+            ICollection<FriendBookViewModel> orderedModel = model
+                .OrderByDescending(fbvm => fbvm.DateAdded)
+                .ToList();
+
+            return orderedModel;
         }
 
         public async Task<bool> AddBookToUserReadingListAsync(string bookId, string userId, int readingStatusId)

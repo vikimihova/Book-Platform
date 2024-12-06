@@ -74,7 +74,7 @@ namespace BookPlatform.Web.Controllers
             }
 
             // generate view model
-            IEnumerable<FriendBookViewModel> model = await this.readingListService.GetFriendBooksByUserIdAsync(userId);
+            ICollection<FriendBookViewModel> model = await this.readingListService.GetFriendBooksByUserIdAsync(userId);
 
             return View(model);
         }
