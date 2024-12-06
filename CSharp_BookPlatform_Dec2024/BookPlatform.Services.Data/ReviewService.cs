@@ -51,6 +51,10 @@ namespace BookPlatform.Core.Services
             reviews = await this.reviewRepository
                 .GetAllAttached()                
                 .Include(r => r.BookApplicationUser)
+                .ThenInclude(bau => bau.Character)
+                .Include(r => r.BookApplicationUser)
+                .ThenInclude(bau => bau.Book)
+                .Include(r => r.BookApplicationUser)
                 .ThenInclude(bau => bau.ApplicationUser)
                 .Where(r => r.ApplicationUserId != user.Id &&
                             userBookIds.Contains(r.BookApplicationUser.BookId) 
@@ -59,9 +63,12 @@ namespace BookPlatform.Core.Services
                 {
                     Id = r.Id.ToString(),
                     BookId = r.BookId.ToString(),
+                    Title = r.BookApplicationUser.Book.Title,
                     Content = r.Content,
                     IsModified = r.ModifiedOn != null ? true : false,
-                    Author = r.BookApplicationUser.ApplicationUser.UserName!
+                    Author = r.BookApplicationUser.ApplicationUser.UserName!,
+                    Rating = r.BookApplicationUser.RatingId != null ? r.BookApplicationUser.RatingId : null,
+                    FavoriteCharacter = r.BookApplicationUser.Character != null ? r.BookApplicationUser.Character.Name : null,
                 })
                 .ToListAsync();
 
@@ -73,15 +80,22 @@ namespace BookPlatform.Core.Services
             IEnumerable<ReviewViewModel> reviews = await this.reviewRepository
                 .GetAllAttached()
                 .Include(r => r.BookApplicationUser)
+                .ThenInclude(bau => bau.Character)
+                .Include(r => r.BookApplicationUser)
+                .ThenInclude(bau => bau.Book)
+                .Include(r => r.BookApplicationUser)
                 .ThenInclude(bau => bau.ApplicationUser)
                 .Where(r => r.BookId.ToString().ToLower() == bookId.ToLower())
                 .Select(r => new ReviewViewModel()
                 {
                     Id = r.Id.ToString(),
                     BookId = r.BookId.ToString(),
+                    Title = r.BookApplicationUser.Book.Title,
                     Content = r.Content,
                     IsModified = r.ModifiedOn != null ? true : false,
-                    Author = r.BookApplicationUser.ApplicationUser.UserName!
+                    Author = r.BookApplicationUser.ApplicationUser.UserName!,
+                    Rating = r.BookApplicationUser.RatingId != null ? r.BookApplicationUser.RatingId : null,
+                    FavoriteCharacter = r.BookApplicationUser.Character != null ? r.BookApplicationUser.Character.Name : null,
                 })
                 .ToListAsync();
 
