@@ -1,0 +1,13 @@
+﻿@using BookPlatform.Core.ViewModels.Discover
+@model DiscoverViewModel
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-6">
+			<partial name="_ReviewsPartial" model="@Model.NewReviews"/>
+		</div>
+		<div class="col-md-6">
+			<partial name="_IndexFriendsPartial" model="@Model.FriendBooks"/>
+		</div>
+	</div>
+</div>
