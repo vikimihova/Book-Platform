@@ -76,7 +76,7 @@ namespace BookPlatform.Core.Services
                     BookTitle = bau.Book.Title,
                     Author = bau.Book.Author.FullName,
                     Rating = bau.RatingId != null ? bau.RatingId.Value : 0,
-                    ReadingStatusId = bau.ReadingStatus.Id, // changed
+                    ReadingStatusId = bau.ReadingStatus.Id, 
                     ReadingStatus = bau.ReadingStatus.StatusDescription,
                     DateAdded = bau.DateAdded.ToString(DateViewFormat),
                     DateFinished = bau.DateFinished.HasValue ? bau.DateFinished.Value.ToString(DateViewFormat) : String.Empty,
@@ -339,20 +339,8 @@ namespace BookPlatform.Core.Services
             Review? review = await this.reviewRepository
                     .FirstOrDefaultAsync(r => r.BookId == bookApplicationUser.BookId &&
                                               r.ApplicationUserId == bookApplicationUser.ApplicationUserId);
-            
-            if (model.Review != null && review == null)
-            {
-                review = new Review()
-                {
-                    Content = model.Review,
-                    BookId = bookApplicationUser.BookId,
-                    ApplicationUserId = bookApplicationUser.ApplicationUserId
-                };
 
-                await this.reviewRepository.AddAsync(review);
-            }
-
-            if (model.Review != null && review != null)
+            if (model.Review != null && review != null && model.Review != review.Content)
             {
                 review.Content = model.Review;
                 review.ModifiedOn = DateTime.Now;
@@ -363,6 +351,18 @@ namespace BookPlatform.Core.Services
             {
                 await this.reviewRepository.DeleteAsync(review);
             }
+
+            if (model.Review != null && review == null)
+            {
+                review = new Review()
+                {
+                    Content = model.Review,
+                    BookId = bookApplicationUser.BookId,
+                    ApplicationUserId = bookApplicationUser.ApplicationUserId
+                };
+
+                await this.reviewRepository.AddAsync(review);
+            }            
 
             // update repository
             await bookApplicationUserRepository.UpdateAsync(bookApplicationUser);
