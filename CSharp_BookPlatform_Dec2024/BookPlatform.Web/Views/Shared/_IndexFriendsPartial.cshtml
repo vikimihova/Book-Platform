@@ -1,15 +1,17 @@
 ﻿@using BookPlatform.Core.ViewModels.ApplicationUser
 @model ICollection<FriendBookViewModel>
 
-<h1>Friends' Books</h1>
 
-@if (Model.Any())
-{
-    <div class="container mt-5">
+<div class="container">
+    @if (Model.Any())
+    {   
+        <div class="row text-center">
+            <h2>Friends' Books</h2>
+        </div>
         <div class="row">
             @foreach (FriendBookViewModel friendBook in Model)
             {
-                <div class="col-md-2 my-5">
+                <div class="col-md-6 my-5">
                     <p>
                         <strong>@friendBook.FriendUserName</strong><br>
                         @if (friendBook.ReadingStatusDescription == "Read")
@@ -38,9 +40,10 @@
                 </div>
             }
         </div>
-    </div>
-}
-else
-{
-    <h3>No Results</h3>
-}
+    
+    }
+    else
+    {
+        <h2>No Friends' Books</h2>
+    }
+</div>
