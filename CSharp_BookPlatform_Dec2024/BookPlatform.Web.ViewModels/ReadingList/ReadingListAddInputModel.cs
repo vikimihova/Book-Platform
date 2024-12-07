@@ -3,7 +3,7 @@
 using static BookPlatform.Common.ApplicationConstants;
 using static BookPlatform.Common.EntityValidationConstants.BookValidationConstants;
 using static BookPlatform.Common.EntityValidationConstants.ReviewValidationConstants;
-using static BookPlatform.Common.EntityValidationConstants.CharacterValidationConstants;
+
 using BookPlatform.Core.ViewModels.Character;
 using BookPlatform.Core.ViewModels.Rating;
 
@@ -27,7 +27,7 @@ namespace BookPlatform.Core.ViewModels.ReadingList
         [Required]
         public int ReadingStatus { get; set; }
 
-        public string? DateFinished { get; set; }
+        public string? DateFinished { get; set; } = DateTime.Now.ToString(DateViewFormat);
                 
         public string? CharacterId { get; set; }
 
