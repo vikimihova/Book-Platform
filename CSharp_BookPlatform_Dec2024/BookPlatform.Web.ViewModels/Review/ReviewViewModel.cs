@@ -10,6 +10,8 @@
 
         public string Author { get; set; } = null!;
 
+        public string AuthorEmail { get; set; } = null!;
+
         public string Content { get; set; } = null!;
 
         public bool IsModified { get; set; } = false;

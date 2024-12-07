@@ -4,9 +4,9 @@ namespace BookPlatform.Core.Services.Interfaces
 {
     public interface IFriendService
     {
-        Task<IEnumerable<ApplicationUserViewModel>> GetFriendsAsync(string userId);
+        Task<ICollection<ApplicationUserViewModel>> GetFriendsAsync(string userId);
 
-        Task<IEnumerable<ApplicationUserViewModel>> FindFriendAsync(string friendEmail);
+        Task<ICollection<ApplicationUserViewModel>> FindFriendAsync(string userId, string friendEmail);
 
         Task<bool> AddFriendAsync(string mainUserId, string friendEmail);
 

@@ -1,11 +1,10 @@
 ﻿using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Core.ViewModels.ApplicationUser;
 using BookPlatform.Data.Models;
-using BookPlatform.Data.Repository.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Security.Claims;
+
+using static BookPlatform.Common.ApplicationConstants;
 
 namespace BookPlatform.Core.Services
 {
@@ -19,9 +18,9 @@ namespace BookPlatform.Core.Services
             this.userManager = userManager;
         }
 
-        public async Task<IEnumerable<ApplicationUserViewModel>> GetFriendsAsync(string userId)
+        public async Task<ICollection<ApplicationUserViewModel>> GetFriendsAsync(string userId)
         {
-            IEnumerable<ApplicationUserViewModel> model = new List<ApplicationUserViewModel>();
+            ICollection<ApplicationUserViewModel> model = new List<ApplicationUserViewModel>();
 
             // check if user id is a valid guid
             Guid userGuid = Guid.Empty;
@@ -48,7 +47,7 @@ namespace BookPlatform.Core.Services
             }
 
             // generate view model
-            model = user.Friends
+            model = user.Friends                
                 .OrderBy(u => u.UserName)
                 .Select(u => new ApplicationUserViewModel()
                 {
@@ -60,9 +59,27 @@ namespace BookPlatform.Core.Services
             return model;
         }
 
-        public async Task<IEnumerable<ApplicationUserViewModel>> FindFriendAsync(string friendEmail)
+        public async Task<ICollection<ApplicationUserViewModel>> FindFriendAsync(string userId, string friendEmail)
         {
-            IEnumerable<ApplicationUserViewModel> model = new List<ApplicationUserViewModel>();
+            ICollection<ApplicationUserViewModel> model = await GetFriendsAsync(userId);
+
+            // check if user id is a valid guid
+            Guid userGuid = Guid.Empty;
+            if (!IsGuidValid(userId, ref userGuid))
+            {
+                return model;
+            }
+
+            // find user
+            ApplicationUser? user = await this.userManager
+                .Users
+                .Include(u => u.Friends)
+                .FirstOrDefaultAsync(u => u.Id.ToString().ToLower() == userId.ToLower());
+
+            if (user == null)
+            {
+                return model;
+            }
 
             // check email
             if (String.IsNullOrWhiteSpace(friendEmail))
@@ -71,22 +88,31 @@ namespace BookPlatform.Core.Services
             }
 
             // find user
-            ApplicationUser? user = await this.userManager.FindByEmailAsync(friendEmail);
+            ApplicationUser? searchedUser = await this.userManager.FindByEmailAsync(friendEmail);
 
-            if (user == null)
+            if (searchedUser == null || user == searchedUser)
             {
                 return model;
             }
 
-            model = new List<ApplicationUserViewModel>()
+
+            // check if user is in role User
+            if(await userManager.IsInRoleAsync(searchedUser, UserRoleName))
             {
-                new ApplicationUserViewModel()
+                // generate view model
+                ApplicationUserViewModel searchedUserViewModel = new ApplicationUserViewModel()
                 {
-                    Email = user.Email!,
-                    UserName = user.UserName!,
+                    Email = searchedUser.Email!,
+                    UserName = searchedUser.UserName!,
+                };
+
+
+                // add to list
+                if (!model.Any(vm => vm.Email == searchedUser.Email))
+                {
+                    model.Add(searchedUserViewModel);
                 }
-            }
-            .ToList();
+            }            
 
             return model;
         }
@@ -117,7 +143,21 @@ namespace BookPlatform.Core.Services
                 .Include(u => u.Friends)
                 .FirstOrDefaultAsync(u => u.Email == friendEmail);
 
-            if (mainUser == null || friendUser == null)
+            if (mainUser == null || friendUser == null || mainUser == friendUser)
+            {
+                return false;
+            }
+
+            // check if user is in role User
+            if (!await userManager.IsInRoleAsync(mainUser, UserRoleName) ||
+                !await userManager.IsInRoleAsync(friendUser, UserRoleName))
+            {
+                return false;
+            }
+
+            // check if users already in each other's friends lists
+            if (mainUser.Friends.Any(fr => fr.Email == friendUser.Email) ||
+                friendUser.Friends.Any(fr => fr.Email == mainUser.Email))
             {
                 return false;
             }
@@ -159,6 +199,13 @@ namespace BookPlatform.Core.Services
                 .FirstOrDefaultAsync(u => u.Email == friendEmail);
 
             if (mainUser == null || friendUser == null)
+            {
+                return false;
+            }
+
+            // check if users already in each other's friends lists
+            if (!mainUser.Friends.Any(fr => fr.Email == friendUser.Email) ||
+                !friendUser.Friends.Any(fr => fr.Email == mainUser.Email))
             {
                 return false;
             }

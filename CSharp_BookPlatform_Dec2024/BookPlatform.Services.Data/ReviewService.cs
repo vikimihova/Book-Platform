@@ -67,6 +67,7 @@ namespace BookPlatform.Core.Services
                     Content = r.Content,
                     IsModified = r.ModifiedOn != null ? true : false,
                     Author = r.BookApplicationUser.ApplicationUser.UserName!,
+                    AuthorEmail = r.BookApplicationUser.ApplicationUser.Email!,
                     Rating = r.BookApplicationUser.RatingId != null ? r.BookApplicationUser.RatingId : null,
                     FavoriteCharacter = r.BookApplicationUser.Character != null ? r.BookApplicationUser.Character.Name : null,
                 })
@@ -94,6 +95,7 @@ namespace BookPlatform.Core.Services
                     Content = r.Content,
                     IsModified = r.ModifiedOn != null ? true : false,
                     Author = r.BookApplicationUser.ApplicationUser.UserName!,
+                    AuthorEmail = r.BookApplicationUser.ApplicationUser.Email!,
                     Rating = r.BookApplicationUser.RatingId != null ? r.BookApplicationUser.RatingId : null,
                     FavoriteCharacter = r.BookApplicationUser.Character != null ? r.BookApplicationUser.Character.Name : null,
                 })

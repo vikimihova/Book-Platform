@@ -29,7 +29,7 @@ namespace BookPlatform.Web.Controllers
                 return View("BadRequest");
             }
 
-            IEnumerable<ApplicationUserViewModel> model = await this.friendService.GetFriendsAsync(userId);
+            ICollection<ApplicationUserViewModel> model = await this.friendService.GetFriendsAsync(userId);
 
             return View(model);
         }
@@ -47,7 +47,7 @@ namespace BookPlatform.Web.Controllers
                 return RedirectToPage("/Identity/Account/Login");
             }
 
-            IEnumerable<ApplicationUserViewModel> model = await this.friendService.FindFriendAsync(email);
+            ICollection<ApplicationUserViewModel> model = await this.friendService.FindFriendAsync(userId, email);
 
             return View("Index", model);
         }
@@ -56,6 +56,9 @@ namespace BookPlatform.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Add(string email)
         {
+            // ref URL
+            var refererUrl = Request.Headers["Referer"].ToString();
+
             // get user id
             string? userId = User.GetUserId();
 
@@ -67,13 +70,16 @@ namespace BookPlatform.Web.Controllers
 
             bool result = await this.friendService.AddFriendAsync(userId, email);
 
-            return RedirectToAction(nameof(Index));
+            return Redirect(refererUrl);
         }
 
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Remove(string email)
         {
+            // ref URL
+            var refererUrl = Request.Headers["Referer"].ToString();
+
             // get user id
             string? userId = User.GetUserId();
 
@@ -85,7 +91,7 @@ namespace BookPlatform.Web.Controllers
 
             bool result = await this.friendService.RemoveFriendAsync(userId, email);
 
-            return RedirectToAction(nameof(Index));
+            return Redirect(refererUrl);
         }
     }
 }
