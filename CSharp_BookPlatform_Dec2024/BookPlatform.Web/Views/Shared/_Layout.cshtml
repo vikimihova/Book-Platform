@@ -16,19 +16,35 @@
             <div class="container-fluid">                              
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Discover">Home</a>
-                        </li>
+                        @if ((this.User?.Identity?.IsAuthenticated ?? false) && (this.User.IsInRole(UserRoleName)))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Discover">Home</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                        }                        
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Book" asp-action="Index">Browse</a>
                         </li>
+
                         @if (this.User?.Identity?.IsAuthenticated ?? false){
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="ReadingList" asp-action="Index">My Books</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Friend" asp-action="Index">Friends</a>
-                            </li>
+
+                            @if (this.User.IsInRole(UserRoleName))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="ReadingList" asp-action="Index">My Books</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Friend" asp-action="Index">Friends</a>
+                                </li>
+                            }
+                            
                             @if (this.User.IsInRole(AdminRoleName))
                             {
                                 <li class="nav-item">
@@ -39,7 +55,7 @@
                     </ul>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="navbar-brand" asp-area="" asp-controller="Book" asp-action="Index">BRAND NEW BOOK PLATFORM</a>
+                            <a class="navbar-brand" asp-area="" asp-controller="Book" asp-action="Index"><strong>SIMPLE READS</strong></a>
                         </li>                        
                     </ul>                    
                     <partial name="_LoginPartial" />
