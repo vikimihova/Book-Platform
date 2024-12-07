@@ -57,8 +57,8 @@ namespace BookPlatform.Core.Services
                 .Include(r => r.BookApplicationUser)
                 .ThenInclude(bau => bau.ApplicationUser)
                 .Where(r => r.ApplicationUserId != user.Id &&
-                            userBookIds.Contains(r.BookApplicationUser.BookId) 
-                            /*&& r.CreatedOn > user.LastLogin || r.ModifiedOn > user.LastLogin*/)
+                            userBookIds.Contains(r.BookApplicationUser.BookId) &&
+                            r.CreatedOn > user.LastLogin || r.ModifiedOn > user.LastLogin)
                 .Select(r => new ReviewViewModel()
                 {
                     Id = r.Id.ToString(),
