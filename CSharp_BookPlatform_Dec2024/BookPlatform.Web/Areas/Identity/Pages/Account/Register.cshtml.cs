@@ -119,18 +119,10 @@ namespace BookPlatform.Web.Areas.Identity.Pages.Account
                     if (!userRoleResult.Succeeded)
                     {
                         throw new InvalidOperationException(String.Format(ErrorWhileAddingUserToRole, user.UserName, UserRoleName));
-                    }
-                    //
-
-                    var userId = await _userManager.GetUserIdAsync(user);
+                    }                                       
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
-
-                    // Set LastLogin to now
-                    user.LastLogin = DateTime.Now;
-                    await _userManager.UpdateAsync(user);
-                    //
-
+                    
                     return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)
