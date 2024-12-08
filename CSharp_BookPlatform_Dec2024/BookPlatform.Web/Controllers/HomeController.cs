@@ -45,13 +45,7 @@ namespace BookPlatform.Web.Controllers
         public async Task<IActionResult> Discover()
         {
             // get user id
-            string userId = User.GetUserId()!;
-
-            // check if user is authenticated
-            //if (String.IsNullOrWhiteSpace(userId))
-            //{
-            //    return RedirectToPage("/Identity/Account/Login");
-            //}
+            string userId = User.GetUserId()!;            
 
             DiscoverViewModel model = new DiscoverViewModel();
 
