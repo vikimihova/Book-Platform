@@ -19,6 +19,7 @@ namespace BookPlatform.Core.Services
         {
             var ratings = await this.ratingRepository
                 .GetAllAttached()
+                .AsNoTracking()
                 .Select(r => new SelectRatingViewModel()
                 {
                     Id = r.Id,

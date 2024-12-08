@@ -20,6 +20,7 @@ namespace BookPlatform.Core.Services
         {
             ICollection<SelectGenreViewModel> genres = await this.genreRepository
                 .GetAllAttached()
+                .AsNoTracking()
                 .Where(g => g.IsDeleted == false)
                 .Select(g => new SelectGenreViewModel()
                 {

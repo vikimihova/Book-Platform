@@ -67,7 +67,8 @@ namespace BookPlatform.Core.Services
                 .ThenInclude(bau => bau.ApplicationUser)
                 .Where(r => r.ApplicationUserId != user.Id &&
                             userBookIds.Contains(r.BookApplicationUser.BookId) &&
-                            r.CreatedOn > user.LastLogin || r.ModifiedOn > user.LastLogin)
+                            r.CreatedOn > user.LastLogin || r.ModifiedOn > user.LastLogin &&
+                            r.BookApplicationUser.Book.IsDeleted == false)
                 .Select(r => new ReviewViewModel()
                 {
                     Id = r.Id.ToString(),
@@ -97,7 +98,7 @@ namespace BookPlatform.Core.Services
             // find book
             Book? book = await this.bookRepository.GetByIdAsync(bookGuid);
 
-            if (book == null)
+            if (book == null || book.IsDeleted == true)
             {
                 throw new InvalidOperationException();
             }

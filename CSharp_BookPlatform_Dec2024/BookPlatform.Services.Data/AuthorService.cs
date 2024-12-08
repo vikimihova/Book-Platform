@@ -21,6 +21,7 @@ namespace BookPlatform.Core.Services
         {
             ICollection<SelectAuthorViewModel> authors = await this.authorRepository
                 .GetAllAttached()
+                .AsNoTracking()
                 .Where(a => a.IsDeleted == false)
                 .Select(a => new SelectAuthorViewModel()
                 {
