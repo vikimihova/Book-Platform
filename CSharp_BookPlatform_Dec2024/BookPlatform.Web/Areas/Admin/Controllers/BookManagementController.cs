@@ -45,8 +45,7 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
 
             return View(model);
         }
-
-        // if bool is false?
+                
         [HttpPost]
         public async Task<IActionResult> Add(AddBookInputModel model)
         {
@@ -58,15 +57,14 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            bool result = await this.bookService.AddBookAsync(model);
-
-            if (result == false)
+            try
             {
-                model.Authors = await this.authorService.GetAuthorsAsync();
-                model.Genres = await this.genreService.GetGenresAsync();
-
-                return View(model);
+                bool result = await this.bookService.AddBookAsync(model);
             }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }                      
 
             return RedirectToAction(nameof(Index));
         }
@@ -74,16 +72,15 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string bookId)
         {
-            if (string.IsNullOrWhiteSpace(bookId))
+            EditBookInputModel model;
+
+            try
+            {
+                model = await this.bookService.GenerateEditBookInputModelAsync(bookId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
-            }
-
-            EditBookInputModel? model = await this.bookService.GenerateEditBookInputModelAsync(bookId);
-
-            if (model == null)
-            {
-                return RedirectToAction(nameof(Index));
             }
 
             model.Authors = await this.authorService.GetAuthorsAsync();
@@ -92,7 +89,6 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> Edit(EditBookInputModel model)
         {
@@ -104,29 +100,31 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            bool result = await this.bookService.EditBookAsync(model);
-
-            if (!result)
+            try
             {
-                model.Authors = await this.authorService.GetAuthorsAsync();
-                model.Genres = await this.genreService.GetGenresAsync();
-
-                return View(model);
+                bool result = await this.bookService.EditBookAsync(model);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> Delete(string bookId)
         {
-            if (string.IsNullOrWhiteSpace(bookId))
+            bool result;
+
+            try
+            {
+                result = await this.bookService.SoftDeleteBookAsync(bookId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
-            }
-
-            bool result = await this.bookService.SoftDeleteBookAsync(bookId);
+            }            
 
             if (!result)
             {
@@ -136,16 +134,19 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> Include(string bookId)
         {
-            if (string.IsNullOrWhiteSpace(bookId))
+            bool result;
+
+            try
+            {
+                result = await this.bookService.IncludeBookAsync(bookId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
             }
-
-            bool result = await this.bookService.IncludeBookAsync(bookId);
 
             if (!result)
             {

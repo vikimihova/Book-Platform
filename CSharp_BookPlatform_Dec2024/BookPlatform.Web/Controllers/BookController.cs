@@ -47,12 +47,7 @@ namespace BookPlatform.Web.Controllers
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Details(string bookId)
-        {
-            if (string.IsNullOrWhiteSpace(bookId))
-            {
-                return BadRequest();
-            }
-
+        {           
             // set TempData for reading status
             if (this.User?.Identity?.IsAuthenticated ?? false)
             {
@@ -60,20 +55,33 @@ namespace BookPlatform.Web.Controllers
                 string userId = this.userManager.GetUserId(this.User)!;
 
                 // get reading status
-                string? readingStatusDescription = await this.readingListService.GetCurrentReadingStatusDescriptionAsync(bookId, userId);
+                string? readingStatusDescription;
+
+                try
+                {
+                    readingStatusDescription = await this.readingListService.GetCurrentReadingStatusDescriptionAsync(bookId, userId);
+                }
+                catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+                {
+                    return BadRequest();
+                }                
 
                 if (readingStatusDescription != null)
                 {
                     TempData["ReadingStatus"] = readingStatusDescription;
                 }
-            }            
+            }
 
             // generate view model
-            BookDetailsViewModel? model = await this.bookService.GetBookDetailsAsync(bookId);
+            BookDetailsViewModel model;
 
-            if (model == null)
+            try
             {
-                return RedirectToAction(nameof(Index));
+                model = await this.bookService.GetBookDetailsAsync(bookId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
             }
 
             return View(model);
@@ -82,13 +90,13 @@ namespace BookPlatform.Web.Controllers
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Search(string title)
-        {
-            if (string.IsNullOrWhiteSpace(title))
+        {           
+            IEnumerable<BookIndexViewModel>? books = await this.bookService.SearchBooksAsync(title);
+
+            if (books == null)
             {
                 return RedirectToAction(nameof(Index));
             }
-
-            IEnumerable<BookIndexViewModel> books = await this.bookService.SearchBooksAsync(title);
 
             return View(nameof(Index), books);
         }
