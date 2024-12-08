@@ -45,7 +45,6 @@ namespace BookPlatform.Data.Repository
         public IQueryable<TType> GetAllAttached()
         {
             return this.dbSet
-                .AsNoTracking()
                 .AsQueryable();
         }
 
