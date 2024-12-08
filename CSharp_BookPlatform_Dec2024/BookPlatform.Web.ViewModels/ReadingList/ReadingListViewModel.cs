@@ -8,7 +8,7 @@
 
         public string Author { get; set; } = null!;
 
-        public int Rating { get; set; }
+        public int? Rating { get; set; }
 
         public int ReadingStatusId { get; set; }
 
