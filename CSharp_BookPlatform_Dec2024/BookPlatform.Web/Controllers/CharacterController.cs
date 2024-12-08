@@ -9,26 +9,28 @@ namespace BookPlatform.Web.Controllers
     public class CharacterController : Controller
     {
         private readonly ICharacterService characterService;
-        private readonly IBookService bookService;
 
         public CharacterController(
-            ICharacterService characterService,
-            IBookService bookService)
+            ICharacterService characterService)
         {
             this.characterService = characterService;
-            this.bookService = bookService;
         }
 
         [Authorize]
         [HttpGet]
-        public IActionResult Add(string bookId)
+        public async Task<IActionResult> Add(string bookId)
         {
-            if (string.IsNullOrWhiteSpace(bookId))
+            AddCharacterInputModel model;
+
+            try
+            {
+                model = await this.characterService.GenerateAddCharacterInputModelAsync(bookId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
             }
 
-            AddCharacterInputModel model = new AddCharacterInputModel();
             model.BookId = bookId;
 
             return View(model);
@@ -43,11 +45,20 @@ namespace BookPlatform.Web.Controllers
                 return View(model);
             }
 
-            bool result = await this.characterService.AddCharacterAsync(model);
+            bool result;
+
+            try
+            {
+                result = await this.characterService.AddCharacterAsync(model);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }            
 
             if (!result)
             {
-                return View(model);
+                return RedirectToAction("Edit", "ReadingList", new { model.BookId });
             }
 
             return RedirectToAction("Edit", "ReadingList", new { model.BookId });

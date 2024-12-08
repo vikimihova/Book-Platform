@@ -27,17 +27,20 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
 
             return this.View(model);
         }
-
-        // if bool is false?
+                
         [HttpPost]
         public async Task<IActionResult> MakeAdmin(string userId)
         {
-            if (string.IsNullOrWhiteSpace(userId))
+            bool result;
+
+            try
+            {
+                result = await this.userService.MakeAdminAsync(userId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
             }
-
-            bool result = await this.userService.MakeAdminAsync(userId);
 
             if (!result)
             {
@@ -47,16 +50,19 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> RemoveAdmin(string userId)
         {
-            if (string.IsNullOrWhiteSpace(userId))
+            bool result;
+
+            try
+            {
+                result = await this.userService.RemoveAdminAsync(userId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
             }
-
-            bool result = await this.userService.RemoveAdminAsync(userId);
 
             if (!result)
             {
@@ -66,16 +72,19 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string userId)
         {
-            if (string.IsNullOrWhiteSpace(userId))
+            bool result;
+
+            try
+            {
+                result = await this.userService.DeleteUserAsync(userId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
             }
-
-            bool result = await this.userService.DeleteUserAsync(userId);
 
             if (!result)
             {

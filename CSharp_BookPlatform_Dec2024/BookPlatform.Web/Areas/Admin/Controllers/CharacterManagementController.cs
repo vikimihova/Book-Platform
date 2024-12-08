@@ -5,6 +5,7 @@ using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Core.ViewModels.Character;
 
 using static BookPlatform.Common.ApplicationConstants;
+using BookPlatform.Data.Models;
 
 namespace BookPlatform.Web.Areas.Admin.Controllers
 {
@@ -22,12 +23,16 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string bookId)
         {
-            if (string.IsNullOrWhiteSpace(bookId))
+            IEnumerable<CharacterIndexViewModel> model;
+
+            try
+            {
+                model = await this.characterService.GetCharactersIndexAsync(bookId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
             }
-
-            IEnumerable<CharacterIndexViewModel> model = await this.characterService.GetCharactersIndexAsync(bookId);
 
             TempData["BookId"] = bookId;
 
@@ -35,20 +40,24 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add(string bookId)
+        public async Task<IActionResult> Add(string bookId)
         {
-            if (string.IsNullOrWhiteSpace(bookId))
+            AddCharacterInputModel model;
+
+            try
+            {
+                model = await this.characterService.GenerateAddCharacterInputModelAsync(bookId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
             }
 
-            AddCharacterInputModel model = new AddCharacterInputModel();
             model.BookId = bookId;
 
             return View(model);
         }
-
-        // if bool is false?
+                
         [HttpPost]
         public async Task<IActionResult> Add(AddCharacterInputModel model)
         {
@@ -57,26 +66,39 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            bool result = await this.characterService.AddCharacterAsync(model);
+            bool result;
+
+            try
+            {
+                result = await this.characterService.AddCharacterByAdminAsync(model);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
 
             if (!result)
-            {                
-                return View(model);
+            {
+                return RedirectToAction(nameof(Index), new { model.BookId });
             }
 
             return RedirectToAction(nameof(Index), new { model.BookId });
         }
 
-        // if bool is false?
+        
         [HttpPost]
         public async Task<IActionResult> Delete(string characterId, string bookId)
         {
-            if (string.IsNullOrWhiteSpace(bookId) || string.IsNullOrWhiteSpace(characterId))
+            bool result;
+
+            try
+            {
+                result = await this.characterService.SoftDeleteCharacterAsync(characterId, bookId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
-            }
-
-            bool result = await this.characterService.SoftDeleteCharacterAsync(characterId, bookId);
+            }            
 
             if (!result)
             {
@@ -86,16 +108,20 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index), new { bookId });
         }
 
-        // if bool is false?
+        
         [HttpPost]
         public async Task<IActionResult> Include(string characterId, string bookId)
         {
-            if (string.IsNullOrWhiteSpace(bookId) || string.IsNullOrWhiteSpace(characterId))
+            bool result;
+
+            try
+            {
+                result = await this.characterService.IncludeCharacterAsync(characterId, bookId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
             }
-
-            bool result = await this.characterService.IncludeCharacterAsync(characterId, bookId);
 
             if (!result)
             {

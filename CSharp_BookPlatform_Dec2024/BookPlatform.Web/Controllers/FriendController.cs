@@ -23,8 +23,18 @@ namespace BookPlatform.Web.Controllers
         {
             // get user id
             string userId = User.GetUserId()!;
-            
-            ICollection<ApplicationUserViewModel> model = await this.friendService.GetFriendsAsync(userId);
+
+            ICollection<ApplicationUserViewModel> model;
+
+            try
+            {
+                model = await this.friendService.GetFriendsAsync(userId);
+
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
 
             return View(model);
         }
@@ -32,61 +42,73 @@ namespace BookPlatform.Web.Controllers
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Find(string email)
-        {
-            // check email
-            if (String.IsNullOrWhiteSpace(email))
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
+        {          
             // get user id
-            string userId = User.GetUserId()!;            
+            string userId = User.GetUserId()!;
 
-            ICollection<ApplicationUserViewModel> model = await this.friendService.FindFriendAsync(userId, email);
+            ICollection<ApplicationUserViewModel> model;
 
-            return View("Index", model);
-        }
+            try
+            {
+                model = await this.friendService.FindFriendAsync(userId, email);
 
-        // if bool is false?
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> Add(string email)
-        {
-            // check email
-            if (String.IsNullOrWhiteSpace(email))
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
             }
 
+            return View("Index", model);
+        }
+        
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Add(string email)
+        {          
             // ref URL
             var refererUrl = Request.Headers["Referer"].ToString();
 
             // get user id
-            string userId = User.GetUserId()!;            
+            string userId = User.GetUserId()!;
 
-            bool result = await this.friendService.AddFriendAsync(userId, email);
+            // try adding friend
+            bool result;
+
+            try
+            {
+                result = await this.friendService.AddFriendAsync(userId, email);
+
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
 
             return Redirect(refererUrl);
         }
-
-        // if bool is false?
+                
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Remove(string email)
         {
-            // check email
-            if (String.IsNullOrWhiteSpace(email))
-            {
-                return BadRequest();
-            }
-
             // ref URL
             var refererUrl = Request.Headers["Referer"].ToString();
 
             // get user id
-            string userId = User.GetUserId()!;                       
+            string userId = User.GetUserId()!;
 
-            bool result = await this.friendService.RemoveFriendAsync(userId, email);
+            // try removing friend
+            bool result;
+
+            try
+            {
+                result = await this.friendService.RemoveFriendAsync(userId, email);
+
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
 
             return Redirect(refererUrl);
         }
