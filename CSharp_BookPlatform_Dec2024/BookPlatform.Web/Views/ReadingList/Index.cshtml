@@ -10,9 +10,9 @@
             <th class="col-2 text-wrap">Title</th>
             <th class="col-2 text-wrap">Author</th>
             <th class="col-2">My Rating</th>
-            <th class="col-2">Status</th>
             <th class="col-1">Character</th>
-            <th class="col-1">Finished</th>
+            <th class="col-2 text-center">Status</th>
+            <th class="col-1 text-center">Finished</th>
             <th class="col-1"></th>
         </tr>
     </thead>
@@ -56,8 +56,7 @@
                             </svg>
                         }
                     }
-                </td>
-                <td>@book.ReadingStatus</td>
+                </td>                
                 <td>
                     @if (book.FavoriteCharacter != null) {
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-heart-fill me-1 mb-n1" viewBox="0 0 16 16">
@@ -72,7 +71,8 @@
                         </svg>
                     }                    
                 </td>
-                <td>@book.DateFinished</td>
+                <td class="text-center">@book.ReadingStatus</td>
+                <td class="text-center">@book.DateFinished</td>
                 <td>
                     <div class="col d-flex justify-content-between">
                         @if (book.ReadingStatusId != 1)
