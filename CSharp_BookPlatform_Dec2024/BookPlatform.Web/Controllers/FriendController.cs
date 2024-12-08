@@ -1,10 +1,10 @@
-﻿using BookPlatform.Core.Services.Interfaces;
-using BookPlatform.Core.ViewModels.ApplicationUser;
-using BookPlatform.Data.Models;
-using BookPlatform.Web.Infrastructure.Extensions;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+
+using BookPlatform.Core.Services.Interfaces;
+using BookPlatform.Core.ViewModels.ApplicationUser;
+
+using BookPlatform.Web.Infrastructure.Extensions;
 
 namespace BookPlatform.Web.Controllers
 {
@@ -18,17 +18,12 @@ namespace BookPlatform.Web.Controllers
         }
 
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             // get user id
-            string? userId = User.GetUserId();
-
-            // check if user is authenticated
-            if (String.IsNullOrWhiteSpace(userId))
-            {
-                return View("BadRequest");
-            }
-
+            string userId = User.GetUserId()!;
+            
             ICollection<ApplicationUserViewModel> model = await this.friendService.GetFriendsAsync(userId);
 
             return View(model);
@@ -38,56 +33,58 @@ namespace BookPlatform.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Find(string email)
         {
-            // get user id
-            string? userId = User.GetUserId();
-
-            // check if user is authenticated
-            if (String.IsNullOrWhiteSpace(userId))
-            {                
-                return RedirectToPage("/Identity/Account/Login");
+            // check email
+            if (String.IsNullOrWhiteSpace(email))
+            {
+                return RedirectToAction(nameof(Index));
             }
+
+            // get user id
+            string userId = User.GetUserId()!;            
 
             ICollection<ApplicationUserViewModel> model = await this.friendService.FindFriendAsync(userId, email);
 
             return View("Index", model);
         }
 
+        // if bool is false?
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Add(string email)
         {
+            // check email
+            if (String.IsNullOrWhiteSpace(email))
+            {
+                return BadRequest();
+            }
+
             // ref URL
             var refererUrl = Request.Headers["Referer"].ToString();
 
             // get user id
-            string? userId = User.GetUserId();
-
-            // check if user is authenticated
-            if (String.IsNullOrWhiteSpace(userId))
-            {
-                return RedirectToPage("/Identity/Account/Login");
-            }
+            string userId = User.GetUserId()!;            
 
             bool result = await this.friendService.AddFriendAsync(userId, email);
 
             return Redirect(refererUrl);
         }
 
+        // if bool is false?
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Remove(string email)
         {
+            // check email
+            if (String.IsNullOrWhiteSpace(email))
+            {
+                return BadRequest();
+            }
+
             // ref URL
             var refererUrl = Request.Headers["Referer"].ToString();
 
             // get user id
-            string? userId = User.GetUserId();
-
-            // check if user is authenticated
-            if (String.IsNullOrWhiteSpace(userId))
-            {
-                return RedirectToPage("/Identity/Account/Login");
-            }
+            string userId = User.GetUserId()!;                       
 
             bool result = await this.friendService.RemoveFriendAsync(userId, email);
 

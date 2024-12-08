@@ -1,7 +1,8 @@
-﻿using BookPlatform.Core.Services.Interfaces;
-using BookPlatform.Core.ViewModels.Book;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+
+using BookPlatform.Core.Services.Interfaces;
+using BookPlatform.Core.ViewModels.Book;
 
 using static BookPlatform.Common.ApplicationConstants;
 
@@ -45,6 +46,7 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> Add(AddBookInputModel model)
         {
@@ -72,6 +74,11 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string bookId)
         {
+            if (string.IsNullOrWhiteSpace(bookId))
+            {
+                return BadRequest();
+            }
+
             EditBookInputModel? model = await this.bookService.GenerateEditBookInputModelAsync(bookId);
 
             if (model == null)
@@ -85,6 +92,7 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> Edit(EditBookInputModel model)
         {
@@ -109,9 +117,15 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> Delete(string bookId)
         {
+            if (string.IsNullOrWhiteSpace(bookId))
+            {
+                return BadRequest();
+            }
+
             bool result = await this.bookService.SoftDeleteBookAsync(bookId);
 
             if (!result)
@@ -122,9 +136,15 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> Include(string bookId)
         {
+            if (string.IsNullOrWhiteSpace(bookId))
+            {
+                return BadRequest();
+            }
+
             bool result = await this.bookService.IncludeBookAsync(bookId);
 
             if (!result)

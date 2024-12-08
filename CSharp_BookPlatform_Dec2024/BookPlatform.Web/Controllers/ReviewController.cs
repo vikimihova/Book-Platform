@@ -1,10 +1,10 @@
-﻿using BookPlatform.Core.Services.Interfaces;
-using BookPlatform.Core.ViewModels.Review;
-using BookPlatform.Data.Models;
-using BookPlatform.Web.Infrastructure.Extensions;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+
+using BookPlatform.Core.Services.Interfaces;
+using BookPlatform.Core.ViewModels.Review;
+
+using BookPlatform.Web.Infrastructure.Extensions;
 
 namespace BookPlatform.Web.Controllers
 {
@@ -23,22 +23,23 @@ namespace BookPlatform.Web.Controllers
         public async Task<IActionResult> Index()
         {
             // get user id
-            string? userId = User.GetUserId();
+            string userId = User.GetUserId()!;            
 
-            // check if user is authenticated
-            if (String.IsNullOrWhiteSpace(userId))
-            {
-                return RedirectToPage("/Identity/Account/Login");
-            }
-
+            // generate view model
             IEnumerable<ReviewViewModel> model = await this.reviewService.GetAllNewReviewsAsync(userId);
 
             return View(model);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> AllBookReviews(string bookId)
         {
+            if (string.IsNullOrWhiteSpace(bookId))
+            {
+                return BadRequest();
+            }
+
             IEnumerable<ReviewViewModel> model = await this.reviewService.GetAllReviewsPerBookAsync(bookId);
 
             return View(model);

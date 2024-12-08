@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
+using BookPlatform.Data.Models;
 using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Core.ViewModels.ReadingList;
-using BookPlatform.Data.Models;
+using BookPlatform.Core.ViewModels.ApplicationUser;
 using BookPlatform.Web.Infrastructure.Extensions;
 
 using static BookPlatform.Common.ApplicationConstants;
 using static BookPlatform.Common.OutputMessages.ReadingList;
 using static BookPlatform.Common.ModelValidationErrorMessages.DateTimeFormats;
 
-using System.Globalization;
-using BookPlatform.Core.ViewModels.ApplicationUser;
 
 namespace BookPlatform.Web.Controllers
 {
@@ -46,13 +46,7 @@ namespace BookPlatform.Web.Controllers
         public async Task<IActionResult> Index()
         {
             // get user id
-            string? userId = User.GetUserId();
-
-            // check if user is authenticated
-            if (String.IsNullOrWhiteSpace(userId))
-            {
-                return RedirectToPage("/Identity/Account/Login");
-            }
+            string userId = User.GetUserId()!;                       
 
             // generate view model
             IEnumerable<ReadingListViewModel> model = await readingListService.GetUserReadingListByUserIdAsync(userId);
@@ -65,48 +59,32 @@ namespace BookPlatform.Web.Controllers
         public async Task<IActionResult> IndexFriends()
         {
             // get user id
-            string? userId = User.GetUserId();
-
-            // check if user is authenticated
-            if (String.IsNullOrWhiteSpace(userId))
-            {
-                return RedirectToPage("/Identity/Account/Login");
-            }
-
+            string userId = User.GetUserId()!;
+                        
             // generate view model
             ICollection<FriendBookViewModel> model = await this.readingListService.GetFriendBooksByUserIdAsync(userId);
 
             return View(model);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Add(string bookId, int readingStatusId)
         {
+            if (string.IsNullOrWhiteSpace(bookId))
+            {
+                return BadRequest();
+            }
+
             // get UserId
-            string userId = this.userManager.GetUserId(this.User)!;
+            string userId = this.userManager.GetUserId(this.User)!;       
 
-            // check UserId StringNullOrEmpty (if false, redirect)
-            if (String.IsNullOrWhiteSpace(userId))
-            {
-                return RedirectToPage("/Identity/Account/Login");
-            }
-
-            // check if book already read
-            bool IsAlreadyRead = await this.readingListService.CheckIfBookAlreadyReadAsync(bookId, userId, readingStatusId);
-
-            if (IsAlreadyRead)
-            {
-                return RedirectToAction("Details", "Book", new { bookId });
-            }
-
-            // invoke method from ReadingListService
-            bool result = await this.readingListService
-                .AddBookToUserReadingListAsync(bookId, userId, readingStatusId);
+            // add book to reading list
+            bool result = await this.readingListService.AddBookToUserReadingListAsync(bookId, userId, readingStatusId);
 
             // get reading status
             string? readingStatusDescription = await this.readingListService.GetCurrentReadingStatusDescriptionAsync(bookId, userId);
-
-            // if false, redirect
+                        
             if (result == false)
             {
                 TempData[nameof(BookAlreadyInReadingList)] = string.Format(BookAlreadyInReadingList, readingStatusDescription);
@@ -120,45 +98,40 @@ namespace BookPlatform.Web.Controllers
             return RedirectToAction("Details", "Book", new { bookId });
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> AddAsRead(string bookId, int readingStatusId)
-        {
-            // check if book exists
-            Book? book = await this.bookService.GetBookByIdAsync(bookId);
+        {           
+            // get userId
+            string userId = this.userManager.GetUserId(this.User)!;
 
-            if (book == null)
-            {
-                return RedirectToAction("Index", "Book");
+            // create input model to pass book information 
+            ReadingListAddInputModel? model = null;
+
+            try 
+            {                       
+                model = await this.readingListService.GenerateAddInputModelAsync(bookId, userId, readingStatusId);
             }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }            
 
-            // check if book already read
-            string userId = this.userManager.GetUserId(this.User)!;            
-            bool IsAlreadyRead = await this.readingListService.CheckIfBookAlreadyReadAsync(bookId, userId, readingStatusId);
-            
-            if (IsAlreadyRead)
+            if (model == null)
             {
                 return RedirectToAction("Details", "Book", new { bookId });
             }
 
-            // create input model to pass book information        
-            ReadingListAddInputModel model = this.readingListService.GenerateAddInputModel(book, readingStatusId);
             model.Characters = await this.characterService.GetCharactersAsync(bookId);
             model.Ratings = await this.ratingService.GetRatingsAsync();
 
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddAsRead(ReadingListAddInputModel model)
-        {
-            // check userId
-            string userId = this.userManager.GetUserId(this.User)!;
-
-            if (String.IsNullOrWhiteSpace(userId))
-            {
-                return RedirectToPage("/Identity/Account/Login");
-            }
-
+        {           
             // check model state
             if (!this.ModelState.IsValid) 
             {
@@ -187,6 +160,9 @@ namespace BookPlatform.Web.Controllers
                 }
             }
 
+            // get userId
+            string userId = this.userManager.GetUserId(this.User)!;
+
             // try to add book to reading list
             bool result = await this.readingListService.AddBookToUserReadingListReadAsync(model, userId);
 
@@ -200,29 +176,31 @@ namespace BookPlatform.Web.Controllers
             return RedirectToAction("Details", "Book", new { model.BookId });
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Edit(string bookId, int readingStatusId)
-        {            
-            // check if book exists
-            Book? book = await this.bookService.GetBookByIdAsync(bookId);
-
-            if (book == null)
-            {
-                return RedirectToAction("Index", "Book");
-            }
-
-            // check if book already read
+        {
+            
+            // get userId
             string userId = this.userManager.GetUserId(this.User)!;
 
-            bool IsAlreadyRead = await this.readingListService.CheckIfBookAlreadyReadAsync(bookId, userId, readingStatusId);
+            // create input model to pass book information        
+            ReadingListEditInputModel model = null;
 
-            if (!IsAlreadyRead)
+            try
+            {
+                model = await this.readingListService.GenerateEditInputModelAsync(bookId, userId, readingStatusId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            if (model == null)
             {
                 return RedirectToAction("Details", "Book", new { bookId });
             }
 
-            // create input model to pass book information        
-            ReadingListEditInputModel model = await this.readingListService.GenerateEditInputModelAsync(bookId, userId);
             model.Characters = await this.characterService.GetCharactersAsync(bookId);
             model.Ratings = await this.ratingService.GetRatingsAsync();
 
@@ -230,17 +208,10 @@ namespace BookPlatform.Web.Controllers
 
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Edit(ReadingListEditInputModel model)
         {
-            // check userId
-            string userId = this.userManager.GetUserId(this.User)!;
-
-            if (String.IsNullOrWhiteSpace(userId))
-            {
-                return RedirectToPage("/Identity/Account/Login");
-            }            
-
             // check model state
             if (!this.ModelState.IsValid)
             {
@@ -269,6 +240,9 @@ namespace BookPlatform.Web.Controllers
                 }
             }
 
+            // get userId
+            string userId = this.userManager.GetUserId(this.User)!;
+
             // try to update book entry in reading list
             bool result = await this.readingListService.EditInReadingListAsync(model, userId);
 
@@ -282,13 +256,19 @@ namespace BookPlatform.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // if bool is false?
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Remove(string bookId)
         {
+            if (string.IsNullOrWhiteSpace(bookId))
+            {
+                return BadRequest();
+            }
+
             string userId = this.userManager.GetUserId(this.User)!;
 
-            bool result = await this.readingListService
-                .RemoveBookFromUserReadingListAsync(bookId, userId);
+            bool result = await this.readingListService.RemoveBookFromUserReadingListAsync(bookId, userId);
 
             if (result == false)
             {

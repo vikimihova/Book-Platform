@@ -1,12 +1,14 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 using BookPlatform.Core.ViewModels;
-using Microsoft.AspNetCore.Identity;
-using BookPlatform.Data.Models;
 using BookPlatform.Core.ViewModels.Discover;
 using BookPlatform.Core.Services.Interfaces;
+
 using BookPlatform.Web.Infrastructure.Extensions;
+
+using static BookPlatform.Common.ApplicationConstants;
 
 namespace BookPlatform.Web.Controllers
 {
@@ -26,6 +28,8 @@ namespace BookPlatform.Web.Controllers
             this.reviewService = reviewService;
         }
 
+        [AllowAnonymous]
+        [HttpGet]
         public IActionResult Index()
         {
             if (this.User?.Identity?.IsAuthenticated ?? false) 
@@ -36,16 +40,18 @@ namespace BookPlatform.Web.Controllers
             return View();
         }
 
+        [Authorize(Roles = UserRoleName)]
+        [HttpGet]
         public async Task<IActionResult> Discover()
         {
             // get user id
-            string? userId = User.GetUserId();
+            string userId = User.GetUserId()!;
 
             // check if user is authenticated
-            if (String.IsNullOrWhiteSpace(userId))
-            {
-                return RedirectToPage("/Identity/Account/Login");
-            }
+            //if (String.IsNullOrWhiteSpace(userId))
+            //{
+            //    return RedirectToPage("/Identity/Account/Login");
+            //}
 
             DiscoverViewModel model = new DiscoverViewModel();
 
@@ -55,12 +61,9 @@ namespace BookPlatform.Web.Controllers
             return View(model);
         }
 
-        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        //public IActionResult Error()
-        //{
-        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        //}
-
+        [AllowAnonymous]
+        [HttpGet]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error(int? statusCode = null)
         {
             if (statusCode == 404)

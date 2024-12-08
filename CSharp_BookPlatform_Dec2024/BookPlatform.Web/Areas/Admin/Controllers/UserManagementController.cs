@@ -1,7 +1,8 @@
-﻿using BookPlatform.Core.Services.Interfaces;
-using BookPlatform.Core.ViewModels.Admin.UserManagement;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+
+using BookPlatform.Core.Services.Interfaces;
+using BookPlatform.Core.ViewModels.Admin.UserManagement;
 
 using static BookPlatform.Common.ApplicationConstants;
 
@@ -27,9 +28,15 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
             return this.View(model);
         }
 
+        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> MakeAdmin(string userId)
         {
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return BadRequest();
+            }
+
             bool result = await this.userService.MakeAdminAsync(userId);
 
             if (!result)
@@ -40,9 +47,15 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> RemoveAdmin(string userId)
         {
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return BadRequest();
+            }
+
             bool result = await this.userService.RemoveAdminAsync(userId);
 
             if (!result)
@@ -53,9 +66,15 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string userId)
         {
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return BadRequest();
+            }
+
             bool result = await this.userService.DeleteUserAsync(userId);
 
             if (!result)

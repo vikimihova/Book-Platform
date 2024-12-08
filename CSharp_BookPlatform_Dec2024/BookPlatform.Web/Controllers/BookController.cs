@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 using BookPlatform.Data.Models;
 
 using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Core.ViewModels.Book;
-using BookPlatform.Core.Services;
 
 namespace BookPlatform.Web.Controllers
-{
+{    
     public class BookController : Controller
     {
         private readonly IBaseService baseService;
@@ -34,6 +34,7 @@ namespace BookPlatform.Web.Controllers
             this.userManager = userManager;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -42,13 +43,14 @@ namespace BookPlatform.Web.Controllers
 
             return View(model);
         }
-               
+
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Details(string bookId)
         {
             if (string.IsNullOrWhiteSpace(bookId))
             {
-                throw new ArgumentNullException(nameof(bookId));
+                return BadRequest();
             }
 
             // set TempData for reading status
@@ -77,6 +79,7 @@ namespace BookPlatform.Web.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Search(string title)
         {

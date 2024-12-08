@@ -1,8 +1,9 @@
-﻿using BookPlatform.Core.Services.Interfaces;
-using BookPlatform.Core.ViewModels.Character;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
+
+using BookPlatform.Core.Services.Interfaces;
+using BookPlatform.Core.ViewModels.Character;
+
 using static BookPlatform.Common.ApplicationConstants;
 
 namespace BookPlatform.Web.Areas.Admin.Controllers
@@ -21,8 +22,12 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string bookId)
         {
-            IEnumerable<CharacterIndexViewModel> model = await this.characterService
-                .GetCharactersIndexAsync(bookId);
+            if (string.IsNullOrWhiteSpace(bookId))
+            {
+                return BadRequest();
+            }
+
+            IEnumerable<CharacterIndexViewModel> model = await this.characterService.GetCharactersIndexAsync(bookId);
 
             TempData["BookId"] = bookId;
 
@@ -32,12 +37,18 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Add(string bookId)
         {
+            if (string.IsNullOrWhiteSpace(bookId))
+            {
+                return BadRequest();
+            }
+
             AddCharacterInputModel model = new AddCharacterInputModel();
             model.BookId = bookId;
 
             return View(model);
         }
 
+        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> Add(AddCharacterInputModel model)
         {
@@ -56,9 +67,15 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index), new { model.BookId });
         }
 
+        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> Delete(string characterId, string bookId)
         {
+            if (string.IsNullOrWhiteSpace(bookId) || string.IsNullOrWhiteSpace(characterId))
+            {
+                return BadRequest();
+            }
+
             bool result = await this.characterService.SoftDeleteCharacterAsync(characterId, bookId);
 
             if (!result)
@@ -69,9 +86,15 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index), new { bookId });
         }
 
+        // if bool is false?
         [HttpPost]
         public async Task<IActionResult> Include(string characterId, string bookId)
         {
+            if (string.IsNullOrWhiteSpace(bookId) || string.IsNullOrWhiteSpace(characterId))
+            {
+                return BadRequest();
+            }
+
             bool result = await this.characterService.IncludeCharacterAsync(characterId, bookId);
 
             if (!result)

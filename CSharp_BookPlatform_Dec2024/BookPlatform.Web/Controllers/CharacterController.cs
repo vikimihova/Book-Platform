@@ -1,7 +1,8 @@
-﻿using BookPlatform.Core.Services.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
+using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Core.ViewModels.Character;
-using BookPlatform.Data.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BookPlatform.Web.Controllers
 {
@@ -18,15 +19,22 @@ namespace BookPlatform.Web.Controllers
             this.bookService = bookService;
         }
 
+        [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Add(string bookId)
+        public IActionResult Add(string bookId)
         {
+            if (string.IsNullOrWhiteSpace(bookId))
+            {
+                return BadRequest();
+            }
+
             AddCharacterInputModel model = new AddCharacterInputModel();
             model.BookId = bookId;
 
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Add(AddCharacterInputModel model)
         {
