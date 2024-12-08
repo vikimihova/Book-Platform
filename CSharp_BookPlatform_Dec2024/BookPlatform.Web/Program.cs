@@ -6,8 +6,6 @@ using BookPlatform.Data.Models;
 
 using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Web.Infrastructure.Extensions;
-using BookPlatform.Web.Infrastructure.Middleware;
-using static BookPlatform.Common.ErrorMessages;
 
 namespace BookPlatform.Web
 {
@@ -112,9 +110,9 @@ namespace BookPlatform.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseMiddleware<CustomExceptionMiddleware>();
-            app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
+            
+            // Handle status codes
+            app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
 
             // Seed roles User and Admin and create an admin user
             app.SeedRoles(adminEmail, adminUsername, adminPassword);
