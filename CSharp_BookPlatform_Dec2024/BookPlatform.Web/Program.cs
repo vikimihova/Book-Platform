@@ -69,7 +69,8 @@ namespace BookPlatform.Web
             // Mark cookies with secure attribute (cookies sent only over HTTPS)
             builder.Services.AddAntiforgery(options => 
             { 
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.HeaderName = "X-CSRF-TOKEN";
             });
 
             // Add repositories for each entity (repository pattern) except for ApplicationUser (UserManager and SignInManager instead)
