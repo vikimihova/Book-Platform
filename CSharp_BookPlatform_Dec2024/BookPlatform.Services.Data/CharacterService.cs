@@ -26,10 +26,26 @@ namespace BookPlatform.Core.Services
 
         public async Task<IEnumerable<CharacterIndexViewModel>> GetCharactersIndexAsync(string bookId)
         {
+            // check input
+            Guid bookGuid = Guid.Empty;
+            if (!IsGuidValid(bookId, ref bookGuid))
+            {
+                throw new ArgumentException();
+            }
+
+            // check if book exists
+            Book? book = await this.bookRepository.GetByIdAsync(bookGuid);
+
+            if (book == null)
+            {
+                throw new InvalidOperationException();
+            }
+
             IEnumerable<CharacterIndexViewModel> characters = await this.bookCharacterRepository
                 .GetAllAttached()
+                .AsNoTracking()
                 .Include(bc => bc.Character)
-                .Where(bc => bc.BookId.ToString().ToLower() == bookId.ToLower())
+                .Where(bc => bc.BookId == bookGuid)
                 .OrderBy(bc => bc.Character.Name)
                 .Select(bc => new CharacterIndexViewModel()
                 {
@@ -46,11 +62,29 @@ namespace BookPlatform.Core.Services
 
         public async Task<ICollection<SelectCharacterViewModel>> GetCharactersAsync(string bookId)
         {
+            // check input
+            Guid bookGuid = Guid.Empty;
+            if (!IsGuidValid(bookId, ref bookGuid))
+            {
+                throw new ArgumentException();
+            }
+
+            // check if book exists
+            Book? book = await this.bookRepository.GetByIdAsync(bookGuid);
+
+            if (book == null)
+            {
+                throw new InvalidOperationException();
+            }
+
             ICollection<SelectCharacterViewModel> characters = await this.bookCharacterRepository
                 .GetAllAttached()
+                .AsNoTracking()
                 .Include(bc => bc.Character)
-                .Where(bc => bc.IsDeleted == false)
-                .Where(bc => bc.BookId.ToString().ToLower() == bookId.ToLower())
+                .Include(bc => bc.Book)
+                .Where(bc => bc.Book.IsDeleted == false && 
+                             bc.Book.Id == bookGuid &&
+                             bc.Character.IsDeleted == false)
                 .OrderBy(bc => bc.Character.Name)
                 .Select(bc => new SelectCharacterViewModel()
                 {
@@ -66,10 +100,17 @@ namespace BookPlatform.Core.Services
         {
             // check if bookId is valid
             Guid bookGuid = Guid.Empty;
-
             if (!IsGuidValid(model.BookId, ref bookGuid))
             {
-                return false;
+                throw new ArgumentException();
+            }
+
+            // check if book exists
+            Book? book = await this.bookRepository.GetByIdAsync(bookGuid);
+
+            if (book == null)
+            {
+                throw new InvalidOperationException();
             }
 
             // check if character already exists, then add
@@ -117,10 +158,17 @@ namespace BookPlatform.Core.Services
         {
             // check if bookId is valid
             Guid bookGuid = Guid.Empty;
-
             if (!IsGuidValid(model.BookId, ref bookGuid))
             {
-                return false;
+                throw new ArgumentException();
+            }
+
+            // check if book exists
+            Book? book = await this.bookRepository.GetByIdAsync(bookGuid);
+
+            if (book == null)
+            {
+                throw new InvalidOperationException();
             }
 
             // check if character already exists, then add
@@ -166,38 +214,29 @@ namespace BookPlatform.Core.Services
 
         public async Task<bool> SoftDeleteCharacterAsync(string characterId, string bookId)
         {
-            // check if bookId is valid guid
+            // check input
             Guid bookGuid = Guid.Empty;
-
-            if (!IsGuidValid(bookId, ref bookGuid))
+            Guid characterGuid = Guid.Empty;
+            if (!IsGuidValid(bookId, ref bookGuid) ||
+                !IsGuidValid(characterId, ref characterGuid))
             {
-                return false;
+                throw new ArgumentException();
             }
 
             // check if book exists
-            Book? book = await this.bookRepository
-                .GetByIdAsync(bookGuid);
+            Book? book = await this.bookRepository.GetByIdAsync(bookGuid);
 
             if (book == null)
             {
-                return false;
-            }
-
-            // check if characterId is valid guid
-            Guid characterGuid = Guid.Empty;
-
-            if (!IsGuidValid(characterId, ref characterGuid))
-            {
-                return false;
-            }
+                throw new InvalidOperationException();
+            }            
 
             // check if character exists
-            Character? character = await this.characterRepository
-                .GetByIdAsync(characterGuid);
+            Character? character = await this.characterRepository.GetByIdAsync(characterGuid);
 
             if (character == null)
             {
-                return false;
+                throw new InvalidOperationException();
             }
 
             // check if bookCharacter exists
@@ -206,7 +245,7 @@ namespace BookPlatform.Core.Services
 
             if (bookCharacter == null)
             {
-                return false;
+                throw new InvalidOperationException();
             }
 
             // check if bookCharacter already deleted
@@ -224,38 +263,29 @@ namespace BookPlatform.Core.Services
 
         public async Task<bool> IncludeCharacterAsync(string characterId, string bookId)
         {
-            // check if bookId is valid guid
+            // check input
             Guid bookGuid = Guid.Empty;
-
-            if (!IsGuidValid(bookId, ref bookGuid))
+            Guid characterGuid = Guid.Empty;
+            if (!IsGuidValid(bookId, ref bookGuid) ||
+                !IsGuidValid(characterId, ref characterGuid))
             {
-                return false;
+                throw new ArgumentException();
             }
 
             // check if book exists
-            Book? book = await this.bookRepository
-                .GetByIdAsync(bookGuid);
+            Book? book = await this.bookRepository.GetByIdAsync(bookGuid);
 
             if (book == null)
             {
-                return false;
-            }
-
-            // check if characterId is valid guid
-            Guid characterGuid = Guid.Empty;
-
-            if (!IsGuidValid(characterId, ref characterGuid))
-            {
-                return false;
+                throw new InvalidOperationException();
             }
 
             // check if character exists
-            Character? character = await this.characterRepository
-                .GetByIdAsync(characterGuid);
+            Character? character = await this.characterRepository.GetByIdAsync(characterGuid);
 
             if (character == null)
             {
-                return false;
+                throw new InvalidOperationException();
             }
 
             // check if bookCharacter exists
@@ -264,7 +294,7 @@ namespace BookPlatform.Core.Services
 
             if (bookCharacter == null)
             {
-                return false;
+                throw new InvalidOperationException();
             }
 
             // check if bookCharacter already deleted
@@ -278,6 +308,28 @@ namespace BookPlatform.Core.Services
             await this.bookCharacterRepository.UpdateAsync(bookCharacter);
 
             return true;
+        }
+
+        // AUXILIARY
+
+        public async Task<AddCharacterInputModel> GenerateAddCharacterInputModelAsync(string bookId)
+        {
+            // check input
+            Guid bookGuid = Guid.Empty;
+            if (!IsGuidValid(bookId, ref bookGuid))
+            {
+                throw new ArgumentException();
+            }
+
+            // check if book exists
+            Book? book = await this.bookRepository.GetByIdAsync(bookGuid);
+
+            if (book == null || book.IsDeleted == true)
+            {
+                throw new InvalidOperationException();
+            }
+
+            return new AddCharacterInputModel();
         }
     }
 }

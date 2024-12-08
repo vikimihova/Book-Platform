@@ -10,8 +10,12 @@ namespace BookPlatform.Core.Services.Interfaces
 
         Task<bool> AddCharacterAsync(AddCharacterInputModel model);
 
+        Task<bool> AddCharacterByAdminAsync(AddCharacterInputModel model);
+
         Task<bool> SoftDeleteCharacterAsync(string characterId, string bookId);
 
         Task<bool> IncludeCharacterAsync(string characterId, string bookId);
+
+        Task<AddCharacterInputModel> GenerateAddCharacterInputModelAsync(string bookId);
     }
 }

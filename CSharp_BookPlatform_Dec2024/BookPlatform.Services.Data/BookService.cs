@@ -21,6 +21,7 @@ namespace BookPlatform.Core.Services
         {
             IEnumerable<BookIndexViewModel> allBooks = await bookRepository
                 .GetAllAttached()
+                .AsNoTracking()
                 .OrderBy(b => b.Author.LastName)
                 .ThenBy(b => b.PublicationYear)
                 .Select(b => new BookIndexViewModel()
@@ -53,11 +54,19 @@ namespace BookPlatform.Core.Services
             return allBooksRandom;
         }
 
-        public async Task<IEnumerable<BookIndexViewModel>> SearchBooksAsync(string title)
+        public async Task<IEnumerable<BookIndexViewModel>?> SearchBooksAsync(string title)
         {
+            // check if title is valid
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                return null;
+            }
+
+            // generate view model
             IEnumerable<BookIndexViewModel> books = await bookRepository
                 .GetAllAttached()
-                .Where(b => b.Title.ToLower().Contains(title.ToLower()))
+                .AsNoTracking()
+                .Where(b => b.Title.ToLower().Contains(title.ToLower()) && b.IsDeleted == false)
                 .OrderBy(b => b.Author.LastName)
                 .ThenBy(b => b.PublicationYear)
                 .Select(b => new BookIndexViewModel()
@@ -77,12 +86,11 @@ namespace BookPlatform.Core.Services
             return books;
         }
 
-        public async Task<BookDetailsViewModel?> GetBookDetailsAsync(string bookId)
+        public async Task<BookDetailsViewModel> GetBookDetailsAsync(string bookId)
         {           
             // check if string is a valid Guid
-            Guid parsedGuid = Guid.Empty;
-
-            if (!IsGuidValid(bookId, ref parsedGuid))
+            Guid bookGuid = Guid.Empty;
+            if (!IsGuidValid(bookId, ref bookGuid))
             {
                 throw new ArgumentException();
             }
@@ -90,15 +98,16 @@ namespace BookPlatform.Core.Services
             // get book
             Book? book = await bookRepository
                 .GetAllAttached()
+                .AsNoTracking()
                 .Where(b => b.IsDeleted == false)
                 .Include(b => b.Author)
                 .Include(b => b.Genre)
-                .FirstOrDefaultAsync(b => b.Id == parsedGuid);
+                .FirstOrDefaultAsync(b => b.Id == bookGuid);
 
             // check if book exists
             if (book == null)
             {
-                return null;
+                throw new InvalidOperationException();
             }
 
             // generate view model
@@ -116,51 +125,28 @@ namespace BookPlatform.Core.Services
 
             return model;
         }
-
-        public async Task<Book?> GetBookByIdAsync(string bookId)
-        {
-            Book? book = await this.bookRepository
-                .GetAllAttached()
-                .FirstOrDefaultAsync(b => b.Id.ToString().ToLower() == bookId.ToLower());
-
-            return book;
-        }
-
-        //public async Task<ICollection<SelectBookViewModel>> GetBooksAsync()
-        //{
-        //    ICollection<SelectBookViewModel> books = await this.bookRepository
-        //        .GetAllAttached()
-        //        .Where(b => b.IsDeleted == false)
-        //        .Select(b => new SelectBookViewModel()
-        //        {
-        //            Id = b.Id.ToString(),
-        //            Title = b.Title
-        //        })
-        //        .ToListAsync();
-
-        //    return books;
-        //}
-
+                 
         public async Task<bool> AddBookAsync(AddBookInputModel model)
         {
-            // check if book already exists
-            Book? book = await this.bookRepository
-                .FirstOrDefaultAsync(b => b.Title == model.Title 
-                                       && b.AuthorId.ToString().ToLower() == model.AuthorId);
-
-            if (book != null)
-            {
-                return false;
-            }
-
             // check if guids are valid
             Guid authorGuid = Guid.Empty;
             Guid genreGuid = Guid.Empty;
-
             if (!IsGuidValid(model.AuthorId, ref authorGuid) || !IsGuidValid(model.GenreId, ref genreGuid))
             {
-                return false;                
+                throw new ArgumentException();
             }
+
+            // check if book already exists
+            Book? book = await this.bookRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(b => b.Title == model.Title 
+                                       && b.AuthorId == authorGuid);
+
+            if (book != null)
+            {
+                throw new InvalidOperationException();
+            }            
 
             book = new Book()
             {
@@ -179,24 +165,25 @@ namespace BookPlatform.Core.Services
 
         public async Task<bool> EditBookAsync(EditBookInputModel model)
         {
-            // check if book already exists
-            Book? book = await this.bookRepository
-                .FirstOrDefaultAsync(b => b.Title == model.Title
-                                       && b.AuthorId.ToString().ToLower() == model.AuthorId);
-
-            if (book == null)
-            {
-                return false;
-            }
-
             // check if guids are valid
             Guid authorGuid = Guid.Empty;
             Guid genreGuid = Guid.Empty;
-
             if (!IsGuidValid(model.AuthorId, ref authorGuid) || !IsGuidValid(model.GenreId, ref genreGuid))
             {
-                return false;
+                throw new ArgumentException();
             }
+
+            // check if book already exists
+            Book? book = await this.bookRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(b => b.Title == model.Title
+                                       && b.AuthorId == authorGuid);
+
+            if (book == null)
+            {
+                throw new InvalidOperationException();
+            }            
 
             book.Title = model.Title;
             book.PublicationYear = model.PublicationYear;
@@ -212,21 +199,19 @@ namespace BookPlatform.Core.Services
 
         public async Task<bool> SoftDeleteBookAsync(string bookId)
         {
-            // check if bookId is valid guid
+            // check input
             Guid bookGuid = Guid.Empty;
-
             if (!IsGuidValid(bookId, ref bookGuid))
             {
-                return false;
+                throw new ArgumentException();
             }
 
             // check if book exists
-            Book? book = await this.bookRepository
-                .GetByIdAsync(bookGuid);
+            Book? book = await this.bookRepository.FirstOrDefaultAsync(b => b.Id == bookGuid);
 
             if (book == null)
             {
-                return false;
+                throw new InvalidOperationException();
             }
 
             // check if book already deleted
@@ -244,21 +229,19 @@ namespace BookPlatform.Core.Services
 
         public async Task<bool> IncludeBookAsync(string bookId)
         {
-            // check if bookId is valid guid
+            // check input
             Guid bookGuid = Guid.Empty;
-
             if (!IsGuidValid(bookId, ref bookGuid))
             {
-                return false;
+                throw new ArgumentException();
             }
 
             // check if book exists
-            Book? book = await this.bookRepository
-                .GetByIdAsync(bookGuid);
+            Book? book = await this.bookRepository.FirstOrDefaultAsync(b => b.Id == bookGuid);
 
             if (book == null)
             {
-                return false;
+                throw new InvalidOperationException();
             }
 
             // check if book already deleted
@@ -276,23 +259,21 @@ namespace BookPlatform.Core.Services
 
         // AUXILIARY
 
-        public async Task<EditBookInputModel?> GenerateEditBookInputModelAsync(string bookId)
+        public async Task<EditBookInputModel> GenerateEditBookInputModelAsync(string bookId)
         {
-            // check if bookId is valid guid
+            // check input
             Guid bookGuid = Guid.Empty;
-
             if (!IsGuidValid(bookId, ref bookGuid))
             {
-                return null;
+                throw new ArgumentException();
             }
 
             // check if book exists
-            Book? book = await this.bookRepository
-                .GetByIdAsync(bookGuid);
+            Book? book = await this.bookRepository.GetByIdAsync(bookGuid);
 
-            if (book == null)
+            if (book == null || book.IsDeleted == true)
             {
-                return null;
+                throw new InvalidOperationException();
             }
 
             EditBookInputModel model = new EditBookInputModel()

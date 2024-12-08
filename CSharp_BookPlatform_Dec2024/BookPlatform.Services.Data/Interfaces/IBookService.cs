@@ -9,13 +9,9 @@ namespace BookPlatform.Core.Services.Interfaces
 
         Task<IEnumerable<BookIndexViewModel>> IndexGetAllRandomAsync();
 
-        Task<IEnumerable<BookIndexViewModel>> SearchBooksAsync(string title);
+        Task<IEnumerable<BookIndexViewModel>?> SearchBooksAsync(string title);
 
-        Task<BookDetailsViewModel?> GetBookDetailsAsync(string id);
-
-        Task<Book?> GetBookByIdAsync(string bookId);
-
-        //Task<ICollection<SelectBookViewModel>> GetBooksAsync();
+        Task<BookDetailsViewModel> GetBookDetailsAsync(string id);
 
         Task<bool> AddBookAsync(AddBookInputModel model);
 
@@ -25,6 +21,6 @@ namespace BookPlatform.Core.Services.Interfaces
 
         Task<bool> IncludeBookAsync(string bookId);
 
-        Task<EditBookInputModel?> GenerateEditBookInputModelAsync(string bookId);
+        Task<EditBookInputModel> GenerateEditBookInputModelAsync(string bookId);
     }
 }

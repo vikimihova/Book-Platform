@@ -20,25 +20,26 @@ namespace BookPlatform.Core.Services
 
         public async Task<ICollection<ApplicationUserViewModel>> GetFriendsAsync(string userId)
         {
-            ICollection<ApplicationUserViewModel> model = new List<ApplicationUserViewModel>();
-
             // check if user id is a valid guid
             Guid userGuid = Guid.Empty;
             if (!IsGuidValid(userId, ref userGuid))
             {
-                return model;
+                throw new ArgumentException();
             }
 
             // find user
             ApplicationUser? user = await this.userManager
                 .Users
                 .Include(u => u.Friends)
-                .FirstOrDefaultAsync(u => u.Id.ToString().ToLower() == userId.ToLower());
+                .FirstOrDefaultAsync(u => u.Id == userGuid);
 
             if (user == null)
             {
-                return model;
+                throw new InvalidOperationException();
             }
+
+            // generate empty model
+            ICollection<ApplicationUserViewModel> model = new List<ApplicationUserViewModel>();
 
             // check if user has any friends
             if (!user.Friends.Any())
@@ -46,7 +47,7 @@ namespace BookPlatform.Core.Services
                 return model;
             }
 
-            // generate view model
+            // populate model
             model = user.Friends                
                 .OrderBy(u => u.UserName)
                 .Select(u => new ApplicationUserViewModel()
@@ -61,24 +62,14 @@ namespace BookPlatform.Core.Services
 
         public async Task<ICollection<ApplicationUserViewModel>> FindFriendAsync(string userId, string friendEmail)
         {
-            ICollection<ApplicationUserViewModel> model = await GetFriendsAsync(userId);
+            // generate empty model
+            ICollection<ApplicationUserViewModel> model = await GetFriendsAsync(userId);                       
 
             // check if user id is a valid guid
             Guid userGuid = Guid.Empty;
             if (!IsGuidValid(userId, ref userGuid))
             {
-                return model;
-            }
-
-            // find user
-            ApplicationUser? user = await this.userManager
-                .Users
-                .Include(u => u.Friends)
-                .FirstOrDefaultAsync(u => u.Id.ToString().ToLower() == userId.ToLower());
-
-            if (user == null)
-            {
-                return model;
+                throw new ArgumentException();
             }
 
             // check email
@@ -88,16 +79,32 @@ namespace BookPlatform.Core.Services
             }
 
             // find user
+            ApplicationUser? user = await this.userManager
+                .Users
+                .Include(u => u.Friends)
+                .FirstOrDefaultAsync(u => u.Id == userGuid);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException();
+            }            
+
+            // find user
             ApplicationUser? searchedUser = await this.userManager.FindByEmailAsync(friendEmail);
 
-            if (searchedUser == null || user == searchedUser)
+            if (searchedUser == null)
+            {
+                throw new InvalidOperationException();
+            }            
+
+            // check if user is searching himself
+            if (user == searchedUser)
             {
                 return model;
-            }
-
+            }            
 
             // check if user is in role User
-            if(await userManager.IsInRoleAsync(searchedUser, UserRoleName))
+            if (await userManager.IsInRoleAsync(searchedUser, UserRoleName))
             {
                 // generate view model
                 ApplicationUserViewModel searchedUserViewModel = new ApplicationUserViewModel()
@@ -105,7 +112,6 @@ namespace BookPlatform.Core.Services
                     Email = searchedUser.Email!,
                     UserName = searchedUser.UserName!,
                 };
-
 
                 // add to list
                 if (!model.Any(vm => vm.Email == searchedUser.Email))
@@ -123,20 +129,20 @@ namespace BookPlatform.Core.Services
             Guid mainUserGuid = Guid.Empty;
             if (!IsGuidValid(mainUserId, ref mainUserGuid))
             {
-                return false;
+                throw new ArgumentException();
             }
 
             // check email
             if (String.IsNullOrWhiteSpace(friendEmail))
             {
-                return false;
+                throw new ArgumentException();
             }
 
             // find users
             ApplicationUser? mainUser = await this.userManager
                 .Users
                 .Include(u => u.Friends)
-                .FirstOrDefaultAsync(u => u.Id.ToString().ToLower() == mainUserId.ToLower());
+                .FirstOrDefaultAsync(u => u.Id == mainUserGuid);
 
             ApplicationUser? friendUser = await this.userManager
                 .Users
@@ -145,7 +151,7 @@ namespace BookPlatform.Core.Services
 
             if (mainUser == null || friendUser == null || mainUser == friendUser)
             {
-                return false;
+                throw new InvalidOperationException();
             }
 
             // check if user is in role User
@@ -178,29 +184,29 @@ namespace BookPlatform.Core.Services
             Guid mainUserGuid = Guid.Empty;
             if (!IsGuidValid(mainUserId, ref mainUserGuid))
             {
-                return false;
+                throw new ArgumentException();
             }
 
             // check email
             if (String.IsNullOrWhiteSpace(friendEmail))
             {
-                return false;
+                throw new ArgumentException();
             }
 
             // find users
             ApplicationUser? mainUser = await this.userManager
                 .Users
                 .Include(u => u.Friends)
-                .FirstOrDefaultAsync(u => u.Id.ToString().ToLower() == mainUserId.ToLower());
+                .FirstOrDefaultAsync(u => u.Id == mainUserGuid);
 
             ApplicationUser? friendUser = await this.userManager
                 .Users
                 .Include(u => u.Friends)
                 .FirstOrDefaultAsync(u => u.Email == friendEmail);
 
-            if (mainUser == null || friendUser == null)
+            if (mainUser == null || friendUser == null || mainUser == friendUser)
             {
-                return false;
+                throw new InvalidOperationException();
             }
 
             // check if users already in each other's friends lists

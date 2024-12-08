@@ -20,7 +20,9 @@ namespace BookPlatform.Core.Services
         public async Task<IEnumerable<AllApplicationUsersViewModel>> GetAllUsersAsync()
         {
             // get all users
-            IEnumerable<ApplicationUser> allUsers = await this.userManager.Users.ToArrayAsync();
+            IEnumerable<ApplicationUser> allUsers = await this.userManager.Users
+                .AsNoTracking()
+                .ToArrayAsync();
 
             // populate view model
             ICollection<AllApplicationUsersViewModel> allUsersViewModel = new List<AllApplicationUsersViewModel>();
@@ -48,7 +50,7 @@ namespace BookPlatform.Core.Services
             Guid userGuid = Guid.Empty;
             if (!IsGuidValid(userId, ref userGuid))
             {
-                return false;
+                throw new ArgumentException();
             }
 
             // check if user exists
@@ -56,7 +58,7 @@ namespace BookPlatform.Core.Services
 
             if (user == null)
             {
-                return false;
+                throw new InvalidOperationException();
             }
 
             // check if user is already an admin
@@ -64,7 +66,7 @@ namespace BookPlatform.Core.Services
 
             if (userAlreadyAdmin)
             {
-                return false;
+                throw new InvalidOperationException();
             }
 
             // make admin
@@ -84,7 +86,7 @@ namespace BookPlatform.Core.Services
             Guid userGuid = Guid.Empty;
             if (!IsGuidValid(userId, ref userGuid))
             {
-                return false;
+                throw new ArgumentException();
             }
 
             // check if user exists
@@ -92,7 +94,7 @@ namespace BookPlatform.Core.Services
 
             if (user == null)
             {
-                return false;
+                throw new InvalidOperationException();
             }
 
             // check if user is already an admin
@@ -100,7 +102,7 @@ namespace BookPlatform.Core.Services
 
             if (!userAlreadyAdmin)
             {
-                return false;
+                throw new InvalidOperationException();
             }
 
             // remove admin role
@@ -120,15 +122,45 @@ namespace BookPlatform.Core.Services
             Guid userGuid = Guid.Empty;
             if (!IsGuidValid(userId, ref userGuid))
             {
-                return false;
+                throw new ArgumentException();
             }
 
             // check if user exists
-            ApplicationUser? user = await this.userManager.FindByIdAsync(userId);
+            ApplicationUser? user = await this.userManager.Users
+                .Include(u => u.Friends)
+                .ThenInclude(f => f.Friends)
+                .FirstOrDefaultAsync(u => u.Id == userGuid);
 
             if (user == null)
             {
-                return false;
+                throw new InvalidOperationException();
+            }
+
+            // check if user has friends
+            if (user.Friends.Any())
+            {
+                List<string> friendEmails = new List<string>();
+
+                foreach (var friend in user.Friends)
+                {
+                    friendEmails.Add(friend.Email!);     
+                }
+
+                foreach (var email in friendEmails)
+                {
+                    ApplicationUser? friendUser = await this.userManager.Users
+                        .Include(u => u.Friends)
+                        .FirstOrDefaultAsync(u => u.Email == email);
+
+                    if (friendUser != null) 
+                    {
+                        friendUser.Friends.Remove(user);
+                        user.Friends.Remove(friendUser);
+
+                        await userManager.UpdateAsync(user);
+                        await userManager.UpdateAsync(friendUser);
+                    }                    
+                }
             }
 
             // delete user
