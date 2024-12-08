@@ -27,11 +27,9 @@ namespace BookPlatform.Web
             builder.Services.AddDbContext<PlatformDbContext>(options =>
             {
                 options.UseSqlServer(connectionString)
-                    .EnableSensitiveDataLogging() // delete!
-                    .LogTo(Console.WriteLine, LogLevel.Information); // delete!
-            }); // !NuGet Microsoft Extensions Dependency Injection package!
-            
-
+                    .EnableSensitiveDataLogging() // delete after development!
+                    .LogTo(Console.WriteLine, LogLevel.Information); // delete after development!
+            });           
 
             // Add db developer page exception filter (only in development environment)
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -63,7 +61,6 @@ namespace BookPlatform.Web
             {
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = "/Identity/Account/Login";
-                //options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
 
             // Mark cookies with secure attribute (cookies sent only over HTTPS)
@@ -81,16 +78,12 @@ namespace BookPlatform.Web
 
             // Add other services
             builder.Services.AddControllersWithViews();
-            builder.Services.AddRazorPages();
-
-            // builder.Services.AddHttpClient<OpenLibraryService>();
+            builder.Services.AddRazorPages();            
 
             // BUILD APPLICATION
             var app = builder.Build();
 
-            // CONFIGURE THE HTTP REQUEST PIPELINE
-
-            // ADD AUTOMAPPER
+            // CONFIGURE THE HTTP REQUEST PIPELINE            
 
             if (app.Environment.IsDevelopment())            
             {
@@ -100,8 +93,6 @@ namespace BookPlatform.Web
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                app.UseStatusCodePagesWithReExecute("/Home/StatusCode");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -118,6 +109,7 @@ namespace BookPlatform.Web
             // Seed roles User and Admin and create an admin user
             app.SeedRoles(adminEmail, adminUsername, adminPassword);
 
+            // Routing
             app.MapControllerRoute(
                 name: "Areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
@@ -133,17 +125,7 @@ namespace BookPlatform.Web
             app.MapRazorPages();
 
             // SEED DATABASE
-            //app.SeedDatabase();
-
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var context = scope
-            //      .ServiceProvider
-            //      .GetRequiredService<PlatformDbContext>();               
-            //}
-
-            // UPDATE DATABASE
-            //app.UpdateDatabase();
+            //app.SeedDatabase();   
 
             // APPLY MIGRATIONS
             app.ApplyMigrations();
