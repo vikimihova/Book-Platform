@@ -76,6 +76,11 @@ namespace BookPlatform.Web.Controllers
                 return this.View("BadRequest");
             }
 
+            if (statusCode == 500)
+            {
+                return this.View("InternalServerError");
+            }
+
             return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
