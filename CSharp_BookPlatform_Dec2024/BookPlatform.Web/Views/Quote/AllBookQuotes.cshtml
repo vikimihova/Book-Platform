@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using BookPlatform.Data.Models
+@using BookPlatform.Core.ViewModels.Quote
+@using Microsoft.EntityFrameworkCore
+@model AllBookQuotesViewModel
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="card mb-2 shadow-sm" style="width: 100%">
+                <img src="@Model.BookDetails.ImageUrl" class="card-img-top" alt="Cover Image" style="height: 450px; object-fit: cover;">
+            </div>
+            <div class="col-md-12">
+                <div class="buttons" style="width: 100%">
+                    <div class="d-flex flex-column">
+                        <a class="btn btn-dark mb-2" asp-controller="Book" asp-action="Details" asp-route-bookId="@Model.BookDetails.Id">Go back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-sm-6 col-xs-12 min-vw-50">
+            <h3>@Model.BookDetails.Title</h3>
+            <p class="text-start">@Model.BookDetails.Author</p>
+            <div class="d-flex flex-row align-content-center mt-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gold" class="bi bi-star-fill" viewBox="0 0 16 16">
+                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
+                </svg>
+                <p class="mx-2 my-0 py-0">@Model.BookDetails.AverageRating.ToString("F2")</p>
+            </div>
+            @foreach (QuoteViewModel quote in Model.Quotes)
+            {
+                <div class="card border-secondary shadow-sm my-3" style="width:100%">
+                    <div class="card-body">
+                        <p class="card-text">@quote.Content</p>
+                    </div>                    
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
