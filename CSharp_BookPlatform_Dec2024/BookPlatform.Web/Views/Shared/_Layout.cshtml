@@ -53,15 +53,14 @@
                             }
                         }                        
                     </ul>
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="navbar-brand" asp-area="" asp-controller="Book" asp-action="Index"><strong>SIMPLE READS</strong></a>
-                        </li>                        
-                    </ul>                    
+                    <div class="navbar-brand-container">
+                        <a class="navbar-brand" asp-area="" asp-controller="Book" asp-action="Index"><strong>SIMPLE READS</strong></a>
+                    </div>       
                     <partial name="_LoginPartial" />
                 </div>                
             </div>
         </nav>
+        @await RenderSectionAsync("Header", required: false)
     </header>
     <div class="container">
         <main role="main" class="pb-3">

@@ -1,12 +1,20 @@
 ﻿@using BookPlatform.Core.ViewModels.Discover
 @model DiscoverViewModel
 
-<div class="container">
+@section Header {
+	<div class="row text-center">
+		<p class="text-secondary">
+			<span class="fst-italic">"I think books are like people, in the sense that they’ll turn up in your life when you most need them."</span> - Emma Thompson
+		</p>
+	</div>
+}
+
+<div class="container mt-3">
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-5 min-vw-50">
 			<partial name="_ReviewsPartial" model="@Model.NewReviews"/>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-7 min-vw-50">
 			<partial name="_IndexFriendsPartial" model="@Model.FriendBooks"/>
 		</div>
 	</div>

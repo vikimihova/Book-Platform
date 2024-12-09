@@ -5,13 +5,10 @@
 <div class="container">
     @if (Model.Any())
     {   
-        <div class="row text-center">
-            <h2>Friends' Books</h2>
-        </div>
         <div class="row">
             @foreach (FriendBookViewModel friendBook in Model)
             {
-                <div class="col-md-6 my-5">
+                <div class="col-md-4 my-5 flex-shrink-0">
                     <p>
                         <strong>@friendBook.FriendUserName</strong><br>
                         @if (friendBook.ReadingStatusDescription == "Read")
@@ -44,6 +41,11 @@
     }
     else
     {
-        <h2>No Friends' Books</h2>
+        <div class="row text-center">
+            <h2 class="text-secondary">No Friends' Books</h2>
+            <div class="mt-5">
+                <p class="text-secondary">Add more friends to see new books frequently.</p>
+            </div>
+        </div>       
     }
 </div>
