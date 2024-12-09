@@ -34,6 +34,7 @@ namespace BookPlatform.Web.Infrastructure.Extensions
             context.SeedGenres();
             context.SeedBooks();
             context.SeedCharacters();
+            context.SeedQuotes();
 
             return app;
         }

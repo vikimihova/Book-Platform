@@ -308,6 +308,66 @@ namespace BookPlatform.Data
             }
         }
 
+        public void SeedQuotes()
+        {
+            try
+            {
+                QuotesImportDto[] quotesImportDtos = Deserializer.GenerateQuotesImportDtos();
+
+                List<Quote> generatedQuotes = new List<Quote>();
+
+                foreach (var quotesDto in quotesImportDtos)
+                {
+                    if (quotesDto.Quotes.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    Book? book = this.Books
+                        .AsNoTracking()
+                        .FirstOrDefault(b => b.Title == quotesDto.Title && b.Description == quotesDto.Description);
+
+                    if (book == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (var quote in quotesDto.Quotes)
+                    {
+                        if (!generatedQuotes.Any(q => q.Content == quote))
+                        {
+                            Quote newQuote = new Quote()
+                            {
+                                Content = quote,
+                                CreatedOn = DateTime.Now,
+                                BookId = book.Id
+                            };
+
+                            generatedQuotes.Add(newQuote);
+                        }
+                    }
+                }
+
+                List<Quote> existingQuotes = this.Quotes
+                    .AsNoTracking()
+                    .ToList();
+
+                List<Quote> newQuotesToAdd = generatedQuotes
+                    .Where(gq => !existingQuotes.Any(eq => eq.Content == gq.Content))
+                    .ToList();
+
+                if (newQuotesToAdd.Any())
+                {
+                    this.Quotes.AddRange(newQuotesToAdd);
+                    this.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
         public void UpdateBooksImageUrl()
         {
             BookImportDto[] bookImportDtos = Deserializer.GenerateBookImportDtos();

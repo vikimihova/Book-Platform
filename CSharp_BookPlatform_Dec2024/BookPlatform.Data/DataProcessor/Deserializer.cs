@@ -39,6 +39,12 @@ namespace BookPlatform.Data.DataProcessor
         {
             string filePath = GenerateFilePath();
             return JsonConvert.DeserializeObject<CharactersImportDto[]>(File.ReadAllText(filePath))!;
-        }        
+        }    
+        
+        public static QuotesImportDto[] GenerateQuotesImportDtos()
+        {
+            string filePath = GenerateFilePath();
+            return JsonConvert.DeserializeObject<QuotesImportDto[]>(File.ReadAllText(filePath))!;
+        }
     }
 }
