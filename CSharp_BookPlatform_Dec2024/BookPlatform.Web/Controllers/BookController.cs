@@ -88,7 +88,7 @@ namespace BookPlatform.Web.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Search(string title)
         {           
             IEnumerable<BookIndexViewModel>? books = await this.bookService.SearchBooksAsync(title);
