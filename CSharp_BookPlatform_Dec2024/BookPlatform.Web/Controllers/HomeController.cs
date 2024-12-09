@@ -32,6 +32,12 @@ namespace BookPlatform.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            if ((this.User?.Identity?.IsAuthenticated ?? false) &&
+                 this.User.IsInRole(UserRoleName))
+            {
+                return RedirectToAction("Discover", "Home");
+            }
+
             if (this.User?.Identity?.IsAuthenticated ?? false) 
             {
                 return RedirectToAction("Index", "Book");
