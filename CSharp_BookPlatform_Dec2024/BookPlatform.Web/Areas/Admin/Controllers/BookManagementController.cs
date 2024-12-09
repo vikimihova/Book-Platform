@@ -47,6 +47,7 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
         }
                 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(AddBookInputModel model)
         {
             if (!ModelState.IsValid)
@@ -90,6 +91,7 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditBookInputModel model)
         {
             if (!ModelState.IsValid)

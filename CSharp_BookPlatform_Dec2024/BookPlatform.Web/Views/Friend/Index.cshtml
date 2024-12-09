@@ -12,7 +12,7 @@
 
 <h1 class="text-start mb-4">My Friends</h1>
 
-<form asp-action="Find" method="get">
+<form asp-action="Find" method="get" asp-antiforgery="true">
     <div class="d-flex align-items-center mb-4" style="width: 500px;">
         <div class="me-2 flex-grow-1">
             <input name="email" class="form-control" style="height: 40px;" placeholder="Search friends by email" />

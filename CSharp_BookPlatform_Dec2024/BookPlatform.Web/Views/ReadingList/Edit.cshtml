@@ -19,8 +19,7 @@
         </div>
         <div class="col-md-9 col-sm-6 col-xs-12 min-vw-50">
             <h3>@Model.BookTitle</h3>
-            <form asp-action="Edit" method="post">
-                @Html.AntiForgeryToken()
+            <form asp-action="Edit" method="post" asp-antiforgery="true">
                 <input type="hidden" asp-for="BookId" value="@Model.BookId" />
                 <input type="hidden" asp-for="BookTitle" value="@Model.BookTitle" />
                 <input type="hidden" asp-for="ImageUrl" value="@Model.ImageUrl" />
@@ -54,8 +53,6 @@
                 </div>
                 <button type="submit" class="btn btn-primary mt-2">Save</button>
             </form>
-
-
         </div>
     </div>
 </div>

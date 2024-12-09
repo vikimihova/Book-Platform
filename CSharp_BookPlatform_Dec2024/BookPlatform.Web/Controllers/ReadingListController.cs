@@ -161,6 +161,7 @@ namespace BookPlatform.Web.Controllers
 
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddAsRead(ReadingListAddInputModel model)
         {           
             // check model state
@@ -248,6 +249,7 @@ namespace BookPlatform.Web.Controllers
 
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ReadingListEditInputModel model)
         {
             // check model state

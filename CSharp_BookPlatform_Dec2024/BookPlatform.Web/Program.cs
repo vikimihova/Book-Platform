@@ -60,6 +60,7 @@ namespace BookPlatform.Web
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = SameSiteMode.Strict;
                 options.LoginPath = "/Identity/Account/Login";
             });
 
@@ -102,6 +103,8 @@ namespace BookPlatform.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCookiePolicy();
             
             // Handle status codes
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");

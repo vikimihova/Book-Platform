@@ -41,6 +41,7 @@ namespace BookPlatform.Web.Controllers
 
         [Authorize]
         [HttpGet]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Find(string email)
         {          
             // get user id

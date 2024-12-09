@@ -36,6 +36,7 @@ namespace BookPlatform.Web.Controllers
 
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(AddCharacterInputModel model)
         {
             if (!ModelState.IsValid)

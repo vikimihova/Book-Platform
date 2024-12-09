@@ -19,7 +19,7 @@
         </div>
         <div class="col-md-9 col-sm-6 col-xs-12 min-vw-50">     
             <h3>@Model.BookTitle</h3>
-            <form asp-action="AddAsRead" method="post">
+            <form asp-action="AddAsRead" method="post" asp-antiforgery="true">
                 <input type="hidden" asp-for="BookId" value="@Model.BookId" />
                 <input type="hidden" asp-for="BookTitle" value="@Model.BookTitle" />
                 <input type="hidden" asp-for="ImageUrl" value="@Model.ImageUrl" />
@@ -52,9 +52,7 @@
                     <span asp-validation-for="Review" class="text-danger"></span>
                 </div>
                 <button type="submit" class="btn btn-primary mt-2">Save</button>
-            </form>
-            
-            
+            </form>      
         </div>
     </div>
 </div>
