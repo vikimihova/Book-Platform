@@ -7,9 +7,18 @@
 
 @model ReadingListAddInputModel
 
-<div class="container d-flex justify-content-center">
+<div class="container">
     <div class="row">
-        <div class="col-md-9 col-sm-6 col-xs-12 min-vw-50">      
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="card mb-2 shadow-sm" style="width: 100%">
+                <img src="@Model.ImageUrl" class="card-img-top" alt="Cover Image" style="height: 450px; object-fit: cover;">
+            </div>
+            <div class="d-flex flex-column">
+                <a class="btn btn-dark" asp-controller="Book" asp-action="Details" asp-route-bookId="@Model.BookId">Go back</a>
+            </div>
+        </div>
+        <div class="col-md-9 col-sm-6 col-xs-12 min-vw-50">     
+            <h3>@Model.BookTitle</h3>
             <form asp-action="AddAsRead" method="post">
                 <input type="hidden" asp-for="BookId" value="@Model.BookId" />
                 <input type="hidden" asp-for="BookTitle" value="@Model.BookTitle" />
@@ -33,6 +42,9 @@
                         <option value="">Select Character...</option>
                     </select>
                     <span asp-validation-for="@Model.CharacterId" class="text-danger"></span>      
+                </div>
+                <div>
+                    <p class="text-secondary">You can only add characters to books you've read. Go to your reading list and click on Edit to add more characters.</p>
                 </div>
                 <div>
                     <label for="Review">Review</label>
