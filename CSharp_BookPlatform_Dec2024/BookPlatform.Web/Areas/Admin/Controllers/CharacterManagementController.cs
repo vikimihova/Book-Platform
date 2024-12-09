@@ -53,8 +53,6 @@ namespace BookPlatform.Web.Areas.Admin.Controllers
                 return BadRequest();
             }
 
-            model.BookId = bookId;
-
             return View(model);
         }
                 

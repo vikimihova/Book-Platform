@@ -18,20 +18,18 @@ namespace BookPlatform.Web.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Add(string bookId)
+        public async Task<IActionResult> Add(string bookId, int readingStatusId)
         {
             AddCharacterInputModel model;
 
             try
             {
-                model = await this.characterService.GenerateAddCharacterInputModelAsync(bookId);
+                model = await this.characterService.GenerateAddCharacterInputModelAsync(bookId, readingStatusId);
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
             }
-
-            model.BookId = bookId;
 
             return View(model);
         }
@@ -58,10 +56,10 @@ namespace BookPlatform.Web.Controllers
 
             if (!result)
             {
-                return RedirectToAction("Edit", "ReadingList", new { model.BookId });
+                return RedirectToAction("Edit", "ReadingList", new { model.BookId, model.ReadingStatusId });
             }
 
-            return RedirectToAction("Edit", "ReadingList", new { model.BookId });
+            return RedirectToAction("Edit", "ReadingList", new { model.BookId, model.ReadingStatusId });
         }        
     }
 }

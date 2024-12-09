@@ -14,5 +14,13 @@ namespace BookPlatform.Core.ViewModels.Character
 
         [Required]
         public string BookId { get; set; } = null!;
+
+        [Required]
+        public string BookTitle { get; set; } = null!;
+
+        [Required]
+        public string ImageUrl { get; set; } = null!;
+                
+        public int? ReadingStatusId { get; set; }
     }
 }

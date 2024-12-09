@@ -312,7 +312,7 @@ namespace BookPlatform.Core.Services
 
         // AUXILIARY
 
-        public async Task<AddCharacterInputModel> GenerateAddCharacterInputModelAsync(string bookId)
+        public async Task<AddCharacterInputModel> GenerateAddCharacterInputModelAsync(string bookId, int? readingStatusId = null)
         {
             // check input
             Guid bookGuid = Guid.Empty;
@@ -329,7 +329,17 @@ namespace BookPlatform.Core.Services
                 throw new InvalidOperationException();
             }
 
-            return new AddCharacterInputModel();
+            AddCharacterInputModel model = new AddCharacterInputModel();
+            model.BookId = bookId;
+            model.BookTitle = book.Title;
+            model.ImageUrl = book.ImageUrl;
+
+            if (readingStatusId != null)
+            {
+                model.ReadingStatusId = readingStatusId;
+            }            
+
+            return model;
         }
     }
 }

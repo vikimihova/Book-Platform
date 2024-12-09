@@ -16,6 +16,6 @@ namespace BookPlatform.Core.Services.Interfaces
 
         Task<bool> IncludeCharacterAsync(string characterId, string bookId);
 
-        Task<AddCharacterInputModel> GenerateAddCharacterInputModelAsync(string bookId);
+        Task<AddCharacterInputModel> GenerateAddCharacterInputModelAsync(string bookId, int? readingStatusId = null);
     }
 }
