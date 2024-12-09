@@ -41,15 +41,15 @@ namespace BookPlatform.Core.Services
 
         // MAIN
 
-        public async Task<IEnumerable<ReadingListViewModel>> GetUserReadingListByUserIdAsync(string userId)
+        public async Task<IEnumerable<ReadingListViewModel>> GetUserReadingListByUserIdAsync(string userId, ReadingListPaginatedViewModel inputModel)
         {
             IEnumerable<ReadingListViewModel> readingList = new List<ReadingListViewModel>();
 
-            // check if user id is a valid guid
+            // check if userId is a valid guid
             Guid userGuid = Guid.Empty;
             if (!IsGuidValid(userId, ref userGuid))
             {
-                return readingList;
+                throw new ArgumentException();
             }
 
             // find user
@@ -57,13 +57,14 @@ namespace BookPlatform.Core.Services
 
             if (user == null)
             {
-                return readingList;
+                throw new InvalidOperationException();
             }
 
             // get UserBooks and create view model
-            readingList = await bookApplicationUserRepository
-                .GetAllAttached()                
-                .Where(bau => bau.ApplicationUserId.ToString() == userId)
+            IQueryable<ReadingListViewModel> readingListQuery = bookApplicationUserRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .Where(bau => bau.ApplicationUserId == userGuid)
                 .Include(bau => bau.ReadingStatus)
                 .Include(bau => bau.Rating)
                 .Include(bau => bau.Character)
@@ -76,14 +77,23 @@ namespace BookPlatform.Core.Services
                     BookTitle = bau.Book.Title,
                     Author = bau.Book.Author.FullName,
                     Rating = bau.RatingId != null ? bau.RatingId.Value : 0,
-                    ReadingStatusId = bau.ReadingStatus.Id, 
+                    ReadingStatusId = bau.ReadingStatus.Id,
                     ReadingStatus = bau.ReadingStatus.StatusDescription,
                     DateAdded = bau.DateAdded.ToString(DateViewFormat),
                     DateFinished = bau.DateFinished.HasValue ? bau.DateFinished.Value.ToString(DateViewFormat) : String.Empty,
                     FavoriteCharacter = bau.Character != null ? bau.Character.Name : null,
                     ImageUrl = bau.Book.ImageUrl
-                })                
-                .ToListAsync();
+                });      
+
+            if (inputModel.CurrentPage.HasValue &&
+                inputModel.EntitiesPerPage.HasValue)
+            {
+                readingListQuery = readingListQuery
+                    .Skip(inputModel.EntitiesPerPage.Value * (inputModel.CurrentPage.Value - 1))
+                    .Take(inputModel.EntitiesPerPage.Value);
+            }
+
+            readingList = await readingListQuery.ToListAsync();
 
             return readingList;
         }
@@ -96,7 +106,7 @@ namespace BookPlatform.Core.Services
             Guid userGuid = Guid.Empty;
             if (!IsGuidValid(userId, ref userGuid))
             {
-                return model;
+                throw new ArgumentException();
             }
 
             // find user
@@ -106,7 +116,7 @@ namespace BookPlatform.Core.Services
 
             if (user == null)
             {
-                return model;
+                throw new InvalidOperationException();
             }
 
             // check if user has any friends
@@ -119,6 +129,7 @@ namespace BookPlatform.Core.Services
             {
                 List<BookApplicationUser> friendsReadingList = await bookApplicationUserRepository
                     .GetAllAttached()
+                    .AsNoTracking()
                     .Where(bau => bau.ApplicationUserId == friend.Id)
                     .Include(bau => bau.ReadingStatus)
                     .Include(bau => bau.Book)
@@ -154,29 +165,36 @@ namespace BookPlatform.Core.Services
 
         public async Task<bool> AddBookToUserReadingListAsync(string bookId, string userId, int readingStatusId)
         {
-            // check Guid bookId (if false, return false)
+            // check input
             Guid bookGuid = Guid.Empty;
-
-            if (!IsGuidValid(bookId, ref bookGuid))
+            Guid userGuid = Guid.Empty;
+            if (!IsGuidValid(bookId, ref bookGuid) ||
+                !IsGuidValid(userId, ref userGuid) ||
+                readingStatusId < 1 ||
+                readingStatusId > 3)
             {
-                return false;
+                throw new ArgumentException();
             }
 
-            // check if book exists (if null, return false)
+            // check if book exists
             Book? book = await bookRepository
                 .GetByIdAsync(bookGuid);
 
             if (book == null)
             {
+                throw new InvalidOperationException();
+            }                       
+
+            // check if book already read
+            bool IsAlreadyRead = await CheckIfBookAlreadyReadAsync(bookGuid, userGuid, readingStatusId);
+
+            if (IsAlreadyRead)
+            {
                 return false;
             }
 
-            // parse userId to Guid
-            Guid userGuid = Guid.Parse(userId);
-
             // check bookApplicationUser exists
             BookApplicationUser? bookApplicationUser = await bookApplicationUserRepository
-                .GetAllAttached()
                 .FirstOrDefaultAsync(bau => bau.BookId == bookGuid && bau.ApplicationUserId == userGuid);
 
             // if false, create new bookApplicationUser
@@ -290,16 +308,22 @@ namespace BookPlatform.Core.Services
         public async Task<bool> EditInReadingListAsync(ReadingListEditInputModel model, string userId)
         {
             // parse userId to Guid
-            Guid userGuid = Guid.Parse(userId);
+            Guid userGuid = Guid.Empty;
+            Guid bookGuid = Guid.Empty;
+            if (!IsGuidValid(userId, ref userGuid) ||
+                !IsGuidValid(model.BookId, ref bookGuid))
+            {
+                throw new ArgumentException();
+            }
 
             // check if bookApplicationUser exists
             BookApplicationUser? bookApplicationUser = await bookApplicationUserRepository
-                .FirstOrDefaultAsync(bau => bau.BookId.ToString().ToLower() == model.BookId.ToLower() &&
+                .FirstOrDefaultAsync(bau => bau.BookId == bookGuid &&
                                             bau.ApplicationUserId == userGuid);
 
             if (bookApplicationUser == null)
             {
-                return false;
+                throw new InvalidOperationException();
             }
 
             // UPDATE INFORMATION ABOUT BookApplicationUser:
@@ -379,14 +403,16 @@ namespace BookPlatform.Core.Services
             Guid bookGuid = Guid.Empty;
             Guid userGuid = Guid.Empty;
 
-            if (!IsGuidValid(bookId, ref bookGuid) || !IsGuidValid(userId, ref userGuid))
+            if (!IsGuidValid(bookId, ref bookGuid) || 
+                !IsGuidValid(userId, ref userGuid))
             {
-                return false;
+                throw new ArgumentException();
             }
 
             // get entry to delete
             BookApplicationUser? bookApplicationUserToDelete = await this.bookApplicationUserRepository
-                .FirstOrDefaultAsync(bau => bau.BookId == bookGuid && bau.ApplicationUserId == userGuid);
+                .FirstOrDefaultAsync(bau => bau.BookId == bookGuid && 
+                                            bau.ApplicationUserId == userGuid);
 
             // delete entry
             if (bookApplicationUserToDelete != null) 
@@ -408,20 +434,43 @@ namespace BookPlatform.Core.Services
 
         public async Task<ReadingStatus?> GetCurrentReadingStatusAsync(string bookId, string userId)
         {
+            // check input
+            Guid bookGuid = Guid.Empty;
+            Guid userGuid = Guid.Empty;
+            if (!IsGuidValid(bookId, ref bookGuid) ||
+                !IsGuidValid(userId, ref userGuid))
+            {
+                throw new ArgumentException();
+            }
+
+            // check if book exists
+            Book? book = await this.bookRepository.GetByIdAsync(bookGuid);
+
+            if (book == null || book.IsDeleted == true)
+            {
+                throw new InvalidOperationException();
+            }
+
             BookApplicationUser? bookApplicationUser = await bookApplicationUserRepository
                                 .GetAllAttached()
+                                .AsNoTracking()
                                 .Include(x => x.ReadingStatus)
-                                .FirstOrDefaultAsync(x => x.BookId.ToString().ToLower() == bookId.ToLower() 
-                                                       && x.ApplicationUserId.ToString().ToLower() == userId.ToLower());
+                                .FirstOrDefaultAsync(x => x.BookId == bookGuid &&
+                                                          x.ApplicationUserId == userGuid);
 
-            ReadingStatus? readingStatus = bookApplicationUser?.ReadingStatus;
+            if (bookApplicationUser == null)
+            {
+                return null;
+            }
+
+            ReadingStatus readingStatus = bookApplicationUser.ReadingStatus;
 
             return readingStatus;
         }
 
         public async Task<string?> GetCurrentReadingStatusDescriptionAsync(string bookId, string userId)
         {
-            ReadingStatus?  readingStatus = await GetCurrentReadingStatusAsync(bookId, userId);
+            ReadingStatus? readingStatus = await GetCurrentReadingStatusAsync(bookId, userId);
 
             if (readingStatus != null)
             {
@@ -431,17 +480,15 @@ namespace BookPlatform.Core.Services
             return null;
         }
 
-        public async Task<bool> CheckIfBookAlreadyReadAsync(string bookId, string userId, int readingStatusId)
+        public async Task<bool> CheckIfBookAlreadyReadAsync(Guid bookGuid, Guid userGuid, int readingStatusId)
         {
             // CHECK IF BookApplicationUser WITH STATUS READ ALREADY EXISTS
-            // parse userId to Guid
-            Guid userGuid = Guid.Parse(userId);
-
-            // check bookApplicationUser exists
+            
             BookApplicationUser? bookApplicationUser = await bookApplicationUserRepository
                 .GetAllAttached()
-                .FirstOrDefaultAsync(bau => bau.BookId.ToString().ToLower() == bookId.ToLower() 
-                                         && bau.ApplicationUserId == userGuid);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(bau => bau.BookId == bookGuid &&
+                                            bau.ApplicationUserId == userGuid);
 
             if (bookApplicationUser != null && bookApplicationUser.ReadingStatusId == 1)
             {
@@ -453,37 +500,68 @@ namespace BookPlatform.Core.Services
 
         public async Task UpdateBookRating(string bookId)
         {
-            // check string
+            // check input
             Guid bookGuid = Guid.Empty;
-            
-            if (IsGuidValid(bookId, ref bookGuid))
+            if (!IsGuidValid(bookId, ref bookGuid))
             {
-                // check book
-                Book? book = this.bookRepository.GetById(bookGuid);
+                throw new ArgumentException();
+            }
 
-                if (book != null)
-                {
-                    List<BookApplicationUser> relevantBookApplicationUsersWithRating = await this.bookApplicationUserRepository
+            // check if book exists
+            Book? book = await this.bookRepository.FirstOrDefaultAsync(b => b.Id == bookGuid);
+
+            if (book == null || book.IsDeleted == true)
+            {
+                throw new InvalidOperationException();
+            }
+
+            List<BookApplicationUser> relevantBookApplicationUsersWithRating = await this.bookApplicationUserRepository
                         .GetAllAttached()
+                        .AsNoTracking()
                         .Where(bau => bau.BookId == bookGuid && bau.RatingId != null)
                         .ToListAsync();
 
-                    if (relevantBookApplicationUsersWithRating.Any())
-                    {
-                        book.AverageRating = relevantBookApplicationUsersWithRating.Average(bau => bau.RatingId!.Value);                        
-                    }
-                    else
-                    {
-                        book.AverageRating = 0;
-                    }
+            if (relevantBookApplicationUsersWithRating.Any())
+            {
+                book.AverageRating = relevantBookApplicationUsersWithRating.Average(bau => bau.RatingId!.Value);
+            }
+            else
+            {
+                book.AverageRating = 0;
+            }
 
-                    await this.bookRepository.UpdateAsync(book);
-                }
-            }            
+            await this.bookRepository.UpdateAsync(book);
         }
 
-        public ReadingListAddInputModel GenerateAddInputModel(Book book, int readingStatusId)
+        public async Task<ReadingListAddInputModel?> GenerateAddInputModelAsync(string bookId, string userId, int readingStatusId)
         {
+            // check input
+            Guid bookGuid = Guid.Empty;
+            Guid userGuid = Guid.Empty;
+            if (!IsGuidValid(bookId, ref bookGuid) || 
+                !IsGuidValid(userId, ref userGuid) ||
+                readingStatusId < 1 ||
+                readingStatusId > 3)
+            {
+                throw new ArgumentException();
+            }
+
+            // check if book exists
+            Book? book = await this.bookRepository.GetByIdAsync(bookGuid);
+
+            if (book == null || book.IsDeleted == true)
+            {
+                throw new InvalidOperationException();
+            }
+
+            // check if book already read
+            bool IsAlreadyRead = await CheckIfBookAlreadyReadAsync(bookGuid, userGuid, readingStatusId);
+
+            if (IsAlreadyRead)
+            {
+                return null;
+            }
+
             ReadingListAddInputModel model = new ReadingListAddInputModel();
 
             model.BookId = book.Id.ToString();
@@ -494,15 +572,43 @@ namespace BookPlatform.Core.Services
             return model;
         }
 
-        public async Task<ReadingListEditInputModel> GenerateEditInputModelAsync(string bookId, string userId)
+        public async Task<ReadingListEditInputModel?> GenerateEditInputModelAsync(string bookId, string userId, int readingStatusId)
         {
-            Book? book = await this.bookRepository
-                .FirstOrDefaultAsync(b => b.Id.ToString().ToLower() == bookId.ToLower());
+            // check input
+            Guid bookGuid = Guid.Empty;
+            Guid userGuid = Guid.Empty;
+            if (!IsGuidValid(bookId, ref bookGuid) ||
+                !IsGuidValid(userId, ref userGuid) ||
+                readingStatusId < 1 ||
+                readingStatusId > 3)
+            {
+                throw new ArgumentException();
+            }
 
+            // check if book exists
+            Book? book = await this.bookRepository.GetByIdAsync(bookGuid);
+
+            if (book == null || book.IsDeleted == true)
+            {
+                throw new InvalidOperationException();
+            }
+
+            // check if book already read
+            bool IsAlreadyRead = await CheckIfBookAlreadyReadAsync(bookGuid, userGuid, readingStatusId);
+
+            if (!IsAlreadyRead)
+            {
+                return null;
+            }
+
+            // get bookApplicationUser
             BookApplicationUser? bookApplicationUser = await this.bookApplicationUserRepository
-                .FirstOrDefaultAsync(bau => bau.BookId.ToString().ToLower() == bookId.ToLower()
-                                         && bau.ApplicationUserId.ToString().ToLower() == userId.ToLower());            
+                .GetAllAttached()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(bau => bau.BookId == bookGuid
+                                         && bau.ApplicationUserId == userGuid);            
 
+            // generate model
             ReadingListEditInputModel model = new ReadingListEditInputModel()
             {
                 BookId = bookId,
@@ -514,9 +620,12 @@ namespace BookPlatform.Core.Services
                 ImageUrl = book.ImageUrl
             };
 
+            // check review content
             Review? review = await this.reviewRepository
-                .FirstOrDefaultAsync(r => r.BookId.ToString().ToLower() == bookId.ToLower()
-                                       && r.ApplicationUserId.ToString().ToLower() == userId.ToLower());
+                .GetAllAttached()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.BookId == bookGuid
+                                       && r.ApplicationUserId == userGuid);
 
             if (review != null)
             {
@@ -524,6 +633,35 @@ namespace BookPlatform.Core.Services
             }
 
             return model;
-        }        
+        }
+
+        public async Task<int> GetTotalBooksCountPerUserAsync(string userId)
+        {
+            IEnumerable<BookApplicationUser> readingList = new List<BookApplicationUser>();
+
+            // check if userId is a valid guid
+            Guid userGuid = Guid.Empty;
+            if (!IsGuidValid(userId, ref userGuid))
+            {
+                throw new ArgumentException();
+            }
+
+            // find user
+            ApplicationUser? user = await this.userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            // get UserBooks and create view model
+            readingList = await bookApplicationUserRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .Where(bau => bau.ApplicationUserId == userGuid)
+                .ToListAsync();
+
+            return readingList.Count();
+        }
     }
 }

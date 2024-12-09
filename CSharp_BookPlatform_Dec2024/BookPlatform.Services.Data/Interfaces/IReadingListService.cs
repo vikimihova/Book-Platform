@@ -7,7 +7,7 @@ namespace BookPlatform.Core.Services.Interfaces
     public interface IReadingListService
     {
         // MAIN
-        Task<IEnumerable<ReadingListViewModel>> GetUserReadingListByUserIdAsync(string userId);
+        Task<IEnumerable<ReadingListViewModel>> GetUserReadingListByUserIdAsync(string userId, ReadingListPaginatedViewModel inputModel);
 
         Task<ICollection<FriendBookViewModel>> GetFriendBooksByUserIdAsync(string userId);
 
@@ -24,12 +24,14 @@ namespace BookPlatform.Core.Services.Interfaces
 
         Task<string?> GetCurrentReadingStatusDescriptionAsync(string bookId, string userId);
 
-        Task<bool> CheckIfBookAlreadyReadAsync(string bookId, string userId, int readingStatusId);
+        Task<bool> CheckIfBookAlreadyReadAsync(Guid bookGuid, Guid userGuid, int readingStatusId);
 
         Task UpdateBookRating(string bookId);
 
-        ReadingListAddInputModel GenerateAddInputModel(Book book, int readingStatusId);
+        Task<ReadingListAddInputModel?> GenerateAddInputModelAsync(string bookId, string userId, int readingStatusId);
 
-        Task<ReadingListEditInputModel> GenerateEditInputModelAsync(string bookId, string userId);
+        Task<ReadingListEditInputModel?> GenerateEditInputModelAsync(string bookId, string userId, int readingStatusId);
+
+        Task<int> GetTotalBooksCountPerUserAsync(string userId);
     }
 }

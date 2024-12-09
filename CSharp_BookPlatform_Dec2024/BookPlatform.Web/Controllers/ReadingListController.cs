@@ -12,6 +12,7 @@ using BookPlatform.Web.Infrastructure.Extensions;
 using static BookPlatform.Common.ApplicationConstants;
 using static BookPlatform.Common.OutputMessages.ReadingList;
 using static BookPlatform.Common.ModelValidationErrorMessages.DateTimeFormats;
+using System.Net;
 
 
 namespace BookPlatform.Web.Controllers
@@ -43,13 +44,30 @@ namespace BookPlatform.Web.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(ReadingListPaginatedViewModel inputModel)
         {
             // get user id
-            string userId = User.GetUserId()!;                       
+            string userId = User.GetUserId()!;
 
-            // generate view model
-            IEnumerable<ReadingListViewModel> model = await readingListService.GetUserReadingListByUserIdAsync(userId);
+            // generate view model for reading list
+            IEnumerable<ReadingListViewModel> booksModel;
+
+            try
+            {
+                booksModel = await readingListService.GetUserReadingListByUserIdAsync(userId, inputModel);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            // generate main view model
+            ReadingListPaginatedViewModel model = new ReadingListPaginatedViewModel();
+            model.Books = booksModel;
+            model.totalBooksPerUserCount = await this.readingListService.GetTotalBooksCountPerUserAsync(userId);
+            model.CurrentPage = inputModel.CurrentPage;
+            model.EntitiesPerPage = inputModel.EntitiesPerPage;
+            model.TotalPages = (int)Math.Ceiling((double)model.totalBooksPerUserCount / inputModel.EntitiesPerPage!.Value);
 
             return View(model);
         }
@@ -60,9 +78,18 @@ namespace BookPlatform.Web.Controllers
         {
             // get user id
             string userId = User.GetUserId()!;
-                        
+
             // generate view model
-            ICollection<FriendBookViewModel> model = await this.readingListService.GetFriendBooksByUserIdAsync(userId);
+            ICollection<FriendBookViewModel> model;
+
+            try
+            {
+                model = await this.readingListService.GetFriendBooksByUserIdAsync(userId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
 
             return View(model);
         }
@@ -71,17 +98,21 @@ namespace BookPlatform.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Add(string bookId, int readingStatusId)
         {
-            if (string.IsNullOrWhiteSpace(bookId))
+            // get UserId
+            string userId = this.userManager.GetUserId(this.User)!;
+
+            // add book to reading list
+            bool result = false;
+
+            try
+            {
+                result = await this.readingListService.AddBookToUserReadingListAsync(bookId, userId, readingStatusId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
             }
-
-            // get UserId
-            string userId = this.userManager.GetUserId(this.User)!;       
-
-            // add book to reading list
-            bool result = await this.readingListService.AddBookToUserReadingListAsync(bookId, userId, readingStatusId);
-
+            
             // get reading status
             string? readingStatusDescription = await this.readingListService.GetCurrentReadingStatusDescriptionAsync(bookId, userId);
                         
@@ -164,7 +195,16 @@ namespace BookPlatform.Web.Controllers
             string userId = this.userManager.GetUserId(this.User)!;
 
             // try to add book to reading list
-            bool result = await this.readingListService.AddBookToUserReadingListReadAsync(model, userId);
+            bool result = false;
+
+            try
+            {
+                result = await this.readingListService.AddBookToUserReadingListReadAsync(model, userId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }             
 
             if (result == false)
             {
@@ -179,13 +219,12 @@ namespace BookPlatform.Web.Controllers
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Edit(string bookId, int readingStatusId)
-        {
-            
+        {            
             // get userId
             string userId = this.userManager.GetUserId(this.User)!;
 
             // create input model to pass book information        
-            ReadingListEditInputModel model = null;
+            ReadingListEditInputModel? model = null;
 
             try
             {
@@ -205,7 +244,6 @@ namespace BookPlatform.Web.Controllers
             model.Ratings = await this.ratingService.GetRatingsAsync();
 
             return View(model);
-
         }
 
         [Authorize]
@@ -244,7 +282,17 @@ namespace BookPlatform.Web.Controllers
             string userId = this.userManager.GetUserId(this.User)!;
 
             // try to update book entry in reading list
-            bool result = await this.readingListService.EditInReadingListAsync(model, userId);
+
+            bool result = false;
+
+            try
+            {
+                result = await this.readingListService.EditInReadingListAsync(model, userId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
 
             if (result == false)
             {
@@ -255,20 +303,23 @@ namespace BookPlatform.Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
-        // if bool is false?
+                
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Remove(string bookId)
-        {
-            if (string.IsNullOrWhiteSpace(bookId))
+        {           
+            string userId = this.userManager.GetUserId(this.User)!;
+
+            bool result = false;
+
+            try
+            {
+                result = await this.readingListService.RemoveBookFromUserReadingListAsync(bookId, userId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return BadRequest();
             }
-
-            string userId = this.userManager.GetUserId(this.User)!;
-
-            bool result = await this.readingListService.RemoveBookFromUserReadingListAsync(bookId, userId);
 
             if (result == false)
             {
