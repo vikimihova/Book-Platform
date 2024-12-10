@@ -6,6 +6,7 @@ using BookPlatform.Data.Models;
 
 using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Web.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookPlatform.Web
 {
@@ -78,6 +79,10 @@ namespace BookPlatform.Web
             builder.Services.RegisterUserDefinedServices(typeof(IBaseService).Assembly);
 
             // Add other services
+            //builder.Services.AddControllersWithViews(options =>
+            //{
+            //    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            //});
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();            
 
