@@ -12,7 +12,7 @@ using System.Net;
 namespace BookPlatform.Tests
 {
     [TestFixture]
-    public class Tests
+    public class CharacterServiceTests
     {
         private Book book1;
         private Book book2;
@@ -1315,6 +1315,97 @@ namespace BookPlatform.Tests
             Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
                 bool result = await characterService.IncludeCharacterAsync(characterId, bookId);
+            });
+        }
+
+        // GenerateAddCharacterInputModelAsync
+
+
+        [Test]
+        [TestCase("624E1A1A-2BE9-4A2D-A22C-184A83E94D1D", 3)]
+        [TestCase("624E1A1A-2BE9-4A2D-A22C-184A83E94D1D", null)]
+        public async Task GenerateAddCharacterInputModel(string bookId, int? readingStatusId = null)
+        {         
+            // Repositories      
+            this.bookRepository
+                .Setup(r => r.GetByIdAsync(this.book1.Id))
+                .ReturnsAsync(this.book1);
+
+            // Service
+            ICharacterService characterService = new CharacterService(
+                characterRepository.Object,
+                bookCharacterRepository.Object,
+                bookRepository.Object);
+
+            AddCharacterInputModel modelActual = await characterService.GenerateAddCharacterInputModelAsync(bookId, readingStatusId);
+                
+            Assert.IsNotNull(modelActual);
+            Assert.That(modelActual.BookId.ToLower(), Is.EqualTo(this.book1.Id.ToString().ToLower()));
+            Assert.That(modelActual.BookTitle.ToLower(), Is.EqualTo(this.book1.Title.ToLower()));
+            Assert.That(modelActual.ImageUrl, Is.EqualTo(this.book1.ImageUrl));
+            Assert.That(modelActual.ReadingStatusId, Is.EqualTo(readingStatusId));
+        }
+
+        [Test]
+        [TestCase("624E1A1A-2BE9-4A2D-A22C-18", 3)]
+        public async Task GenerateAddCharacterInputModelInvalidBookId(string bookId, int? readingStatusId = null)
+        {       
+            // Repositories      
+            this.bookRepository
+                .Setup(r => r.GetByIdAsync(this.book1.Id))
+                .ReturnsAsync(this.book1);
+
+            // Service
+            ICharacterService characterService = new CharacterService(
+                characterRepository.Object,
+                bookCharacterRepository.Object,
+                bookRepository.Object);            
+
+            Assert.ThrowsAsync<ArgumentException>(async () =>
+            {
+                AddCharacterInputModel model = await characterService.GenerateAddCharacterInputModelAsync(bookId, readingStatusId);
+            });
+        }
+
+        [Test]
+        [TestCase("E1FDFD97-C84B-4560-B367-32FE121E35B6", 3)]
+        public async Task GenerateAddCharacterInputModelNonExistentBook(string bookId, int? readingStatusId = null)
+        {
+            // Repositories      
+            this.bookRepository
+                .Setup(r => r.GetByIdAsync(this.book1.Id))
+                .ReturnsAsync(this.book1);
+
+            // Service
+            ICharacterService characterService = new CharacterService(
+                characterRepository.Object,
+                bookCharacterRepository.Object,
+                bookRepository.Object);
+
+            Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            {
+                AddCharacterInputModel model = await characterService.GenerateAddCharacterInputModelAsync(bookId, readingStatusId);
+            });
+        }
+
+        [Test]
+        [TestCase("C4362229-1D19-47CC-ACC4-3CDC96FE358D", 3)]
+        public async Task GenerateAddCharacterInputModelDeletedBook(string bookId, int? readingStatusId = null)
+        {
+            // Repositories      
+            this.bookRepository
+                .Setup(r => r.GetByIdAsync(this.book1.Id))
+                .ReturnsAsync(this.book1);
+
+            // Service
+            ICharacterService characterService = new CharacterService(
+                characterRepository.Object,
+                bookCharacterRepository.Object,
+                bookRepository.Object);
+
+            Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            {
+                AddCharacterInputModel model = await characterService.GenerateAddCharacterInputModelAsync(bookId, readingStatusId);
             });
         }
     }
