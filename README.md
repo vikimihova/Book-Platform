@@ -1,5 +1,5 @@
 # SoftUni-FinalProject-BookPlatform
-//uncomment SeedDatabase in Program.cs before starting the application
+IMPORTANT: Uncomment SeedDatabase in Program.cs before starting the application.
 A social platform for book lovers to discover new titles, share their thoughts and actively engage with like-minded people. 
 My project for the Advanced ASP.NET Core course at SoftUni. OCTOBER - DECEMBER 2024
 
