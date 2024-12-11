@@ -2235,5 +2235,88 @@ namespace BookPlatform.Tests
                 ReadingListEditInputModel modelActual = await readingListService.GenerateEditInputModelAsync(bookId, userId, readingStatusId);
             });
         }
+
+        // GetTotalBooksCountPerUserAsync
+        [Test]
+        [TestCase("420AE570-CD14-4A8A-8E69-7B846C47AF2D")]
+        public async Task GetTotalBooksCountPerUserPositive(string userId)
+        {
+            // Repositories        
+            IQueryable<BookApplicationUser> bookApplicationUsersQueryable = bookApplicationUsersData.AsQueryable().BuildMock();
+            this.bookApplicationUserRepository
+                .Setup(r => r.GetAllAttached())
+                .Returns(bookApplicationUsersQueryable);
+
+            this.userManager
+                .Setup(um => um.FindByIdAsync(userId))
+                .ReturnsAsync(applicationUser1);
+
+            // Service
+            IReadingListService readingListService = new ReadingListService(
+                bookRepository.Object,
+                reviewRepository.Object,
+                bookApplicationUserRepository.Object,
+                userManager.Object);
+
+
+            int resultActual = await readingListService.GetTotalBooksCountPerUserAsync(userId);
+
+            Assert.IsNotNull(resultActual);
+            Assert.That(resultActual, Is.EqualTo(2));
+        }
+
+        [Test]
+        [TestCase("420AE570-CD14--8E69-F2D")]
+        public async Task GetTotalBooksCountPerUserInvalidUserIdNegative(string userId)
+        {
+            // Repositories        
+            IQueryable<BookApplicationUser> bookApplicationUsersQueryable = bookApplicationUsersData.AsQueryable().BuildMock();
+            this.bookApplicationUserRepository
+                .Setup(r => r.GetAllAttached())
+                .Returns(bookApplicationUsersQueryable);
+
+            this.userManager
+                .Setup(um => um.FindByIdAsync(userId))
+                .ReturnsAsync(applicationUser1);
+
+            // Service
+            IReadingListService readingListService = new ReadingListService(
+                bookRepository.Object,
+                reviewRepository.Object,
+                bookApplicationUserRepository.Object,
+                userManager.Object);
+
+            Assert.ThrowsAsync<ArgumentException>(async () =>
+            {
+                int resultActual = await readingListService.GetTotalBooksCountPerUserAsync(userId);
+            });
+        }
+
+        [Test]
+        [TestCase("4BFD099A-762D-4744-BBD0-EA820AC643D5")]
+        public async Task GetTotalBooksCountPerUserNonExistentUserNegative(string userId)
+        {
+            // Repositories        
+            IQueryable<BookApplicationUser> bookApplicationUsersQueryable = bookApplicationUsersData.AsQueryable().BuildMock();
+            this.bookApplicationUserRepository
+                .Setup(r => r.GetAllAttached())
+                .Returns(bookApplicationUsersQueryable);
+
+            this.userManager
+                .Setup(um => um.FindByIdAsync(this.applicationUser1.Id.ToString()))
+                .ReturnsAsync(applicationUser1);
+
+            // Service
+            IReadingListService readingListService = new ReadingListService(
+                bookRepository.Object,
+                reviewRepository.Object,
+                bookApplicationUserRepository.Object,
+                userManager.Object);
+
+            Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            {
+                int resultActual = await readingListService.GetTotalBooksCountPerUserAsync(userId);
+            });
+        }
     }
 }
