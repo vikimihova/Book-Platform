@@ -79,6 +79,7 @@ namespace BookPlatform.Web
             builder.Services.RegisterUserDefinedServices(typeof(IBaseService).Assembly);
 
             // Add other services
+
             //builder.Services.AddControllersWithViews(options =>
             //{
             //    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());

@@ -22,6 +22,7 @@ namespace BookPlatform.Core.Services
             // get all users
             IEnumerable<ApplicationUser> allUsers = await this.userManager.Users
                 .AsNoTracking()
+                .Where(u => u.UserName != AdminRoleName)
                 .ToArrayAsync();
 
             // populate view model
