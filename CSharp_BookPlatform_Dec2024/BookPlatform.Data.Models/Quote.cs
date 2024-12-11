@@ -31,6 +31,6 @@ namespace BookPlatform.Data.Models
         [Required]
         public bool IsDeleted { get; set; } = false;
 
-        //public ICollection<QuoteApplicationUser> QuoteApplicationUsers { get; set; } = new List<QuoteApplicationUser>();
+        public ICollection<QuoteApplicationUser> QuoteApplicationUsers { get; set; } = new List<QuoteApplicationUser>();
     }
 }
