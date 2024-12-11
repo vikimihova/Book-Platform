@@ -1,12 +1,13 @@
 # SoftUni-FinalProject-BookPlatform
 A social platform for book lovers to discover new titles, share their thoughts and actively engage with like-minded people. 
-My project for the Advanced ASP.NET Core course at SoftUni. OCTOBER 2024 - (ongoing)
+My project for the Advanced ASP.NET Core course at SoftUni. OCTOBER - DECEMBER 2024
 
 ## HOW IT WORKS
 Guest visitors:
 - browse books
 - view book details
 - view book reviews
+- view book quotes
 
 Logged Users:
 - all of the above +
@@ -30,10 +31,9 @@ Admin:
 - ASP.NET Identity System
 - MVC Areas with Multiple Layouts
 - Razor Pages, Sections, Partial Views
-- View Components
 - Repository Pattern
 - Dependency Injection
-- Sorting, Filtering, and Paging with EF Core
+- Searching, Filtering, and Paging with EF Core
 - Data Validation, both Client-side and Server-side
 - Bootstrap
 
