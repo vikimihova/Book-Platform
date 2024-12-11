@@ -12,6 +12,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookPlatform.Data.Models", "BookPlatform.Data.Models\BookPlatform.Data.Models.csproj", "{8F438CFD-82A5-4FB8-87EB-E8BCF9C2820D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{4595969B-4658-40A2-9D39-58D67D383DB4}"
+	ProjectSection(SolutionItems) = preProject
+		BookPlatform.Tests\ReadingListServiceTests.cs = BookPlatform.Tests\ReadingListServiceTests.cs
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{8799B98C-CCD7-4BDC-ADE7-6D454EB6BA03}"
 EndProject
