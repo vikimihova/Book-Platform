@@ -1,5 +1,5 @@
 ﻿@using BookPlatform.Core.ViewModels.Book
-@model IEnumerable<BookIndexViewModel>
+@model BookIndexViewModelWrapper
 
 @{
     ViewData["Title"] = "Browse Books";
@@ -15,11 +15,34 @@
 
 <h2>Browse All Books</h2>
 
-<partial name="_SearchPartial" />
+<div class="row justify-content-start">
+    <div class="col-auto">
+        <form asp-action="Index" method="get">
+            <div class="d-flex mb-4 align-items-center" style="width: 500px;">
+                <div class="me-2 flex-grow-1">
+                    <input asp-for="SearchInput" class="form-control" style="height: 40px;" placeholder="Search book by title or author" />
+                </div>
+                <button type="submit" class="btn btn-outline-dark" style="height: 40px; width: 100px;">Search</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-auto">
+        <form asp-action="Index" method="get">
+            <div class="d-flex mb-4 align-items-center" style="width: 500px;">
+                <div class="me-2 flex-grow-1">
+                    <select asp-for="@Model.GenreFilter" class="form-control text-secondary" style="height: 40px;" aria-required="true" asp-items="@(new SelectList(Model.Genres, "Name", "Name"))">
+                        <option value="" class="text-secondary" style="height: 40px;">Filter by genre</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-outline-dark" style="height: 40px; width: 100px;">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-@if(Model.Any()){
+@if(Model.Books != null && Model.Books.Any()){
     <div class="row">
-        @foreach (var book in Model)
+        @foreach (var book in Model.Books)
         {
             <div class="col-md-2">
                 <div class="card mb-2 shadow-sm" style="width: 200px; height: 425px">

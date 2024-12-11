@@ -94,7 +94,7 @@ namespace BookPlatform.Core.Services
 
             if (searchedUser == null)
             {
-                throw new InvalidOperationException();
+                return model;
             }            
 
             // check if user is searching himself
@@ -151,7 +151,7 @@ namespace BookPlatform.Core.Services
 
             if (mainUser == null || friendUser == null || mainUser == friendUser)
             {
-                throw new InvalidOperationException();
+                return false;
             }
 
             // check if user is in role User
@@ -206,7 +206,7 @@ namespace BookPlatform.Core.Services
 
             if (mainUser == null || friendUser == null || mainUser == friendUser)
             {
-                throw new InvalidOperationException();
+                return false;
             }
 
             // check if users already in each other's friends lists

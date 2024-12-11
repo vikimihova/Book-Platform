@@ -7,9 +7,7 @@ namespace BookPlatform.Core.Services.Interfaces
     {
         Task<IEnumerable<BookIndexViewModel>> IndexGetAllAsync();
 
-        Task<IEnumerable<BookIndexViewModel>> IndexGetAllRandomAsync();
-
-        Task<IEnumerable<BookIndexViewModel>?> SearchBooksAsync(string title);
+        Task<IEnumerable<BookIndexViewModel>> IndexGetAllRandomAsync(BookIndexViewModelWrapper inputModel);        
 
         Task<BookDetailsViewModel> GetBookDetailsAsync(string id);
 

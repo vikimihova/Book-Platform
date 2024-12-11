@@ -1,39 +1,32 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Globalization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 using BookPlatform.Data.Models;
 using BookPlatform.Data.Repository.Interfaces;
 
 using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Core.ViewModels.ReadingList;
+using BookPlatform.Core.ViewModels.ApplicationUser;
 
 using static BookPlatform.Common.ApplicationConstants;
-using Microsoft.AspNetCore.Identity;
-using System.Globalization;
-using System.Net;
-using BookPlatform.Core.ViewModels.ApplicationUser;
-using static BookPlatform.Common.OutputMessages;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace BookPlatform.Core.Services
 {
     public class ReadingListService : BaseService, IReadingListService
     {
         private readonly IRepository<Book, Guid> bookRepository;
-        private readonly IRepository<Character, Guid> characterRepository;
         private readonly IRepository<Review, Guid> reviewRepository;
         private readonly IRepository<BookApplicationUser, object> bookApplicationUserRepository;
         private readonly UserManager<ApplicationUser> userManager;
 
         public ReadingListService(
             IRepository<Book, Guid> bookRepository,
-            IRepository<Character, Guid> characterRepository,
             IRepository<Review, Guid> reviewRepository,
             IRepository<BookApplicationUser, object> bookApplicationUserRepository,
             UserManager<ApplicationUser> userManager)
         {
             this.bookRepository = bookRepository;
-            this.characterRepository = characterRepository;
             this.reviewRepository = reviewRepository;
             this.bookApplicationUserRepository = bookApplicationUserRepository;
             this.userManager = userManager;

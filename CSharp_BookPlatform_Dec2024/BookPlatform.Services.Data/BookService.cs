@@ -22,6 +22,8 @@ namespace BookPlatform.Core.Services
             IEnumerable<BookIndexViewModel> allBooks = await bookRepository
                 .GetAllAttached()
                 .AsNoTracking()
+                .Include(b => b.Genre)
+                .Include(b => b.Author)
                 .OrderBy(b => b.Author.LastName)
                 .ThenBy(b => b.PublicationYear)
                 .Select(b => new BookIndexViewModel()
@@ -41,50 +43,42 @@ namespace BookPlatform.Core.Services
             return allBooks;
         }
 
-        public async Task<IEnumerable<BookIndexViewModel>> IndexGetAllRandomAsync()
+        public async Task<IEnumerable<BookIndexViewModel>> IndexGetAllRandomAsync(BookIndexViewModelWrapper model)
         {
             Random random = new Random();
 
             IEnumerable<BookIndexViewModel> allBooks = await IndexGetAllAsync();
+
+            if (!String.IsNullOrWhiteSpace(model.SearchInput))
+            {
+                if (allBooks.Any(b => b.Title.ToLower().Contains(model.SearchInput.ToLower())))
+                {
+                    allBooks = allBooks
+                        .Where(b => b.Title.ToLower().Contains(model.SearchInput.ToLower()))
+                        .ToList();
+                }                   
+
+                if (allBooks.Any(b => b.Author.ToLower().Contains(model.SearchInput.ToLower())))
+                {
+                    allBooks = allBooks
+                        .Where(b => b.Author.ToLower().Contains(model.SearchInput.ToLower()))
+                        .ToList();
+                }
+            }
+
+            if (!String.IsNullOrWhiteSpace(model.GenreFilter))
+            {
+                allBooks = allBooks
+                    .Where(b => b.Genre == model.GenreFilter)
+                    .ToList();
+            }
 
             List<BookIndexViewModel> allBooksRandom = allBooks
                 .Where(b => b.IsDeleted == false)
                 .OrderBy(b => random.Next()).ToList();
 
             return allBooksRandom;
-        }
-
-        public async Task<IEnumerable<BookIndexViewModel>?> SearchBooksAsync(string title)
-        {
-            // check if title is valid
-            if (string.IsNullOrWhiteSpace(title))
-            {
-                return null;
-            }
-
-            // generate view model
-            IEnumerable<BookIndexViewModel> books = await bookRepository
-                .GetAllAttached()
-                .AsNoTracking()
-                .Where(b => b.Title.ToLower().Contains(title.ToLower()) && b.IsDeleted == false)
-                .OrderBy(b => b.Author.LastName)
-                .ThenBy(b => b.PublicationYear)
-                .Select(b => new BookIndexViewModel()
-                {
-                    Id = b.Id.ToString(),
-                    Title = b.Title,
-                    Author = b.Author.FullName,
-                    AuthorLastName = b.Author.LastName != null ? b.Author.LastName : "-",
-                    AuthorFirstName = b.Author.FirstName != null ? b.Author.FirstName : "-",
-                    Genre = b.Genre.Name,
-                    ImageUrl = b.ImageUrl,
-                    AverageRating = b.AverageRating,
-                    IsDeleted = b.IsDeleted
-                })
-                .ToListAsync();
-
-            return books;
-        }
+        }        
 
         public async Task<BookDetailsViewModel> GetBookDetailsAsync(string bookId)
         {           

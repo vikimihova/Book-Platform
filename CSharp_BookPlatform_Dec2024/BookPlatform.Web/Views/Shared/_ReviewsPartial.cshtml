@@ -12,21 +12,19 @@
         .FirstOrDefaultAsync(u => u.UserName == this.User.Identity!.Name);
 }
 
-<div class="container">
+<div class="container mt-4">
     @if(Model.Any())
     {
         <div class="row text-center">
-            <h2>New Reviews</h2>
         </div>
         @foreach (ReviewViewModel review in Model)
         {
-            <div class="card border-secondary shadow-sm my-3">
-                <div class="card-body mb-0">
-                    <a class="book-title card-title" asp-controller="Book" asp-action="Details" asp-route-bookId="@review.BookId">
-                        <h6>@review.Title</h6>
-                    </a>
-                </div>
-
+            <div class="row justify-content-start mb-2">
+                <a class="book-title" asp-controller="Book" asp-action="Details" asp-route-bookId="@review.BookId">
+                    <h5>@review.Title</h5>
+                </a>
+            </div>
+            <div class="card border-secondary shadow-sm mb-5">   
                 <div class="card-body d-flex justify-content-between align-items-center">
                     <div class="d-flex justify-content-between">
                         <p class="card-text me-2"><strong>@review.Author</strong></p>
@@ -94,7 +92,7 @@
                         @if (review.FavoriteCharacter != null)
                         {
                             <span class="text-secondary">@review.FavoriteCharacter</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-heart-fill ms-1 mb-n1" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="pink" class="bi bi-heart-fill ms-1 mb-n1" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
                             </svg>
                         }

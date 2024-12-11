@@ -1,13 +1,13 @@
 using Moq;
-using BookPlatform.Data.Repository.Interfaces;
-
-using BookPlatform.Data.Models;
-using BookPlatform.Core.Services.Interfaces;
-using BookPlatform.Core.Services;
-using BookPlatform.Core.ViewModels.Character;
 using MockQueryable;
 using System.Linq.Expressions;
-using System.Net;
+
+using BookPlatform.Data.Models;
+using BookPlatform.Data.Repository.Interfaces;
+
+using BookPlatform.Core.Services;
+using BookPlatform.Core.Services.Interfaces;
+using BookPlatform.Core.ViewModels.Character;
 
 namespace BookPlatform.Tests
 {
@@ -26,8 +26,6 @@ namespace BookPlatform.Tests
         private ICollection<string> allCharacterNames;
         private ICollection<string> validCharacterNames;
         private IEnumerable<BookCharacter> bookCharactersData;
-        private IEnumerable<Book> booksData;
-        private IEnumerable<Character> charactersData;
 
         private Mock<IRepository<Character, Guid>> characterRepository;
         private Mock<IRepository<BookCharacter, object>> bookCharacterRepository;
@@ -181,26 +179,13 @@ namespace BookPlatform.Tests
                     IsSubmittedByUser = false,
                 }
             };
-
-            this.booksData = new List<Book>()
-            {
-                this.book1,
-                this.book2,
-            };
-
-            this.charactersData = new List<Character>()
-            {
-                this.character1,
-                this.character2,
-                this.character3,
-                this.character4,
-            };
-
+                       
             this.characterRepository = new Mock<IRepository<Character, Guid>>();
             this.bookCharacterRepository = new Mock<IRepository<BookCharacter, object>>();
             this.bookRepository = new Mock<IRepository<Book, Guid>>();
         }
 
+        // GetCharactersIndexAsync
         [Test]
         [TestCase("624E1A1A-2BE9-4A2D-A22C-184A83E94D1D")]
         public async Task GetCharactersIndexExistingBookWithCharacters(string bookId)
@@ -342,6 +327,7 @@ namespace BookPlatform.Tests
             });
         }
 
+        // GetCharactersAsync
         [Test]
         [TestCase("624E1A1A-2BE9-4A2D-A22C-184A83E94D1D")]
         public async Task GetCharactersExistentBookWithCharacters(string bookId)
@@ -478,6 +464,7 @@ namespace BookPlatform.Tests
             });
         }
 
+        // AddCharacterAsync
         [Test]
         public async Task AddCharacterPositive()
         {
@@ -652,7 +639,6 @@ namespace BookPlatform.Tests
         }
 
         // AddCharacterByAdminAsync
-
         [Test]
         public async Task AddCharacterByAdminPositive()
         {
@@ -827,7 +813,6 @@ namespace BookPlatform.Tests
         }
 
         // SoftDeleteCharacterAsync
-
         [Test]
         public async Task SoftDeleteCharacterPositive()
         {
@@ -1073,7 +1058,6 @@ namespace BookPlatform.Tests
         }
 
         // IncludeCharacterAsync
-
         [Test]
         public async Task IncludeCharacterPositive()
         {
@@ -1319,8 +1303,6 @@ namespace BookPlatform.Tests
         }
 
         // GenerateAddCharacterInputModelAsync
-
-
         [Test]
         [TestCase("624E1A1A-2BE9-4A2D-A22C-184A83E94D1D", 3)]
         [TestCase("624E1A1A-2BE9-4A2D-A22C-184A83E94D1D", null)]

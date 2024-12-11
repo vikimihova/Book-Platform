@@ -11,24 +11,18 @@ namespace BookPlatform.Web.Controllers
 {    
     public class BookController : Controller
     {
-        private readonly IBaseService baseService;
         private readonly IBookService bookService;
-        private readonly IAuthorService authorService;
         private readonly IGenreService genreService;
         private readonly IReadingListService readingListService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public BookController(
-            IBaseService baseService,
             IBookService bookService,
-            IAuthorService authorService,
             IGenreService genreService,
             IReadingListService readingListService,
             UserManager<ApplicationUser> userManager)
         {
-            this.baseService = baseService;
             this.bookService = bookService;
-            this.authorService = authorService;
             this.genreService = genreService;
             this.readingListService = readingListService;
             this.userManager = userManager;
@@ -36,10 +30,14 @@ namespace BookPlatform.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(BookIndexViewModelWrapper inputModel)
         {
-            IEnumerable<BookIndexViewModel> model =
-                await this.bookService.IndexGetAllRandomAsync();
+            IEnumerable<BookIndexViewModel> books =
+                await this.bookService.IndexGetAllRandomAsync(inputModel);
+
+            BookIndexViewModelWrapper model = new BookIndexViewModelWrapper();
+            model.Books = books;
+            model.Genres = await this.genreService.GetGenresAsync();
 
             return View(model);
         }
@@ -85,21 +83,6 @@ namespace BookPlatform.Web.Controllers
             }
 
             return View(model);
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Search(string title)
-        {           
-            IEnumerable<BookIndexViewModel>? books = await this.bookService.SearchBooksAsync(title);
-
-            if (books == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(nameof(Index), books);
-        }
+        }        
     }
 }

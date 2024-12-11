@@ -109,7 +109,19 @@
       "Lady Catherine de Bourgh",
       "Charlotte Lucas",
       "Mr. Collins"
-    ]
+    ],
+    "quotes": [
+      "“It is a truth universally acknowledged, that a single man in possession of a good fortune must be in want of a wife.”",
+      "“You mistake me, my dear. I have a high respect for your nerves. They are my old friends. I have heard you mention them with consideration these twenty years at least.”",
+      "“She is tolerable, but not handsome enough to tempt me; and I am in no humour at present to give consequence to young ladies who are slighted by other men.”",
+      "“I wonder who first discovered the efficacy of poetry in driving away love!”",
+      "“About a month ago I received this letter; and about a fortnight ago I answered it, for I thought it a case of some delicacy, and requiring early attention.”",
+      "“The idea of Mr Collins, with all his solemn composure, being run away with by his feelings, made Elizabeth so near laughing that she could not use the short pause he allowed in any attempt to stop him farther.”",
+      "“An unhappy alternative is before you, Elizabeth. From this day you must be a stranger to one of your parents. Your mother will never see you again if you do not marry Mr Collins, and I will never see you again if you do.”",
+      "“Happiness in marriage is entirely a matter of chance.”",
+      "“If I had ever learnt, I should have been a great proficient. And so would Anne, if her health had allowed her to apply. I am confident that she would have performed delightfully.”",
+      "“My fingers,” said Elizabeth, “do not move over this instrument in the masterly manner which I see so many women’s do. They have not the same force or rapidity, and do not produce the same expression. But then I have always supposed it to be my own fault – because I would not take the trouble of practising.”"
+    ] 
   },
   {
     "author": "Honor\u00e9 de Balzac",
@@ -313,7 +325,15 @@
     "title": "The Idiot",
     "year": 1869,
     "genre": "Historical Fiction",
-    "description": "Returning to Russia from a sanitarium in Switzerland, the Christ-like epileptic Prince Myshkin finds himself enmeshed in a tangle of love, torn between two women—the notorious kept woman Nastasya and the pure Aglaia—both involved, in turn, with the corrupt, money-hungry Ganya. In the end, Myshkin’s honesty, goodness, and integrity are shown to be unequal to the moral emptiness of those around him. In her revision of the Garnett translation, Anna Brailovsky has corrected inaccuracies wrought by Garnett’s drastic anglicization of the novel, restoring as much as possible the syntactical structure of the original story."
+    "description": "Returning to Russia from a sanitarium in Switzerland, the Christ-like epileptic Prince Myshkin finds himself enmeshed in a tangle of love, torn between two women—the notorious kept woman Nastasya and the pure Aglaia—both involved, in turn, with the corrupt, money-hungry Ganya. In the end, Myshkin’s honesty, goodness, and integrity are shown to be unequal to the moral emptiness of those around him. In her revision of the Garnett translation, Anna Brailovsky has corrected inaccuracies wrought by Garnett’s drastic anglicization of the novel, restoring as much as possible the syntactical structure of the original story.",
+    "quotes": [
+      "“It is better to be unhappy and know the worst, than to be happy in a fool's paradise.”",
+      "“Beauty will save the world.”",
+      "“There is something at the bottom of every new human thought, every thought of genius, or even every earnest thought that springs up in any brain, which can never be communicated to others, even if one were to write volumes about it and were explaining one's idea for thirty-five years; there's something left which cannot be induced to emerge from your brain, and remains with you forever; and with it you will die, without communicating to anyone perhaps the most important of your ideas.”",
+      "“I am a fool with a heart but no brains, and you are a fool with brains but no heart; and we’re both unhappy, and we both suffer.”",
+      "“Lack of originality, everywhere, all over the world, from time immemorial, has always been considered the foremost quality and the recommendation of the active, efficient and practical man.”",
+      "“Grown-up people do not know that a child can give exceedingly good advice even in the most difficult case.”"
+    ]
   },
   {
     "author": "Fyodor Dostoevsky",
@@ -774,7 +794,11 @@
     "title": "Moby Dick",
     "year": 1851,
     "genre": "Historical Fiction",
-    "description": "So Melville wrote of his masterpiece, one of the greatest works of imagination in literary history. In part, Moby-Dick is the story of an eerily compelling madman pursuing an unholy war against a creature as vast and dangerous and unknowable as the sea itself. But more than just a novel of adventure, more than an encyclopaedia of whaling lore and legend, the book can be seen as part of its author's lifelong meditation on America. Written with wonderfully redemptive humour, Moby-Dick is also a profound inquiry into character, faith, and the nature of perception."
+    "description": "So Melville wrote of his masterpiece, one of the greatest works of imagination in literary history. In part, Moby-Dick is the story of an eerily compelling madman pursuing an unholy war against a creature as vast and dangerous and unknowable as the sea itself. But more than just a novel of adventure, more than an encyclopaedia of whaling lore and legend, the book can be seen as part of its author's lifelong meditation on America. Written with wonderfully redemptive humour, Moby-Dick is also a profound inquiry into character, faith, and the nature of perception.",
+    "quotes": [
+      "“Call me Ishmael.”",
+      "“The sea had jeeringly kept his finite body up, but drowned the infinite of his soul. Not drowned entirely, though. Rather carried down alive to wondrous depths, where strange shapes of the unwarped primal world glided to and fro before his passive eyes; and the miser-merman, Wisdom, revealed his hoarded heaps; and among the joyous, heartless, ever-juvenile eternities, Pip saw the multitudinous, God-omnipresent, coral insects, that out of the firmament of waters heaved the colossal orbs. He saw God’s foot upon the treadle of the loom, and spoke it; and therefore his shipmates called him mad. So man’s insanity is heaven’s sense; and wandering from all mortal reason, man comes at last to that celestial thought, which, to reason, is absurd and frantic; and weal or woe, feels then uncompromised, indifferent as his God.”"
+    ]
   },
   {
     "author": "Michel de Montaigne",
@@ -1638,6 +1662,19 @@
       "Bluebell",
       "Dandelion",
       "Holly"
+    ],
+    "quotes": [
+      "“All the world will be your enemy, Prince with a Thousand Enemies, and whenever they catch you, they will kill you. But first they must catch you, digger, listener, runner, prince with the swift warning. Be cunning and full of tricks and your people shall never be destroyed.”",
+      "“Animals don't behave like men,' he said. 'If they have to fight, they fight; and if they have to kill they kill. But they don't sit down and set their wits to work to devise ways of spoiling other creatures' lives and hurting them. They have dignity and animality.”",
+      "“My heart has joined the Thousand, for my friend stopped running today.”",
+      "“Many human beings say that they enjoy the winter, but what they really enjoy is feeling proof against it.”",
+      "“You know how you let yourself think that everything will be all right if you can only get to a certain place or do a certain thing. But when you get there you find it's not that simple.”",
+      "“He fought because he actually felt safer fighting than running.”",
+      "“The full moon, well risen in a cloudless eastern sky, covered the high solitude with its light. We are not conscious of daylight as that which displaces darkness. Daylight, even when the sun is clear of clouds, seems to us simply the natural condition of the earth and air. When we think of the downs, we think of the downs in daylight, as with think of a rabbit with its fur on. Stubbs may have envisaged the skeleton inside the horse, but most of us do not: and we do not usually envisage the downs without daylight, even though the light is not a part of the down itself as the hide is part of the horse itself. We take daylight for granted. But moonlight is another matter. It is inconstant. The full moon wanes and returns again. Clouds may obscure it to an extent to which they cannot obscure daylight. Water is necessary to us, but a waterfall is not. Where it is to be found it is something extra, a beautiful ornament. We need daylight and to that extent it us utilitarian, but moonlight we do not need. When it comes, it serves no necessity. It transforms. It falls upon the banks and the grass, separating one long blade from another; turning a drift of brown, frosted leaves from a single heap to innumerable flashing fragments; or glimmering lengthways along wet twigs as though light itself were ductile. Its long beams pour, white and sharp, between the trunks of trees, their clarity fading as they recede into the powdery, misty distance of beech woods at night. In moonlight, two acres of coarse bent grass, undulant and ankle deep, tumbled and rough as a horse's mane, appear like a bay of waves, all shadowy troughs and hollows. The growth is so thick and matted that event the wind does not move it, but it is the moonlight that seems to confer stillness upon it. We do not take moonlight for granted. It is like snow, or like the dew on a July morning. It does not reveal but changes what it covers. And its low intensity---so much lower than that of daylight---makes us conscious that it is something added to the down, to give it, for only a little time, a singular and marvelous quality that we should admire while we can, for soon it will be gone again.”",
+      "“You're trying to eat grass that isn't there. Why don't you give it a chance to grow?”",
+      "“Men will never rest till they've spoiled the earth and destroyed the animals.”",
+      "“Be cunning, and full of tricks, and your people will never be destroyed.”",
+      "“To come to the end of a time of anxiety and fear! To feel the cloud that hung over us lift and disperse—the cloud that dulled the heart and made happiness no more than a memory! This at least is one joy that must have been known by almost every living creature.”"
     ]
   }
 ]

@@ -528,10 +528,10 @@ namespace BookPlatform.Data
                     await this.SaveChangesAsync();
                 }
             }
-            catch (Exception ex) 
-            { 
-                Console.WriteLine($"An error occurred: {ex.Message}"); 
-            }            
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
 
         public async Task SeedCharactersAsync()
@@ -585,8 +585,8 @@ namespace BookPlatform.Data
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-                
-        public async Task SeedBookCharactersAsync() // called in SeedCharactersAsync()
+
+        public async Task SeedBookCharactersAsync()
         {
             try
             {
