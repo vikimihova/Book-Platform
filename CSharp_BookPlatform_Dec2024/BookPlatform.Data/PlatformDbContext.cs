@@ -30,7 +30,8 @@ namespace BookPlatform.Data
 
         public virtual DbSet<ReadingStatus> ReadingStatuses { get; set; }
 
-        public virtual DbSet<QuoteApplicationUser> QuotesApplicationUsers { get; set; }
+        // To be implemented later
+        //public virtual DbSet<QuoteApplicationUser> QuotesApplicationUsers { get; set; }
 
         public virtual DbSet<Character> Characters { get; set; }
 
@@ -586,7 +587,7 @@ namespace BookPlatform.Data
             }
         }
 
-        public async Task SeedBookCharactersAsync()
+        public async Task SeedBookCharactersAsync() // called in SeedCharactersAsync()
         {
             try
             {

@@ -17,6 +17,7 @@ namespace BookPlatform.Data.Models
 
         public ICollection<BookApplicationUser> UserBooks { get; set; } = new List<BookApplicationUser>();
 
-        public ICollection<QuoteApplicationUser> UserQuotes { get; set; } = new List<QuoteApplicationUser>();
+        // To be implemented later
+        //public ICollection<QuoteApplicationUser> UserQuotes { get; set; } = new List<QuoteApplicationUser>();
     }
 }
