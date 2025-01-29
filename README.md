@@ -30,7 +30,7 @@ Admins:
 - Microsoft SQL Server
 - ASP.NET Identity System
 - MVC Areas with Multiple Layouts
-- Razor Pages, Sections, Partial Views
+- Razor Views, Sections, Partial Views
 - Repository Pattern
 - Dependency Injection
 - Searching, Filtering, and Paging with EF Core
