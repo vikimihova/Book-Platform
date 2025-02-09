@@ -14,6 +14,8 @@ namespace BookPlatform.Web
     {
         public static void Main(string[] args)
         {
+            // EXTENDED
+
             var builder = WebApplication.CreateBuilder(args);
             var connectionString = builder.Configuration.GetConnectionString("SqlServer");
 
