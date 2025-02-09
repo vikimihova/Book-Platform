@@ -27,7 +27,7 @@ namespace BookPlatform.Core.ViewModels.ReadingList
         [Required]
         public int ReadingStatus { get; set; }
 
-        public string? DateFinished { get; set; } = DateTime.Now.ToString(DateViewFormat);
+        public string? DateFinished { get; set; } = DateTime.Now.ToString(DateInputFormat);
                 
         public string? CharacterId { get; set; }
 
