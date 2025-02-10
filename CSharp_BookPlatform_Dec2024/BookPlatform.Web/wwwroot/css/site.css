@@ -35,7 +35,7 @@ body {
     color: white;
 }
 
-a.book-title, a.author, a.genre, a.review-author {
+a.book-title, a.author, a.genre, a.review-author, a.edit, a.delete {
     color: inherit;
     text-decoration: none;
 }
@@ -46,5 +46,13 @@ a.genre:hover,
 a.review-author:hover {
     color: inherit;
     text-decoration: underline;
+}
+
+a.delete {
+    display: none;
+}
+
+tr:hover a.delete {
+    display: inline-block;
 }
 
