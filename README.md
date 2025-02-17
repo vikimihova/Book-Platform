@@ -1,4 +1,4 @@
-# BookPlatform
+## ABOUT
 A social platform for book lovers to discover new titles, share their thoughts and actively engage with like-minded people. 
 This is an extension to my project for the Advanced ASP.NET Core course at SoftUni. 
 See branch "softuni-final-project" for the unextended version.
