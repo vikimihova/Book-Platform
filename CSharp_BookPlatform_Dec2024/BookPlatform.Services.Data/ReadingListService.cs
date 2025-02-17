@@ -252,7 +252,7 @@ namespace BookPlatform.Core.Services
             // add date finished
             if (model.DateFinished != null)
             {
-                bool isFinishDateValid = DateTime.TryParseExact(model.DateFinished, DateViewFormat,
+                bool isFinishDateValid = DateTime.TryParseExact(model.DateFinished, DateInputFormat,
                     CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateFinished);
 
                 if (isFinishDateValid == true)
@@ -327,7 +327,7 @@ namespace BookPlatform.Core.Services
             // update date finished
             if (model.DateFinished != null)
             {
-                bool isFinishDateValid = DateTime.TryParseExact(model.DateFinished, DateViewFormat,
+                bool isFinishDateValid = DateTime.TryParseExact(model.DateFinished, DateInputFormat,
                     CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateFinished);
 
                 if (isFinishDateValid == true)
@@ -608,7 +608,7 @@ namespace BookPlatform.Core.Services
                 BookTitle = book.Title,
                 Rating = bookApplicationUser.RatingId != null ? bookApplicationUser.RatingId : null,
                 ReadingStatus = 3,
-                DateFinished = bookApplicationUser.DateFinished.HasValue ? bookApplicationUser.DateFinished.Value.ToString(DateViewFormat) : String.Empty,
+                DateFinished = bookApplicationUser.DateFinished.HasValue ? bookApplicationUser.DateFinished.Value.ToString(DateInputFormat) : String.Empty,
                 CharacterId = bookApplicationUser.CharacterId.ToString(),
                 ImageUrl = book.ImageUrl
             };

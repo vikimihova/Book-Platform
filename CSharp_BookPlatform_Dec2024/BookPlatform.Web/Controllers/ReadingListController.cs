@@ -174,10 +174,10 @@ namespace BookPlatform.Web.Controllers
 
             if (model.DateFinished != null)
             {
-                if (!DateTime.TryParseExact(model.DateFinished, DateViewFormat,
+                if (!DateTime.TryParseExact(model.DateFinished, DateInputFormat,
                 CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateFinished))
                 {
-                    ModelState.AddModelError(nameof(model.DateFinished), WrongDateViewFormat);
+                    ModelState.AddModelError(nameof(model.DateFinished), WrongDateInputFormat);
                     model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
                     model.Ratings = await this.ratingService.GetRatingsAsync();
                     return View(model);
@@ -262,10 +262,10 @@ namespace BookPlatform.Web.Controllers
 
             if (model.DateFinished != null)
             {
-                if (!DateTime.TryParseExact(model.DateFinished, DateViewFormat,
+                if (!DateTime.TryParseExact(model.DateFinished, DateInputFormat,
                 CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateFinished))
                 {
-                    ModelState.AddModelError(nameof(model.DateFinished), WrongDateViewFormat);
+                    ModelState.AddModelError(nameof(model.DateFinished), WrongDateInputFormat);
                     model.Characters = await this.characterService.GetCharactersAsync(model.BookId);
                     model.Ratings = await this.ratingService.GetRatingsAsync();
                     return View(model);
