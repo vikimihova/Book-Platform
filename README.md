@@ -1,6 +1,6 @@
 ### ABOUT
-A social platform for book lovers to discover new titles, share their thoughts and actively engage with like-minded people. 
-This is an extension to my project for the Advanced ASP.NET Core course at SoftUni. 
+A social platform for book lovers to discover new titles, share their thoughts and actively engage with like-minded people.<br/> 
+This is an extension to my project for the Advanced ASP.NET Core course at SoftUni.<br/>
 See branch "softuni-final-project" for the unextended version.
 
 ### HOW IT WORKS
@@ -39,7 +39,8 @@ Admins:
 - Bootstrap
 
 ### DATABASE DIAGRAM
-![Database Diagram](https://github.com/user-attachments/assets/abdfe1ff-dbc8-4f50-a18b-3fb76ff295e7)
+![database affinity](https://github.com/user-attachments/assets/c45ad1ac-b6e0-42db-bef3-2d7c1961bcfb)
+
 
 ### BROWSE ALL BOOKS (ALL USERS)
 ![Browse All](https://github.com/user-attachments/assets/9cedf9aa-93a8-42c3-9cc7-7a8fdb05b199)
