@@ -2,6 +2,24 @@
 A social platform for book lovers to discover new titles, share their thoughts and actively engage with like-minded people. This is an extension to my project for the Advanced ASP.NET Core course at SoftUni.<br/>
 See branch "softuni-final-project" for the unextended version.
 
+![Browse All](https://github.com/user-attachments/assets/0c6c56c1-5c31-4003-9d65-4b85cf7fbfbf)
+
+### BUILT WITH
+- ASP.NET Core 8.0
+- Entity Framework Core 8.0
+- Microsoft SQL Server
+- Repository Pattern
+- Dependency Injection
+- ASP.NET Identity System
+- Data Validation (client- and server-side)
+- Searching, Filtering, and Paging with EF Core
+- MVC Areas with Multiple Layouts
+- Razor Views, Sections, Partial Views
+- Bootstrap
+
+### DATABASE DIAGRAM
+![database affinity](https://github.com/user-attachments/assets/c45ad1ac-b6e0-42db-bef3-2d7c1961bcfb)
+
 ### HOW IT WORKS
 Guest visitors:
 - browse books
@@ -24,49 +42,23 @@ Admins:
 - create/edit/delete books
 - create/delete characters
 
-### BUILT WITH
-- ASP.NET Core 8.0
-- Entity Framework Core 8.0
-- Microsoft SQL Server
-- ASP.NET Identity System
-- MVC Areas with Multiple Layouts
-- Razor Views, Sections, Partial Views
-- Repository Pattern
-- Dependency Injection
-- Searching, Filtering, and Paging with EF Core
-- Data Validation, both Client-side and Server-side
-- Bootstrap
-
-### DATABASE DIAGRAM
-![database affinity](https://github.com/user-attachments/assets/c45ad1ac-b6e0-42db-bef3-2d7c1961bcfb)
-
-
 ### BROWSE ALL BOOKS (ALL USERS)
-![Browse All](https://github.com/user-attachments/assets/9cedf9aa-93a8-42c3-9cc7-7a8fdb05b199)
+![Browse All](https://github.com/user-attachments/assets/958f4274-7d48-4309-b3ea-81d8cec269a0)
 
 ### HOME PAGE (LOGGED-IN USERS)
-![Home Page](https://github.com/user-attachments/assets/ba0814d9-d235-41f4-a958-9a925f90b2f2)
+![Home Page](https://github.com/user-attachments/assets/9253640c-98c9-4ebe-a9e5-e5504cb874c8)
 
 ### BOOK DETAILS (ALL USERS)
-![Book Details Page](https://github.com/user-attachments/assets/b923ae0d-ef4e-48d0-98b3-19171df28ada)
+![Book Details Page](https://github.com/user-attachments/assets/873d074d-01d0-4e40-9cfe-69d8152f5466)
 
 ### BOOK REVIEWS (ALL USERS)
-![Book Reviews Page test](https://github.com/user-attachments/assets/f4acf59d-ba21-4cc6-b8bb-d0a6bd5f163f)
+![Book Reviews Page test](https://github.com/user-attachments/assets/2bab7e31-05f5-4e93-8b3b-4272895f9db3)
 
 ### BOOK QUOTES (ALL USERS)
-![Book Quotes Page](https://github.com/user-attachments/assets/8e8adf89-9029-4770-bad2-489157750ea7)
+![Book Quotes Page](https://github.com/user-attachments/assets/b4f2f3fe-c110-47c0-b3e3-1995c842ef6d)
 
 ### MY BOOKS (LOGGED-IN USERS)
-![My Books Page](https://github.com/user-attachments/assets/695f8516-7061-415a-bf52-7a4001f4d725)
+![My Books Page](https://github.com/user-attachments/assets/d5fbb1eb-cb1c-44dd-a3fb-ed6b0286f33a)
 
 ### MY FRIENDS (LOGGED-IN USERS)
-![My Friends Page](https://github.com/user-attachments/assets/2357521f-7267-4376-87fb-0d857aa4c8bd)
-
-
-
-
-
-
-
-
-
+![My Friends Page](https://github.com/user-attachments/assets/71193637-c1a8-49bd-a807-a248bba2bb3e)
