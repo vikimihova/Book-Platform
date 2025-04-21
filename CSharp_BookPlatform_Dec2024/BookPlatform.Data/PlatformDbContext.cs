@@ -30,8 +30,7 @@ namespace BookPlatform.Data
 
         public virtual DbSet<ReadingStatus> ReadingStatuses { get; set; }
 
-        // To be implemented later
-        //public virtual DbSet<QuoteApplicationUser> QuotesApplicationUsers { get; set; }
+        public virtual DbSet<QuoteApplicationUser> QuotesApplicationUsers { get; set; }
 
         public virtual DbSet<Character> Characters { get; set; }
 
