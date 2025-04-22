@@ -24,22 +24,19 @@ namespace BookPlatform.Web.Controllers
         private readonly ICharacterService characterService;
         private readonly IRatingService ratingService;
         private readonly IReadingListService readingListService;
-        private readonly UserManager<ApplicationUser> userManager;
 
         public ReadingListController(
             IBaseService baseService,
             IBookService bookService,
             ICharacterService characterService,
             IRatingService ratingService,
-            IReadingListService readingListService,
-            UserManager<ApplicationUser> userManager)
+            IReadingListService readingListService)
         {
             this.baseService = baseService;
             this.bookService = bookService;
             this.characterService = characterService;
             this.ratingService = ratingService;
             this.readingListService = readingListService;
-            this.userManager = userManager;
         }
 
         [Authorize]
@@ -47,7 +44,7 @@ namespace BookPlatform.Web.Controllers
         public async Task<IActionResult> Index(ReadingListPaginatedViewModel inputModel)
         {
             // get user id
-            string userId = User.GetUserId()!;
+            string userId = this.User.GetUserId()!;
 
             // generate view model for reading list
             IEnumerable<ReadingListViewModel> booksModel;
@@ -77,7 +74,7 @@ namespace BookPlatform.Web.Controllers
         public async Task<IActionResult> IndexFriends()
         {
             // get user id
-            string userId = User.GetUserId()!;
+            string userId = this.User.GetUserId()!;
 
             // generate view model
             ICollection<FriendBookViewModel> model;
@@ -98,8 +95,8 @@ namespace BookPlatform.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Add(string bookId, int readingStatusId)
         {
-            // get UserId
-            string userId = this.userManager.GetUserId(this.User)!;
+            // get user id
+            string userId = this.User.GetUserId()!;
 
             // add book to reading list
             bool result = false;
@@ -133,8 +130,8 @@ namespace BookPlatform.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> AddAsRead(string bookId, int readingStatusId)
         {           
-            // get userId
-            string userId = this.userManager.GetUserId(this.User)!;
+            // get user id
+            string userId = this.User.GetUserId()!;
 
             // create input model to pass book information 
             ReadingListAddInputModel? model = null;
@@ -192,8 +189,8 @@ namespace BookPlatform.Web.Controllers
                 }
             }
 
-            // get userId
-            string userId = this.userManager.GetUserId(this.User)!;
+            // get user id
+            string userId = this.User.GetUserId()!;
 
             // try to add book to reading list
             bool result = false;
@@ -221,8 +218,8 @@ namespace BookPlatform.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string bookId, int readingStatusId)
         {            
-            // get userId
-            string userId = this.userManager.GetUserId(this.User)!;
+            // get user id
+            string userId = this.User.GetUserId()!;
 
             // create input model to pass book information        
             ReadingListEditInputModel? model = null;
@@ -280,8 +277,8 @@ namespace BookPlatform.Web.Controllers
                 }
             }
 
-            // get userId
-            string userId = this.userManager.GetUserId(this.User)!;
+            // get user id
+            string userId = this.User.GetUserId()!;
 
             // try to update book entry in reading list
 
@@ -309,8 +306,9 @@ namespace BookPlatform.Web.Controllers
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Remove(string bookId)
-        {           
-            string userId = this.userManager.GetUserId(this.User)!;
+        {
+            // get user id
+            string userId = this.User.GetUserId()!;
 
             bool result = false;
 
