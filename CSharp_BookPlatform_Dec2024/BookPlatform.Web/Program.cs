@@ -135,8 +135,8 @@ namespace BookPlatform.Web
                       
             app.MapRazorPages();
 
-            // SEED DATABASE
-            app.SeedDatabase();
+            //// SEED DATABASE
+            //app.SeedDatabase();
 
             // APPLY MIGRATIONS
             app.ApplyMigrations();
