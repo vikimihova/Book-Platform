@@ -11,6 +11,7 @@ namespace BookPlatform.Web.Controllers
     {
         private readonly IQuoteService quoteService;
         private readonly IBookService bookService;
+        // alternatively use a designated quoteApplicationUserService in addition to quoteService
 
         public QuoteController(
             IQuoteService quoteService,
@@ -55,5 +56,17 @@ namespace BookPlatform.Web.Controllers
 
             return View(model);
         }
+
+        // To-Do: Action for getting all quotes saved by a specific user
+        // [Authorize]
+        // [HttpGet]
+
+        // To-Do: Action for adding quotes to Favorites
+        // [Authorize]
+        // [HttpGet]
+
+        // To-Do: Action for removing quotes from Favorites
+        // [Authorize]
+        // [HttpGet]
     }
 }

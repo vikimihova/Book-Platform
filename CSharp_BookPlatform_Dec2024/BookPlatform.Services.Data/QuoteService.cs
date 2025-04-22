@@ -12,6 +12,8 @@ namespace BookPlatform.Core.Services
     {
         private readonly IRepository<Quote, Guid> quoteRepository;
         private readonly IRepository<Book, Guid> bookRepository;
+        // Add quotesApplicationUserRepository
+        // Add userManager
 
         public QuoteService(
             IRepository<Quote, Guid> quoteRepository,
@@ -54,5 +56,11 @@ namespace BookPlatform.Core.Services
 
             return quotes;
         }
+
+        // To-Do: Task<IEnumerable<QuoteViewModel>> implementation for getting all quotes saved by a specific user
+
+        // To-Do: Task<bool> implementation for adding quotes to Favorites
+
+        // To-Do: Task<bool> implementation for removing quotes from Favorites
     }
 }
