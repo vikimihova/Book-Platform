@@ -219,7 +219,7 @@ namespace BookPlatform.Core.Services
             return false;
         }
 
-        public async Task<bool> AddBookToUserReadingListReadAsync(ReadingListAddInputModel model, string userId)
+        public async Task<bool> AddBookToUserReadingListReadAsync(AddListedBookInputModel model, string userId)
         {
             // 1. ADD BOOK TO STANDARD READING LIST
             bool result = await AddBookToUserReadingListAsync(model.BookId, userId, model.ReadingStatus);
@@ -526,7 +526,7 @@ namespace BookPlatform.Core.Services
             await this.bookRepository.UpdateAsync(book);
         }
 
-        public async Task<ReadingListAddInputModel?> GenerateAddInputModelAsync(string bookId, string userId, int readingStatusId)
+        public async Task<AddListedBookInputModel?> GenerateAddInputModelAsync(string bookId, string userId, int readingStatusId)
         {
             // check input
             Guid bookGuid = Guid.Empty;
@@ -555,7 +555,7 @@ namespace BookPlatform.Core.Services
                 return null;
             }
 
-            ReadingListAddInputModel model = new ReadingListAddInputModel();
+            AddListedBookInputModel model = new AddListedBookInputModel();
 
             model.BookId = book.Id.ToString();
             model.BookTitle = book.Title;

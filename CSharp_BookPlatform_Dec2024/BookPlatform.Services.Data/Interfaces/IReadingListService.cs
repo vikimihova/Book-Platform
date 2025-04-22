@@ -13,7 +13,7 @@ namespace BookPlatform.Core.Services.Interfaces
 
         Task<bool> AddBookToUserReadingListAsync(string bookId, string userId, int readingStatusId);
 
-        Task<bool> AddBookToUserReadingListReadAsync(ReadingListAddInputModel model, string userId);
+        Task<bool> AddBookToUserReadingListReadAsync(AddListedBookInputModel model, string userId);
 
         Task<bool> EditInReadingListAsync(ReadingListEditInputModel model, string userId);
 
@@ -28,7 +28,7 @@ namespace BookPlatform.Core.Services.Interfaces
 
         Task UpdateBookRating(string bookId);
 
-        Task<ReadingListAddInputModel?> GenerateAddInputModelAsync(string bookId, string userId, int readingStatusId);
+        Task<AddListedBookInputModel?> GenerateAddInputModelAsync(string bookId, string userId, int readingStatusId);
 
         Task<ReadingListEditInputModel?> GenerateEditInputModelAsync(string bookId, string userId, int readingStatusId);
 

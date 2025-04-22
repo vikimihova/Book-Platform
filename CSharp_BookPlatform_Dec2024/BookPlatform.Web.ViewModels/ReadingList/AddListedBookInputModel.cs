@@ -9,7 +9,7 @@ using BookPlatform.Core.ViewModels.Rating;
 
 namespace BookPlatform.Core.ViewModels.ReadingList
 {
-    public class ReadingListAddInputModel
+    public class AddListedBookInputModel
     {
         [Required]
         public string BookId { get; set; } = null!;
