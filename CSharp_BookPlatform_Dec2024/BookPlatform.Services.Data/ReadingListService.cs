@@ -298,7 +298,7 @@ namespace BookPlatform.Core.Services
             return true;
         }
 
-        public async Task<bool> EditInReadingListAsync(ReadingListEditInputModel model, string userId)
+        public async Task<bool> EditInReadingListAsync(EditListedBookInputModel model, string userId)
         {
             // parse userId to Guid
             Guid userGuid = Guid.Empty;
@@ -565,7 +565,7 @@ namespace BookPlatform.Core.Services
             return model;
         }
 
-        public async Task<ReadingListEditInputModel?> GenerateEditInputModelAsync(string bookId, string userId, int readingStatusId)
+        public async Task<EditListedBookInputModel?> GenerateEditInputModelAsync(string bookId, string userId, int readingStatusId)
         {
             // check input
             Guid bookGuid = Guid.Empty;
@@ -599,10 +599,10 @@ namespace BookPlatform.Core.Services
                 .GetAllAttached()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(bau => bau.BookId == bookGuid
-                                         && bau.ApplicationUserId == userGuid);            
+                                         && bau.ApplicationUserId == userGuid);
 
             // generate model
-            ReadingListEditInputModel model = new ReadingListEditInputModel()
+            EditListedBookInputModel model = new EditListedBookInputModel()
             {
                 BookId = bookId,
                 BookTitle = book.Title,

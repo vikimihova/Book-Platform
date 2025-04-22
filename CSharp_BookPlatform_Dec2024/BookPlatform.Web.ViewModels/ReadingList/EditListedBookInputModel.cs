@@ -8,7 +8,7 @@ using static BookPlatform.Common.EntityValidationConstants.ReviewValidationConst
 
 namespace BookPlatform.Core.ViewModels.ReadingList
 {
-    public class ReadingListEditInputModel
+    public class EditListedBookInputModel
     {
         [Required]
         public string BookId { get; set; } = null!;

@@ -784,7 +784,7 @@ namespace BookPlatform.Tests
         public async Task EditBookInReadingListReadPositive()
         {
             string userId = this.applicationUser1.Id.ToString();
-            ReadingListEditInputModel model = new ReadingListEditInputModel();
+            EditListedBookInputModel model = new EditListedBookInputModel();
             model.BookId = this.book1.Id.ToString();
             model.BookTitle = this.book1.Title;
             model.Rating = 3;
@@ -862,7 +862,7 @@ namespace BookPlatform.Tests
         public async Task EditBookInReadingListInvalidInputNegative(string userId, string bookId, string characterId)
         {
             string importedUserId = userId;
-            ReadingListEditInputModel model = new ReadingListEditInputModel();
+            EditListedBookInputModel model = new EditListedBookInputModel();
             model.BookId = bookId;
             model.BookTitle = this.book1.Title;
             model.Rating = 3;
@@ -938,7 +938,7 @@ namespace BookPlatform.Tests
         public async Task EditBookInReadingListNonExistentBookApplicationUserNegative()
         {
             string userId = "4BFD099A-762D-4744-BBD0-EA820AC643D5";
-            ReadingListEditInputModel model = new ReadingListEditInputModel();
+            EditListedBookInputModel model = new EditListedBookInputModel();
             model.BookId = this.book1.Id.ToString();
             model.BookTitle = this.book1.Title;
             model.Rating = 3;
@@ -2072,7 +2072,7 @@ namespace BookPlatform.Tests
                 bookApplicationUserRepository.Object,
                 userManager.Object);
 
-            ReadingListEditInputModel modelActual = await readingListService.GenerateEditInputModelAsync(bookId, userId, readingStatusId);
+            EditListedBookInputModel modelActual = await readingListService.GenerateEditInputModelAsync(bookId, userId, readingStatusId);
 
             Assert.IsNotNull(modelActual);
             Assert.That(modelActual.BookId.ToLower(), Is.EqualTo(this.book1.Id.ToString().ToLower()));
@@ -2118,7 +2118,7 @@ namespace BookPlatform.Tests
                 bookApplicationUserRepository.Object,
                 userManager.Object);
 
-            ReadingListEditInputModel modelActual = await readingListService.GenerateEditInputModelAsync(bookId, userId, readingStatusId);
+            EditListedBookInputModel modelActual = await readingListService.GenerateEditInputModelAsync(bookId, userId, readingStatusId);
 
             Assert.IsNull(modelActual);
         }
@@ -2161,7 +2161,7 @@ namespace BookPlatform.Tests
 
             Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
-                ReadingListEditInputModel modelActual = await readingListService.GenerateEditInputModelAsync(bookId, userId, readingStatusId);
+                EditListedBookInputModel modelActual = await readingListService.GenerateEditInputModelAsync(bookId, userId, readingStatusId);
             });
         }
 
@@ -2195,7 +2195,7 @@ namespace BookPlatform.Tests
 
             Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
-                ReadingListEditInputModel modelActual = await readingListService.GenerateEditInputModelAsync(bookId, userId, readingStatusId);
+                EditListedBookInputModel modelActual = await readingListService.GenerateEditInputModelAsync(bookId, userId, readingStatusId);
             });
         }
 
@@ -2232,7 +2232,7 @@ namespace BookPlatform.Tests
 
             Assert.ThrowsAsync<ArgumentException>(async () =>
             {
-                ReadingListEditInputModel modelActual = await readingListService.GenerateEditInputModelAsync(bookId, userId, readingStatusId);
+                EditListedBookInputModel modelActual = await readingListService.GenerateEditInputModelAsync(bookId, userId, readingStatusId);
             });
         }
 

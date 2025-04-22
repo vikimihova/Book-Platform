@@ -222,7 +222,7 @@ namespace BookPlatform.Web.Controllers
             string userId = this.User.GetUserId()!;
 
             // create input model to pass book information        
-            ReadingListEditInputModel? model = null;
+            EditListedBookInputModel? model = null;
 
             try
             {
@@ -247,7 +247,7 @@ namespace BookPlatform.Web.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ReadingListEditInputModel model)
+        public async Task<IActionResult> Edit(EditListedBookInputModel model)
         {
             // check model state
             if (!this.ModelState.IsValid)
