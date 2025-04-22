@@ -7,7 +7,7 @@ namespace BookPlatform.Core.Services.Interfaces
     public interface IReadingListService
     {
         // MAIN
-        Task<IEnumerable<ReadingListViewModel>> GetUserReadingListByUserIdAsync(string userId, ReadingListPaginatedViewModel inputModel);
+        Task<IEnumerable<ListedBookViewModel>> GetUserReadingListByUserIdAsync(string userId, ReadingListPaginatedViewModel inputModel);
 
         Task<ICollection<FriendBookViewModel>> GetFriendBooksByUserIdAsync(string userId);
 

@@ -47,7 +47,7 @@ namespace BookPlatform.Web.Controllers
             string userId = this.User.GetUserId()!;
 
             // generate view model for reading list
-            IEnumerable<ReadingListViewModel> booksModel;
+            IEnumerable<ListedBookViewModel> booksModel;
 
             try
             {

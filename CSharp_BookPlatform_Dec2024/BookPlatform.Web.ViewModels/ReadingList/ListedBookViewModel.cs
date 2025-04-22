@@ -1,6 +1,6 @@
 ﻿namespace BookPlatform.Core.ViewModels.ReadingList
 {
-    public class ReadingListViewModel
+    public class ListedBookViewModel
     {
         public string BookId { get; set; } = null!;
 

@@ -34,9 +34,9 @@ namespace BookPlatform.Core.Services
 
         // MAIN
 
-        public async Task<IEnumerable<ReadingListViewModel>> GetUserReadingListByUserIdAsync(string userId, ReadingListPaginatedViewModel inputModel)
+        public async Task<IEnumerable<ListedBookViewModel>> GetUserReadingListByUserIdAsync(string userId, ReadingListPaginatedViewModel inputModel)
         {
-            IEnumerable<ReadingListViewModel> readingList = new List<ReadingListViewModel>();
+            IEnumerable<ListedBookViewModel> readingList = new List<ListedBookViewModel>();
 
             // check if userId is a valid guid
             Guid userGuid = Guid.Empty;
@@ -54,7 +54,7 @@ namespace BookPlatform.Core.Services
             }
 
             // get UserBooks and create view model
-            IQueryable<ReadingListViewModel> readingListQuery = bookApplicationUserRepository
+            IQueryable<ListedBookViewModel> readingListQuery = bookApplicationUserRepository
                 .GetAllAttached()
                 .AsNoTracking()
                 .Where(bau => bau.ApplicationUserId == userGuid)
@@ -64,7 +64,7 @@ namespace BookPlatform.Core.Services
                 .Include(bau => bau.Book)
                 .ThenInclude(b => b.Author)
                 .OrderByDescending(b => b.DateAdded)
-                .Select(bau => new ReadingListViewModel()
+                .Select(bau => new ListedBookViewModel()
                 {
                     BookId = bau.BookId.ToString(),
                     BookTitle = bau.Book.Title,

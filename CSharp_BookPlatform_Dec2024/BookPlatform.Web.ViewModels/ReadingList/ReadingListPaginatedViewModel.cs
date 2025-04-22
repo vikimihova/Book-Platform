@@ -2,7 +2,7 @@
 {
     public class ReadingListPaginatedViewModel
     {
-        public IEnumerable<ReadingListViewModel> Books { get; set; } = new List<ReadingListViewModel>();
+        public IEnumerable<ListedBookViewModel> Books { get; set; } = new List<ListedBookViewModel>();
 
         public int? totalBooksPerUserCount { get; set; }
 
