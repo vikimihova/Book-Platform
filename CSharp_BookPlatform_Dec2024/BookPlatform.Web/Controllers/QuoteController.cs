@@ -2,6 +2,7 @@
 using BookPlatform.Core.ViewModels.Book;
 using BookPlatform.Core.ViewModels.Quote;
 using BookPlatform.Core.ViewModels.Review;
+using BookPlatform.Web.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,12 +62,54 @@ namespace BookPlatform.Web.Controllers
         // [Authorize]
         // [HttpGet]
 
-        // To-Do: Action for adding quotes to Favorites
-        // [Authorize]
-        // [HttpGet]
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Add(string quoteId)
+        {
+            // ref URL
+            var refererUrl = Request.Headers.Referer.ToString();
 
-        // To-Do: Action for removing quotes from Favorites
-        // [Authorize]
-        // [HttpGet]
+            // get user id
+            string userId = this.User.GetUserId()!;
+
+            // try adding quote
+            bool result;
+
+            try
+            {
+
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            return Redirect(refererUrl);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Remove(string quoteId)
+        {
+            // ref URL
+            var refererUrl = Request.Headers.Referer.ToString();
+
+            // get user id
+            string userId = this.User.GetUserId()!;
+
+            // try adding quote
+            bool result;
+
+            try
+            {
+
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            return Redirect(refererUrl);
+        }
     }
 }
