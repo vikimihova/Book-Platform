@@ -5,6 +5,7 @@ using BookPlatform.Data.Models;
 using BookPlatform.Data.Repository.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace BookPlatform.Core.Services
 {
@@ -60,6 +61,21 @@ namespace BookPlatform.Core.Services
         // To-Do: Task<IEnumerable<QuoteViewModel>> implementation for getting all quotes saved by a specific user
 
         // To-Do: Task<bool> implementation for adding quotes to Favorites
+        public async Task<bool> AddQuoteAsync(string userId, string quoteId)
+        {
+            // check input
+            Guid userGuid = Guid.Empty;
+            Guid quoteGuid = Guid.Empty;
+            if (!IsGuidValid(userId, ref userGuid) ||
+                !IsGuidValid(quoteId, ref quoteGuid))
+            {
+                throw new ArgumentException();
+            }
+
+
+
+            return true;
+        }
 
         // To-Do: Task<bool> implementation for removing quotes from Favorites
     }
