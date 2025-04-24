@@ -6,10 +6,10 @@ namespace BookPlatform.Core.Services.Interfaces
     {
         Task<IEnumerable<QuoteViewModel>> GetAllQuotesPerBookAsync(string bookId);
 
-        // To-Do: Task<IEnumerable<QuoteViewModel>> for getting all quotes saved by a specific user
+        Task<IEnumerable<QuoteViewModel>> GetAllQuotesPerUserAsync(string userId);
 
-        // To-Do: Task<bool> for adding quotes to Favorites
+        Task<bool> AddQuoteAsync(string userId, string quoteId);
 
-        // To-Do: Task<bool> for removing quotes from Favorites
+        Task<bool> RemoveQuoteAsync(string userId, string quoteId);
     }
 }
