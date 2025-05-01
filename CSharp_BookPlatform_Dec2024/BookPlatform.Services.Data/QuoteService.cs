@@ -13,15 +13,19 @@ namespace BookPlatform.Core.Services
     {
         private readonly IRepository<Quote, Guid> quoteRepository;
         private readonly IRepository<Book, Guid> bookRepository;
-        // Add quotesApplicationUserRepository
-        // Add userManager
+        private readonly IRepository<QuoteApplicationUser, object> quoteApplicationUserRepository;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public QuoteService(
             IRepository<Quote, Guid> quoteRepository,
-            IRepository<Book, Guid> bookRepository)
+            IRepository<Book, Guid> bookRepository,
+            IRepository<QuoteApplicationUser, object> quoteApplicationUserRepository,
+            UserManager<ApplicationUser> userManager)
         {
             this.quoteRepository = quoteRepository;
             this.bookRepository = bookRepository;
+            this.quoteApplicationUserRepository = quoteApplicationUserRepository;
+            this.userManager = userManager;
         }
 
         public async Task<IEnumerable<QuoteViewModel>> GetAllQuotesPerBookAsync(string bookId)
