@@ -77,7 +77,7 @@ namespace BookPlatform.Web.Controllers
 
             try
             {
-
+                result = await this.quoteService.AddQuoteAsync(userId, quoteId);
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {

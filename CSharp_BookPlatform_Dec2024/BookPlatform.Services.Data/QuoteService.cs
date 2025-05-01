@@ -63,8 +63,7 @@ namespace BookPlatform.Core.Services
         }
 
         // To-Do: Task<IEnumerable<QuoteViewModel>> implementation for getting all quotes saved by a specific user
-
-        // To-Do: Task<bool> implementation for adding quotes to Favorites
+                
         public async Task<bool> AddQuoteAsync(string userId, string quoteId)
         {
             // check input
@@ -76,9 +75,42 @@ namespace BookPlatform.Core.Services
                 throw new ArgumentException();
             }
 
+            // check if quote exists
+            Quote quote = await quoteRepository.GetByIdAsync(quoteGuid);
 
+            if (quote == null)
+            {
+                throw new InvalidOperationException();
+            }
 
-            return true;
+            // check if user exists
+            ApplicationUser? user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            // check if QuoteApplicationUser exists            
+            QuoteApplicationUser? quoteApplicationUser = await quoteApplicationUserRepository
+                .FirstOrDefaultAsync(qau => qau.QuoteId == quoteGuid && qau.ApplicationUserId == userGuid);
+
+            if (quoteApplicationUser == null)
+            {
+                // create new QuoteApplicationUser
+                quoteApplicationUser = new QuoteApplicationUser()
+                {
+                    QuoteId = quoteGuid,
+                    ApplicationUserId = userGuid
+                };
+
+                // add to dbSet and save Changes
+                await quoteApplicationUserRepository.AddAsync(quoteApplicationUser);
+
+                return true;
+            }
+
+            return false;
         }
 
         // To-Do: Task<bool> implementation for removing quotes from Favorites
