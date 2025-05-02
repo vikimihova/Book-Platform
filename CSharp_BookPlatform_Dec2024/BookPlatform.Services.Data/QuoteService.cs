@@ -151,6 +151,8 @@ namespace BookPlatform.Core.Services
 
                 return true;
             }
+
+            return false;
         }
     }
 }
