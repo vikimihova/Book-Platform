@@ -113,6 +113,44 @@ namespace BookPlatform.Core.Services
             return false;
         }
 
-        // To-Do: Task<bool> implementation for removing quotes from Favorites
+        public async Task<bool> RemoveQuoteAsync(string userId, string quoteId)
+        {
+            // check input
+            Guid userGuid = Guid.Empty;
+            Guid quoteGuid = Guid.Empty;
+            if (!IsGuidValid(userId, ref userGuid) ||
+                !IsGuidValid(quoteId, ref quoteGuid))
+            {
+                throw new ArgumentException();
+            }
+
+            // check if quote exists
+            Quote quote = await quoteRepository.GetByIdAsync(quoteGuid);
+
+            if (quote == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            // check if user exists
+            ApplicationUser? user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            // check if quoteApplicationUser exists
+            QuoteApplicationUser? quoteApplicationUser = await quoteApplicationUserRepository
+                .FirstOrDefaultAsync(qau => qau.QuoteId == quoteGuid && qau.ApplicationUserId == userGuid);
+
+            // remove quote
+            if (quoteApplicationUser != null)
+            {
+                await this.quoteApplicationUserRepository.DeleteAsync(quoteApplicationUser);
+
+                return true;
+            }
+        }
     }
 }

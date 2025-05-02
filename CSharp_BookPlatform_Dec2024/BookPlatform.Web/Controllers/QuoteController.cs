@@ -97,12 +97,12 @@ namespace BookPlatform.Web.Controllers
             // get user id
             string userId = this.User.GetUserId()!;
 
-            // try adding quote
+            // try removing quote
             bool result;
 
             try
             {
-
+                result = await this.quoteService.RemoveQuoteAsync(userId, quoteId);
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
