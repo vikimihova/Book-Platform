@@ -1,11 +1,11 @@
-﻿using BookPlatform.Core.Services.Interfaces;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Core.ViewModels.Quote;
-using BookPlatform.Core.ViewModels.Review;
+
 using BookPlatform.Data.Models;
 using BookPlatform.Data.Repository.Interfaces;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace BookPlatform.Core.Services
 {

@@ -1,11 +1,11 @@
-﻿using BookPlatform.Core.Services.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
+using BookPlatform.Core.Services.Interfaces;
 using BookPlatform.Core.ViewModels.Book;
 using BookPlatform.Core.ViewModels.Quote;
-using BookPlatform.Core.ViewModels.Review;
-using BookPlatform.Data.Models;
+
 using BookPlatform.Web.Infrastructure.Extensions;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BookPlatform.Web.Controllers
 {
