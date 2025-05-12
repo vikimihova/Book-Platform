@@ -62,8 +62,41 @@ namespace BookPlatform.Core.Services
             return quotes;
         }
 
-        // To-Do: Task<IEnumerable<QuoteViewModel>> implementation for getting all quotes saved by a specific user
-                
+        public async Task<IEnumerable<QuoteViewModel>> GetAllQuotesPerUserAsync(string userId)
+        {
+            // check input
+            Guid userGuid = Guid.Empty;
+
+            if (!IsGuidValid(userId, ref userGuid))
+            {
+                throw new ArgumentException();
+            }
+
+            // get user
+            ApplicationUser? user = await this.userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            // get quotes
+            IEnumerable<QuoteViewModel> quotes = await this.quoteApplicationUserRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .Include(qu => qu.Quote.Book)
+                .Include(qu => qu.Quote.Book.Author)
+                .Select(qu => new QuoteViewModel()
+                {
+                    Title = qu.Quote.Book.Title,
+                    Author = qu.Quote.Book.Author.FullName,
+                    Content = qu.Quote.Content,
+                })
+                .ToListAsync();
+
+            return quotes;
+        }
+
         public async Task<bool> AddQuoteAsync(string userId, string quoteId)
         {
             // check input
