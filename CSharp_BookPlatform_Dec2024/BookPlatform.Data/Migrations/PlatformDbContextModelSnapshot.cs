@@ -701,13 +701,13 @@ namespace BookPlatform.Data.Migrations
             modelBuilder.Entity("BookPlatform.Data.Models.QuoteApplicationUser", b =>
                 {
                     b.HasOne("BookPlatform.Data.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
+                        .WithMany("UserQuotes")
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BookPlatform.Data.Models.Quote", "Quote")
-                        .WithMany()
+                        .WithMany("QuoteApplicationUsers")
                         .HasForeignKey("QuoteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -782,6 +782,8 @@ namespace BookPlatform.Data.Migrations
             modelBuilder.Entity("BookPlatform.Data.Models.ApplicationUser", b =>
                 {
                     b.Navigation("UserBooks");
+
+                    b.Navigation("UserQuotes");
                 });
 
             modelBuilder.Entity("BookPlatform.Data.Models.Author", b =>
@@ -813,6 +815,11 @@ namespace BookPlatform.Data.Migrations
             modelBuilder.Entity("BookPlatform.Data.Models.Genre", b =>
                 {
                     b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("BookPlatform.Data.Models.Quote", b =>
+                {
+                    b.Navigation("QuoteApplicationUsers");
                 });
 #pragma warning restore 612, 618
         }
