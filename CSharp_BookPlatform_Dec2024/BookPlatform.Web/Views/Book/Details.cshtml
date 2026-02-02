@@ -38,6 +38,7 @@
 
 <div class="container">
     <div class="row">
+        @* Panel 1 *@
         <div class="col-md-3 col-sm-6 col-xs-12">
             <div class="card mb-2 shadow-sm" style="width: 100%">
                 <img src="@Model.ImageUrl" class="card-img-top" alt="Cover Image" style="height: 450px; object-fit: cover;">                
@@ -60,13 +61,14 @@
                         }        
                         <a id="reviews-btn-@Model.Id" class="btn btn-outline-dark mb-2" onclick="loadReviews('@Model.Id')">Reviews</a>
                         <a id="quotes-btn-@Model.Id" class="btn btn-info mb-2" asp-controller="Quote" asp-action="AllBookQuotes" asp-route-bookId="@Model.Id">Quotes</a>
+                        @* Customize new button and set default to hide*@
                         <a id="back-btn-@Model.Id">Go back</a>
                     </div>
                 </div>
             </div>
         </div>
-        
 
+        @* Panel 2 *@
         <div class="col-md-9 col-sm-6 col-xs-12 min-vw-50">
             <h3>@Model.Title</h3>
             <p class="text-start">@Model.Author</p>
@@ -111,6 +113,11 @@
                     quotesButton.hide();
                     backButton.show();
 
+                    // Get book description container.
+                    // Get book reviews partial view. (create partial from AllBookReviews)
+
+                    // Hide book description.
+                    // Show book reviews./ lazy load partial view with fetch API using an MVC controller
                 },
                 error: function(xhr){
                     alert('Failed to load book reviews.');
