@@ -58,8 +58,9 @@
                                 </div>
                             </div>
                         }        
-                        <a class="btn btn-outline-dark mb-2" asp-controller="Review" asp-action="AllBookReviews" asp-route-bookId="@Model.Id">Reviews</a>
-                        <a class="btn btn-info mb-2" asp-controller="Quote" asp-action="AllBookQuotes" asp-route-bookId="@Model.Id">Quotes</a>
+                        <a id="reviews-btn-@Model.Id" class="btn btn-outline-dark mb-2" onclick="loadReviews('@Model.Id')">Reviews</a>
+                        <a id="quotes-btn-@Model.Id" class="btn btn-info mb-2" asp-controller="Quote" asp-action="AllBookQuotes" asp-route-bookId="@Model.Id">Quotes</a>
+                        <a id="back-btn-@Model.Id">Go back</a>
                     </div>
                 </div>
             </div>
@@ -95,5 +96,27 @@
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        function loadReviews(id){
+            $.ajax({
+                // url: `apiAddress`,
+                method: 'POST',
+                success: function(){
+                    const reviewsButton = $(`#reviews-btn-${id}`);
+                    const quotesButton = $(`#quotes-btn-${id}`);
+                    const backButton = $(`#back-btn-${id}`);
 
+                    reviewsButton.hide();
+                    quotesButton.hide();
+                    backButton.show();
+
+                },
+                error: function(xhr){
+                    alert('Failed to load book reviews.');
+                }
+            });
+        }
+    </script>
+}
 
